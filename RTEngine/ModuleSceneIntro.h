@@ -1,6 +1,5 @@
 #pragma once
 #include "Module.h"
-#include "p2List.h"
 #include "Globals.h"
 #include "Primitive.h"
 #define MAX_SNAKE 2
@@ -38,7 +37,7 @@ public:
 	Uint32 bestTime;
 	Timer laptimer;
 
-	p2List<Cube> mapObjects;
+	std::list<Cube> mapObjects;
 
 	PhysBody3D* firstObstacle;
 	PhysBody3D* secondObstacle;
