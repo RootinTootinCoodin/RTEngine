@@ -8,7 +8,6 @@
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
-#include "PugiXml\src\pugixml.hpp"
 
 class Application
 {
