@@ -13,12 +13,6 @@
     <Filter Include="Sources\Tools">
       <UniqueIdentifier>{7e4dfaf7-022c-4f7d-92aa-f3b3fa9d6248}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Tools\Pugi">
-      <UniqueIdentifier>{405ec814-07a2-4287-a099-36110e3fb95a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Files">
-      <UniqueIdentifier>{156f4c61-6c9c-47c4-98c7-54d7aa65c44d}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -32,9 +26,6 @@
     </ClInclude>
     <ClInclude Include="ModuleWindow.h">
       <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="p2Point.h">
-      <Filter>Sources\Containers</Filter>
     </ClInclude>
     <ClInclude Include="glmath.h">
       <Filter>Sources\Containers</Filter>
@@ -51,17 +42,8 @@
     <ClInclude Include="Timer.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="p2Queue.h">
-      <Filter>Sources\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="p2Log.h">
       <Filter>Sources\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="PugiXml\src\pugiconfig.hpp">
-      <Filter>Sources\Tools\Pugi</Filter>
-    </ClInclude>
-    <ClInclude Include="PugiXml\src\pugixml.hpp">
-      <Filter>Sources\Tools\Pugi</Filter>
     </ClInclude>
     <ClInclude Include="p2Defs.h">
       <Filter>Sources\Containers</Filter>
@@ -95,13 +77,5 @@
     <ClCompile Include="p2Log.cpp">
       <Filter>Sources\Containers</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Xml Include="Game\map.xml">
-      <Filter>Sources\Files</Filter>
-    </Xml>
-    <Xml Include="Game\car.xml">
-      <Filter>Sources\Files</Filter>
-    </Xml>
   </ItemGroup>
 </Project>
