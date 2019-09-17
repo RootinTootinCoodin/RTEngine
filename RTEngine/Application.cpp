@@ -30,9 +30,9 @@ Application::Application()
 
 Application::~Application()
 {
-	std::list<Module*>::reverse_iterator item = list_modules.rend();
+	std::list<Module*>::iterator item = list_modules.begin();
 
-	while(item != list_modules.rbegin())
+	while(item != list_modules.end())
 	{
 		RELEASE(*item);
 		item++;
@@ -115,9 +115,9 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
-	std::list<Module*>::reverse_iterator item = list_modules.rend();
+	std::list<Module*>::iterator item = list_modules.begin();
 
-	while(item != list_modules.rbegin() && ret == true)
+	while(item != list_modules.end() && ret == true)
 	{
 		ret = (*item)->CleanUp();
 		item++;
