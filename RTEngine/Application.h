@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __APPLICATION_H__
+#define __APPLICATION_H__
+
 
 #include <list>
 
@@ -37,3 +39,5 @@ private:
 	void PrepareUpdate();
 	void FinishUpdate();
 };
+
+#endif
