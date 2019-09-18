@@ -14,6 +14,14 @@ public:
 	//update_status Update(float dt);
 	update_status PostUpdate(float dt);
 	//bool CleanUp();
+
+	void CreateDockspace();
+
+private:
+public:
+private:
+	bool show_demo_window = false;
+	bool dockspace_active = true;
 };
 
 #endif
