@@ -2,6 +2,7 @@
 #define __MODULE_H__
 
 #include "Globals.h"
+
 class Application;
 
 
