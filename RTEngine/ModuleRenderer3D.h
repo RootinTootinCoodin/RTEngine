@@ -27,4 +27,4 @@ public:
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 };
 
-#endif
+#endif // __MODULE_RENDERER_H__

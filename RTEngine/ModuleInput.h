@@ -71,4 +71,4 @@ private:
 	//int mouse_z_motion;
 };
 
-#endif
+#endif // __MODULE_INPUT_H__

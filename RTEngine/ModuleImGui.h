@@ -24,5 +24,5 @@ private:
 	bool dockspace_active = true;
 };
 
-#endif
+#endif // __MODULE_IMGUI_H__
 
