@@ -28,4 +28,4 @@ public:
 	SDL_Surface* screen_surface;
 };
 
-#endif // __ModuleWindow_H__
+#endif // __MODULE_WINDOW_H__

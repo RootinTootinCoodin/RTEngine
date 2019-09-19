@@ -31,4 +31,4 @@ public:
 	uint framebuffer;
 };
 
-#endif
+#endif // __MODULE_RENDERER_H__

@@ -18,6 +18,7 @@
 #include "ImGui/imgui_impl_opengl2.h"
 #include "ImGui/imgui_impl_sdl.h"
 
+#include "MathGeoLib/MathGeoLib.h"
 
 class Application
 {
@@ -50,4 +51,4 @@ private:
 	void FinishUpdate();
 };
 
-#endif
+#endif //__APPLICATION_H__
