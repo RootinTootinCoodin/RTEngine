@@ -16,6 +16,9 @@
     <Filter Include="Sources\ImGui">
       <UniqueIdentifier>{92c9fed7-a8db-4aa8-8301-7c8c0b7fce86}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\UIElements">
+      <UniqueIdentifier>{550fc102-764c-4051-bede-c37c0838e322}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -78,6 +81,15 @@
     <ClInclude Include="ImGui\imgui_impl_opengl2.h">
       <Filter>Sources\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleCamera3D.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="UIElement.h">
+      <Filter>Sources\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="UIScene.h">
+      <Filter>Sources\UIElements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -127,6 +139,12 @@
     </ClCompile>
     <ClCompile Include="ImGui\imgui_impl_opengl2.cpp">
       <Filter>Sources\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleCamera3D.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="UIScene.cpp">
+      <Filter>Sources\UIElements</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

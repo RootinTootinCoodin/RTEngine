@@ -11,7 +11,9 @@
 #include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleImGui.h"
+#include "ModuleCamera3D.h"
 
+#include "GL/glew.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_opengl2.h"
 #include "ImGui/imgui_impl_sdl.h"
@@ -24,6 +26,7 @@ public:
 	ModuleInput* input;
 	ModuleRenderer3D* renderer3D;
 	ModuleImGui* ImGui;
+	ModuleCamera3D* camera;
 
 private:
 

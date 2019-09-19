@@ -86,6 +86,7 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
+    <ClInclude Include="ModuleCamera3D.h" />
     <ClInclude Include="ModuleImGui.h" />
     <ClInclude Include="ModuleRenderer3D.h" />
     <ClInclude Include="p2Defs.h" />
@@ -94,6 +95,8 @@
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="p2Log.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="UIElement.h" />
+    <ClInclude Include="UIScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -106,12 +109,14 @@
     <ClCompile Include="ImGui\imgui_impl_sdl.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ModuleCamera3D.cpp" />
     <ClCompile Include="ModuleImGui.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleRenderer3D.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="p2Log.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="UIScene.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

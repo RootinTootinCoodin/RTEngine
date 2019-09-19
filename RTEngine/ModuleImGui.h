@@ -1,7 +1,10 @@
 #ifndef __MODULE_IMGUI_H__
 #define __MODULE_IMGUI_H__
 
+#include <vector>
 #include "Module.h"
+#include "UIElement.h"
+
 class ModuleImGui :
 	public Module
 {
@@ -19,6 +22,7 @@ public:
 
 private:
 public:
+	std::vector<UIElement*> UI;
 private:
 	bool show_demo_window = false;
 	bool dockspace_active = true;

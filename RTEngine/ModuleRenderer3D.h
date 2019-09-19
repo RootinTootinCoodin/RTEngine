@@ -20,11 +20,15 @@ public:
 
 	void OnResize(int width, int height);
 
+	void GenerateFramebuffer();
+
 public:
 
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+
+	uint framebuffer;
 };
 
 #endif

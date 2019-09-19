@@ -3,6 +3,8 @@
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
 
+#include"UIScene.h"
+
 
 
 ModuleImGui::ModuleImGui(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -30,6 +32,8 @@ bool ModuleImGui::Init()
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL2_Init();
 
+	UIScene* scene = new UIScene();
+	UI.push_back((UIElement*)scene);
 	return true;
 }
 
@@ -61,6 +65,18 @@ update_status ModuleImGui::PreUpdate(float dt)
 		}
 
 	}
+
+	for (auto item = UI.begin(); item != UI.end(); item++)
+	{
+		(*item)->Draw();
+	}
+
+	//ImGui::Begin("Test");
+	//ImGui::BeginMenu("SADGSD");
+	//ImGui::EndMenu();
+	//ImGui::End();
+
+
 
 	if (show_demo_window)
 		ImGui::ShowDemoWindow();
