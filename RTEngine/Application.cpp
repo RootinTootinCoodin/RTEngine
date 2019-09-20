@@ -16,10 +16,12 @@ Application::Application()
 	// Main Modules
 	AddModule(window);
 	AddModule(input);
-	AddModule(ImGui);
+
 	AddModule(camera);
 	// Renderer last!
 	AddModule(renderer3D);
+	//Fuck you i won't do what you tell me
+	AddModule(ImGui);
 }
 
 Application::~Application()

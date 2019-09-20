@@ -32,7 +32,7 @@ bool ModuleImGui::Init()
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL2_Init();
 
-	UIScene* scene = new UIScene();
+	UIScene* scene = new UIScene(App);
 	UI.push_back((UIElement*)scene);
 	return true;
 }

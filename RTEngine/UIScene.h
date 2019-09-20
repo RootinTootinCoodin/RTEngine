@@ -4,7 +4,7 @@ class UIScene :
 	public UIElement
 {
 public:
-	UIScene();
+	UIScene(Application* App);
 	~UIScene();
 
 	void Draw();

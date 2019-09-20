@@ -4,10 +4,12 @@
 #include <string>
 #include "ImGui/imgui.h"
 
+class Application;
+
 class UIElement
 {
 public:
-	UIElement() {}
+	UIElement(Application* App):App(App) {}
 	~UIElement() {}
 
 	virtual void Init() {}
@@ -15,6 +17,7 @@ public:
 private:
 public:
 	std::string name = "No name";
+	Application* App = nullptr;
 private:
 	
 };

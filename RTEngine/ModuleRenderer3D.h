@@ -28,7 +28,8 @@ public:
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 
-	uint framebuffer;
+	uint framebuffer = 0;
+	uint framebuffer_texture = 0;
 };
 
 #endif // __MODULE_RENDERER_H__
