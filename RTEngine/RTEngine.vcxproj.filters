@@ -19,6 +19,9 @@
     <Filter Include="Sources\UIElements">
       <UniqueIdentifier>{550fc102-764c-4051-bede-c37c0838e322}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\NewFilter1">
+      <UniqueIdentifier>{e7ee13ba-b122-4ad8-9918-0b6236861460}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -90,6 +93,9 @@
     <ClInclude Include="UIScene.h">
       <Filter>Sources\UIElements</Filter>
     </ClInclude>
+    <ClInclude Include="UITests.h">
+      <Filter>Sources\UIElements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -144,6 +150,9 @@
       <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="UIScene.cpp">
+      <Filter>Sources\UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="UITests.cpp">
       <Filter>Sources\UIElements</Filter>
     </ClCompile>
   </ItemGroup>

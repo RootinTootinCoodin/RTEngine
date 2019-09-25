@@ -4,6 +4,7 @@
 #include "ModuleRenderer3D.h"
 
 #include"UIScene.h"
+#include "UITests.h"
 
 
 
@@ -33,7 +34,10 @@ bool ModuleImGui::Init()
 	ImGui_ImplOpenGL2_Init();
 
 	UIScene* scene = new UIScene(App);
+	UITests* tests = new UITests(App);
+
 	UI.push_back((UIElement*)scene);
+	UI.push_back((UIElement*)tests);
 	return true;
 }
 
