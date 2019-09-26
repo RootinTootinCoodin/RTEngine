@@ -21,6 +21,8 @@ public:
 	void SetTitle(const char* title);
 	void UpdateSize();
 	void UpdateWindowMode();
+	void UpdateBrightness();
+	void UpdateRefreshRate();
 
 public:
 	//The window we'll be rendering to
@@ -36,6 +38,8 @@ public:
 	bool full_desktop = false;
 	int width = 1280;
 	int height = 1024;
+	float brightness = 1.0f;
+	int refresh_rate = 60;
 };
 
 #endif // __MODULE_WINDOW_H__

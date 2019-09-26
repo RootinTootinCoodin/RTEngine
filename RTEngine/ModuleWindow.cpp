@@ -116,3 +116,15 @@ void ModuleWindow::UpdateWindowMode()
 	/*if (resizable)*/
 		/*SDL_SetWindowResizable(window, SDL_TRUE);*/
 }
+
+void ModuleWindow::UpdateBrightness()
+{
+	SDL_SetWindowBrightness(window, brightness);
+}
+
+void ModuleWindow::UpdateRefreshRate()
+{
+	SDL_DisplayMode mode;
+	SDL_GetDisplayMode(SDL_GetWindowDisplayIndex(window), 0, &mode);
+	refresh_rate = mode.refresh_rate;
+}

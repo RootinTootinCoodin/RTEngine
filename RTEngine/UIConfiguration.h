@@ -1,5 +1,7 @@
 #pragma once
 #include "UIElement.h"
+#include "SDL/include/SDL.h"
+
 class UIConfiguration :
 	public UIElement
 {
