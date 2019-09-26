@@ -42,6 +42,16 @@ void Application::RequestBrowser(std::string url)
 	ShellExecuteA(NULL, "open", url.data(), NULL, NULL, SW_SHOWNORMAL);
 }
 
+float Application::GetCurrentFPS()
+{
+	return current_fps;
+}
+
+float Application::GetCurrentMS()
+{
+	return current_ms;
+}
+
 bool Application::Init()
 {
 	bool ret = true;
@@ -72,8 +82,19 @@ bool Application::Init()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	dt = (float)ms_timer.Read() / 1000.0f;
+	current_ms = (float)ms_timer.Read();
+	dt = current_ms / 1000.0f;
+	current_fps = 1000.0f / current_ms;
 	ms_timer.Start();
+
+	fps_arr[arr_iterator] = current_fps;
+	ms_arr[arr_iterator] = current_ms;
+
+	if (arr_iterator <= 0)
+		arr_iterator = 59;
+
+	else
+	arr_iterator--;
 }
 
 // ---------------------------------------------

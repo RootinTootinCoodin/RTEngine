@@ -128,3 +128,8 @@ void ModuleWindow::UpdateRefreshRate()
 	SDL_GetDisplayMode(SDL_GetWindowDisplayIndex(window), 0, &mode);
 	refresh_rate = mode.refresh_rate;
 }
+
+void ModuleWindow::UpdateTitle()
+{
+	/*SetTitle(&title.data);*/
+}

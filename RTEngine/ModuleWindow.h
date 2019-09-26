@@ -23,6 +23,7 @@ public:
 	void UpdateWindowMode();
 	void UpdateBrightness();
 	void UpdateRefreshRate();
+	void UpdateTitle();
 
 public:
 	//The window we'll be rendering to
@@ -40,6 +41,7 @@ public:
 	int height = 1024;
 	float brightness = 1.0f;
 	int refresh_rate = 60;
+	std::string title = "RTEngine";
 };
 
 #endif // __MODULE_WINDOW_H__

@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "ModuleRenderer3D.h"
 
 UIConfiguration::UIConfiguration(Application* app) : UIElement(app)
 {
@@ -17,6 +18,17 @@ void UIConfiguration::Draw()
 {
 	if (ImGui::Begin(name.c_str(), &show_window))
 	{
+		if (ImGui::CollapsingHeader("Application")) // 1 - Application
+		{
+			/*if (ImGui::InputText("App Name", &App->window->title.data, IM_ARRAYSIZE(&App->window->title.data)))
+				App->window->UpdateTitle();*/
+			char title[25];
+			sprintf_s(title, 25, "Framerate %.1f", App->GetCurrentFPS());
+			ImGui::PlotHistogram("", App->fps_arr, IM_ARRAYSIZE(App->fps_arr), 0, title, 0.0f, 180.0f, ImVec2(310, 100));
+
+			sprintf_s(title, 25, "Miliseconds %f", App->GetCurrentMS());
+			ImGui::PlotHistogram("", App->ms_arr, IM_ARRAYSIZE(App->ms_arr), 0, title, 4.0f, 120.0f, ImVec2(310, 100));
+		}
 
 		if (ImGui::CollapsingHeader("Window")) // 2 - Window
 		{

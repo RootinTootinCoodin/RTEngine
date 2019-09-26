@@ -30,11 +30,17 @@ public:
 	ModuleImGui* ImGui;
 	ModuleCamera3D* camera;
 
+	float fps_arr[60];
+	float ms_arr[60];
+
 private:
 
 	Timer	ms_timer;
 	float	dt;
+	float	current_fps;
+	float	current_ms;
 	std::list<Module*> list_modules;
+	int		arr_iterator = 59;
 
 public:
 
@@ -42,6 +48,9 @@ public:
 	~Application();
 
 	void RequestBrowser(std::string url);
+
+	float GetCurrentFPS();
+	float GetCurrentMS();
 
 	bool Init();
 	update_status Update();
