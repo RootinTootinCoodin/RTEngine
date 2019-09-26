@@ -14,11 +14,11 @@ public:
 
 	virtual void Init() {}
 	virtual void Draw() {}
-private:
+
 public:
 	std::string name = "No name";
 	Application* App = nullptr;
-private:
+	bool show_window = true;
 	
 };
 

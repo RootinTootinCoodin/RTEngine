@@ -1,6 +1,7 @@
 #include "UIScene.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleWindow.h"
 
 
 
@@ -16,16 +17,13 @@ UIScene::~UIScene()
 
 void UIScene::Draw()
 {
-	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
-	if (ImGui::Begin(name.c_str()))
-	{
-		
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar;
 
-		ImGui::Image((ImTextureID)App->renderer3D->framebuffer_texture,ImGui::GetWindowSize());
-
-		ImGui::End();
+	ImGui::Begin(name.c_str(), &show_window,  window_flags);
+	ImGui::SetCursorPos((ImGui::GetWindowSize() - ImVec2(SCREEN_WIDTH, SCREEN_HEIGHT)) * 0.5f);
+	ImGui::Image((ImTextureID)App->renderer3D->framebuffer_texture, ImVec2(SCREEN_WIDTH, SCREEN_HEIGHT));
+	ImGui::End();
 
 
-	}
-	ImGui::PopStyleVar();
+	
 }

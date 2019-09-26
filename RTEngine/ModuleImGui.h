@@ -25,7 +25,6 @@ public:
 	std::vector<UIElement*> UI;
 private:
 	bool show_demo_window = false;
-	bool show_scene = true;
 	bool dockspace_active = true;
 };
 
