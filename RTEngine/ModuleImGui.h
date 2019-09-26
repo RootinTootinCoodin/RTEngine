@@ -5,6 +5,10 @@
 #include "Module.h"
 #include "UIElement.h"
 
+class UIScene;
+class UITests;
+class UIConsole;
+
 class ModuleImGui :
 	public Module
 {
@@ -22,6 +26,10 @@ public:
 
 private:
 public:
+	UIScene* scene = nullptr;
+	UITests* tests = nullptr;
+	UIConsole* console = nullptr;
+
 	std::vector<UIElement*> UI;
 private:
 	bool show_demo_window = false;

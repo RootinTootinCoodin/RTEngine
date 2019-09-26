@@ -35,6 +35,11 @@ Application::~Application()
 	}
 }
 
+void Application::RequestBrowser(std::string url)
+{
+	ShellExecuteA(NULL, "open", url.data(), NULL, NULL, SW_SHOWNORMAL);
+}
+
 bool Application::Init()
 {
 	bool ret = true;

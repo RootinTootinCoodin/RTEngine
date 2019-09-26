@@ -4,7 +4,9 @@ class UIConsole :
 	public UIElement
 {
 public:
-	UIConsole();
+	UIConsole(Application* App);
 	~UIConsole();
+
+	void Draw();
 };
 

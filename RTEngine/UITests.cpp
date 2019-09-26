@@ -13,8 +13,6 @@
 UITests::UITests(Application* App) : UIElement(App)
 {
 	name = "tests";
-
-	
 }
 
 
@@ -26,7 +24,7 @@ void UITests::Draw()
 {
 	pcg32 seed; 
 	seed.seed(pcg_extras::seed_seq_from<std::random_device>()); // if i put this values in the header, i get weir compiler errors
-	if (ImGui::Begin(name.c_str()))
+	if (ImGui::Begin(name.c_str(),&show_window))
 	{
 		if (ImGui::CollapsingHeader("Random Number Generator"))
 		{

@@ -9,7 +9,7 @@ class Application;
 class UIElement
 {
 public:
-	UIElement(Application* App):App(App) {}
+	UIElement(Application* App, bool active = true):App(App), show_window(active){}
 	~UIElement() {}
 
 	virtual void Init() {}

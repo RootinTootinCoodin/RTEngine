@@ -41,6 +41,8 @@ public:
 	Application();
 	~Application();
 
+	void RequestBrowser(std::string url);
+
 	bool Init();
 	update_status Update();
 	bool CleanUp();

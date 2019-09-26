@@ -5,6 +5,7 @@
 
 #include"UIScene.h"
 #include "UITests.h"
+#include "UIConsole.h"
 
 
 
@@ -33,11 +34,13 @@ bool ModuleImGui::Init()
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL2_Init();
 
-	UIScene* scene = new UIScene(App);
-	UITests* tests = new UITests(App);
+	scene = new UIScene(App);
+	tests = new UITests(App);
+	console = new UIConsole(App);
 
 	UI.push_back((UIElement*)scene);
 	UI.push_back((UIElement*)tests);
+	UI.push_back((UIElement*)console);
 	return true;
 }
 
@@ -68,11 +71,31 @@ update_status ModuleImGui::PreUpdate(float dt)
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("Help"))
+		{
+			ImGui::MenuItem("Show demo", "S", &show_demo_window);
+
+			if (ImGui::MenuItem("Documentation"))
+				App->RequestBrowser("https://github.com/RootinTootinCoodin/RTEngine/wiki");
+
+			if (ImGui::MenuItem("Download latest version"))
+				App->RequestBrowser("https://github.com/RootinTootinCoodin/RTEngine/releases");
+
+			if (ImGui::MenuItem("Report a bug"))
+				App->RequestBrowser("https://github.com/RootinTootinCoodin/RTEngine/issues");
+
+			if (ImGui::MenuItem("About"))
+				//Show about window
+
+			ImGui::EndMenu();
+		}
+
 	}
 
 	for (auto item = UI.begin(); item != UI.end(); item++)
 	{
-		(*item)->Draw();
+		if((*item)->show_window)
+			(*item)->Draw();
 	}
 
 	//ImGui::Begin("Test");
