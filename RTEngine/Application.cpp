@@ -19,9 +19,10 @@ Application::Application()
 
 	AddModule(camera);
 	// Renderer last!
+	AddModule(ImGui);
 	AddModule(renderer3D);
 	//Fuck you i won't do what you tell me
-	AddModule(ImGui);
+
 }
 
 Application::~Application()

@@ -20,8 +20,12 @@ public:
 
 	void OnResize(int width, int height);
 
-	void GenerateFramebuffer();
 
+
+	void BindFramebuffer();
+	void UnbindFramebuffer();
+private:
+	void GenerateFramebuffer();
 public:
 
 	SDL_GLContext context;

@@ -8,6 +8,9 @@
 #include "UIConsole.h"
 #include "UIConfig.h"
 #include "UIAbout.h"
+#include "UIConfiguration.h"
+#include "UIInspector.h"
+#include "UIHierarchy.h"
 
 ModuleImGui::ModuleImGui(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -26,7 +29,6 @@ bool ModuleImGui::Init()
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 	
-
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
 
@@ -34,17 +36,24 @@ bool ModuleImGui::Init()
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL2_Init();
 
+
 	scene = new UIScene(App);
 	tests = new UITests(App);
 	console = new UIConsole(App);
 	config = new UIConfig(App);
 	about = new UIAbout(App);
+	configuration = new UIConfiguration(App);
+	inspector = new UIInspector(App);
+	hierarchy = new UIHierarchy(App);
 
 	UI.push_back((UIElement*)scene);
 	UI.push_back((UIElement*)tests);
 	UI.push_back((UIElement*)console);
 	UI.push_back((UIElement*)config);
 	UI.push_back((UIElement*)about);
+	UI.push_back((UIElement*)configuration);
+	UI.push_back((UIElement*)inspector);
+	UI.push_back((UIHierarchy*)hierarchy);
 	return true;
 }
 
@@ -94,6 +103,17 @@ update_status ModuleImGui::PreUpdate(float dt)
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("Window"))
+		{
+			for (auto item = UI.begin(); item != UI.end(); item++)
+			{
+				if (ImGui::MenuItem((*item)->name.c_str(), ".", &(*item)->show_window, &(*item)->show_window))
+					(*item)->show_window = !(*item)->show_window;
+			}
+
+			ImGui::EndMenu();
+		}
+
 	}
 
 	for (auto item = UI.begin(); item != UI.end(); item++)
@@ -119,10 +139,7 @@ update_status ModuleImGui::PostUpdate(float dt)
 	
 	ImGui::EndMainMenuBar();
 	ImGui::End();
-	ImGui::Render();
 
-
-	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 	return UPDATE_CONTINUE;
 }
 

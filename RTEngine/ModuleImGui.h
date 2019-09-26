@@ -10,6 +10,9 @@ class UITests;
 class UIConsole;
 class UIConfig;
 class UIAbout;
+class UIConfiguration;
+class UIInspector;
+class UIHierarchy;
 
 class ModuleImGui :
 	public Module
@@ -33,6 +36,9 @@ public:
 	UIConsole* console = nullptr;
 	UIConfig* config = nullptr;
 	UIAbout* about = nullptr;
+	UIConfiguration* configuration = nullptr;
+	UIInspector* inspector = nullptr;
+	UIHierarchy* hierarchy = nullptr;
 
 	std::vector<UIElement*> UI;
 private:

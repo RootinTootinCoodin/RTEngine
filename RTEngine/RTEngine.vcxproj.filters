@@ -303,6 +303,18 @@
     <ClInclude Include="UIConfig.h">
       <Filter>Sources\UIElements</Filter>
     </ClInclude>
+    <ClInclude Include="UIAbout.h">
+      <Filter>Sources\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="UIConfiguration.h">
+      <Filter>Sources\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="UIInspector.h">
+      <Filter>Sources\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="UIHierarchy.h">
+      <Filter>Sources\UIElements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -462,6 +474,18 @@
       <Filter>Sources\UIElements</Filter>
     </ClCompile>
     <ClCompile Include="UIConfig.cpp">
+      <Filter>Sources\UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="UIAbout.cpp">
+      <Filter>Sources\UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="UIConfiguration.cpp">
+      <Filter>Sources\UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="UIInspector.cpp">
+      <Filter>Sources\UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="UIHierarchy.cpp">
       <Filter>Sources\UIElements</Filter>
     </ClCompile>
   </ItemGroup>
