@@ -3,11 +3,11 @@
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
 
-#include"UIScene.h"
+#include "UIScene.h"
 #include "UITests.h"
 #include "UIConsole.h"
-
-
+#include "UIConfig.h"
+#include "UIAbout.h"
 
 ModuleImGui::ModuleImGui(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -37,10 +37,14 @@ bool ModuleImGui::Init()
 	scene = new UIScene(App);
 	tests = new UITests(App);
 	console = new UIConsole(App);
+	config = new UIConfig(App);
+	about = new UIAbout(App);
 
 	UI.push_back((UIElement*)scene);
 	UI.push_back((UIElement*)tests);
 	UI.push_back((UIElement*)console);
+	UI.push_back((UIElement*)config);
+	UI.push_back((UIElement*)about);
 	return true;
 }
 
@@ -85,7 +89,7 @@ update_status ModuleImGui::PreUpdate(float dt)
 				App->RequestBrowser("https://github.com/RootinTootinCoodin/RTEngine/issues");
 
 			if (ImGui::MenuItem("About"))
-				//Show about window
+				about->SetActive(true);
 
 			ImGui::EndMenu();
 		}

@@ -8,6 +8,8 @@
 class UIScene;
 class UITests;
 class UIConsole;
+class UIConfig;
+class UIAbout;
 
 class ModuleImGui :
 	public Module
@@ -29,6 +31,8 @@ public:
 	UIScene* scene = nullptr;
 	UITests* tests = nullptr;
 	UIConsole* console = nullptr;
+	UIConfig* config = nullptr;
+	UIAbout* about = nullptr;
 
 	std::vector<UIElement*> UI;
 private:
