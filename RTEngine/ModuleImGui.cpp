@@ -6,7 +6,6 @@
 #include "UIScene.h"
 #include "UITests.h"
 #include "UIConsole.h"
-#include "UIConfig.h"
 #include "UIAbout.h"
 #include "UIConfiguration.h"
 #include "UIInspector.h"
@@ -40,7 +39,6 @@ bool ModuleImGui::Init()
 	scene = new UIScene(App);
 	tests = new UITests(App);
 	console = new UIConsole(App);
-	config = new UIConfig(App);
 	about = new UIAbout(App);
 	configuration = new UIConfiguration(App);
 	inspector = new UIInspector(App);
@@ -49,7 +47,6 @@ bool ModuleImGui::Init()
 	UI.push_back((UIElement*)scene);
 	UI.push_back((UIElement*)tests);
 	UI.push_back((UIElement*)console);
-	UI.push_back((UIElement*)config);
 	UI.push_back((UIElement*)about);
 	UI.push_back((UIElement*)configuration);
 	UI.push_back((UIElement*)inspector);

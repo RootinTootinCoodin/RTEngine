@@ -34,7 +34,6 @@ public:
 	UIScene* scene = nullptr;
 	UITests* tests = nullptr;
 	UIConsole* console = nullptr;
-	UIConfig* config = nullptr;
 	UIAbout* about = nullptr;
 	UIConfiguration* configuration = nullptr;
 	UIInspector* inspector = nullptr;

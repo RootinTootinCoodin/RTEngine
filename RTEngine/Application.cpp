@@ -22,6 +22,7 @@ Application::Application()
 	AddModule(ImGui);
 	AddModule(renderer3D);
 	//Fuck you i won't do what you tell me
+	//Guess you should
 
 }
 

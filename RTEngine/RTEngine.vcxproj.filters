@@ -300,9 +300,6 @@
     <ClInclude Include="UIConsole.h">
       <Filter>Sources\UIElements</Filter>
     </ClInclude>
-    <ClInclude Include="UIConfig.h">
-      <Filter>Sources\UIElements</Filter>
-    </ClInclude>
     <ClInclude Include="UIAbout.h">
       <Filter>Sources\UIElements</Filter>
     </ClInclude>
@@ -471,9 +468,6 @@
       <Filter>Sources\MathGeoLib\Time</Filter>
     </ClCompile>
     <ClCompile Include="UIConsole.cpp">
-      <Filter>Sources\UIElements</Filter>
-    </ClCompile>
-    <ClCompile Include="UIConfig.cpp">
       <Filter>Sources\UIElements</Filter>
     </ClCompile>
     <ClCompile Include="UIAbout.cpp">

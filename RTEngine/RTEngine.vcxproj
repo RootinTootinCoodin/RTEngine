@@ -156,7 +156,6 @@
     <ClInclude Include="PCG\include\pcg_uint128.hpp" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UIAbout.h" />
-    <ClInclude Include="UIConfig.h" />
     <ClInclude Include="UIConfiguration.h" />
     <ClInclude Include="UIConsole.h" />
     <ClInclude Include="UIElement.h" />
@@ -216,7 +215,6 @@
     <ClCompile Include="p2Log.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="UIAbout.cpp" />
-    <ClCompile Include="UIConfig.cpp" />
     <ClCompile Include="UIConfiguration.cpp" />
     <ClCompile Include="UIConsole.cpp" />
     <ClCompile Include="UIHierarchy.cpp" />
