@@ -68,6 +68,25 @@ update_status ModuleImGui::PreUpdate(float dt)
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("Help"))
+		{
+			ImGui::MenuItem("Show demo", "S", &show_demo_window);
+
+			if (ImGui::MenuItem("Documentation"))
+				App->RequestBrowser("https://github.com/RootinTootinCoodin/RTEngine/wiki");
+
+			if (ImGui::MenuItem("Download latest version"))
+				App->RequestBrowser("https://github.com/RootinTootinCoodin/RTEngine/releases");
+
+			if (ImGui::MenuItem("Report a bug"))
+				App->RequestBrowser("https://github.com/RootinTootinCoodin/RTEngine/issues");
+
+			if (ImGui::MenuItem("About"))
+				//Show about window
+
+			ImGui::EndMenu();
+		}
+
 	}
 
 	for (auto item = UI.begin(); item != UI.end(); item++)

@@ -1,10 +1,10 @@
 #pragma once
 #include "UIElement.h"
-class UIConsole :
+class UIConfig :
 	public UIElement
 {
 public:
-	UIConsole(Application* app);
-	~UIConsole();
+	UIConfig(Application* app);
+	~UIConfig();
 };
 

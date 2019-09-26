@@ -2,7 +2,7 @@
 
 
 
-UIConsole::UIConsole()
+UIConsole::UIConsole(Application* app) : UIElement(App)
 {
 }
 
