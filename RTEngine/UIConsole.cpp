@@ -1,7 +1,8 @@
 #include "UIConsole.h"
 
 
-UIConsole::UIConsole(Application* App) : UIElement(App)
+UIConsole::UIConsole(Application* app) : UIElement(app)
+
 {
 	name = "Console";
 }

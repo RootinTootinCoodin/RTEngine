@@ -14,6 +14,7 @@ public:
 
 	virtual void Init() {}
 	virtual void Draw() {}
+	void SetActive(bool active) { this->show_window = active; }
 
 public:
 	std::string name = "No name";
