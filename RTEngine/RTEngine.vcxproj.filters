@@ -19,8 +19,11 @@
     <Filter Include="Sources\UIElements">
       <UniqueIdentifier>{550fc102-764c-4051-bede-c37c0838e322}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\NewFilter1">
+    <Filter Include="Sources\PCG">
       <UniqueIdentifier>{e7ee13ba-b122-4ad8-9918-0b6236861460}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\PCG\include">
+      <UniqueIdentifier>{0e9c04d3-7f13-42db-8fc8-e51236204fa1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -95,6 +98,15 @@
     </ClInclude>
     <ClInclude Include="UITests.h">
       <Filter>Sources\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="PCG\include\pcg_extras.hpp">
+      <Filter>Sources\PCG\include</Filter>
+    </ClInclude>
+    <ClInclude Include="PCG\include\pcg_random.hpp">
+      <Filter>Sources\PCG\include</Filter>
+    </ClInclude>
+    <ClInclude Include="PCG\include\pcg_uint128.hpp">
+      <Filter>Sources\PCG\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
