@@ -74,12 +74,6 @@ update_status ModuleImGui::PreUpdate(float dt)
 			}
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Demo"))
-		{
-			ImGui::MenuItem("ShowDemoWindow", "S", &show_demo_window);
-
-			ImGui::EndMenu();
-		}
 
 		if (ImGui::BeginMenu("Help"))
 		{
@@ -104,8 +98,7 @@ update_status ModuleImGui::PreUpdate(float dt)
 		{
 			for (auto item = UI.begin(); item != UI.end(); item++)
 			{
-				if (ImGui::MenuItem((*item)->name.c_str(), ".", &(*item)->show_window, &(*item)->show_window))
-					(*item)->show_window = !(*item)->show_window;
+				ImGui::MenuItem((*item)->name.c_str(), ".", &(*item)->show_window);
 			}
 
 			ImGui::EndMenu();
