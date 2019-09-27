@@ -7,5 +7,7 @@ public:
 	~UIAbout();
 
 	void Draw();
+
+	std::string text;
 };
 
