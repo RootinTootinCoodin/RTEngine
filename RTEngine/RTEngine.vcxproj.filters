@@ -43,6 +43,9 @@
     <Filter Include="Sources\MathGeoLib\Time">
       <UniqueIdentifier>{33a87c5b-1fe7-431f-aee9-6a0246bc4ae1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\parson">
+      <UniqueIdentifier>{573fe400-664f-42ff-83bd-ad1c4bd0ed0c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -312,6 +315,9 @@
     <ClInclude Include="UIHierarchy.h">
       <Filter>Sources\UIElements</Filter>
     </ClInclude>
+    <ClInclude Include="parson\parson.h">
+      <Filter>Sources\parson</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -481,6 +487,9 @@
     </ClCompile>
     <ClCompile Include="UIHierarchy.cpp">
       <Filter>Sources\UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="parson\parson.c">
+      <Filter>Sources\parson</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
