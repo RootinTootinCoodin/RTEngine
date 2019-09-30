@@ -34,7 +34,6 @@ public:
 	std::vector<float> fps_arr;
 	std::vector<float> ms_arr;
 	int fps_limit_display = 0;
-	int fps_limit = 60;
 	char organization[64] = "Akatsuki";
 
 private:
@@ -47,6 +46,7 @@ private:
 	float	avg_fps = 0;
 	std::list<Module*> list_modules;
 	int		arr_iterator = 59;
+	int fps_limit = 60;
 
 public:
 

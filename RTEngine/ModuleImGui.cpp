@@ -104,6 +104,7 @@ update_status ModuleImGui::PreUpdate(float dt)
 		{
 			for (auto item = UI.begin(); item != UI.end(); item++)
 			{
+				if ((*item)->name.c_str() != "About")
 				ImGui::MenuItem((*item)->name.c_str(), ".", &(*item)->show_window);
 			}
 
