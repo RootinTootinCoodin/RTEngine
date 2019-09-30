@@ -61,12 +61,27 @@ bool Application::Init()
 {
 	bool ret = true;
 
+	JSON_Object* config;
+	JSON_Value* config_value;
+
+	config_value = json_parse_file_with_comments("config_file.json");
+	if (config_value == NULL)
+	{
+		LOG("Error opening config file");
+	}
+	else
+	{
+		LOG("Sucess opening config file");
+	}
+		
+	config = json_value_get_object(config_value);
+
 	// Call Init() in all modules
 	std::list<Module*>::iterator item = list_modules.begin();
 
 	while(item != list_modules.end() && ret == true)
 	{
-		ret = (*item)->Init();
+		ret = (*item)->Init(json_object_get_object(config,(*item)->name.c_str()));
 		item++;
 	}
 

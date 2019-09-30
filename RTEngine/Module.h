@@ -2,7 +2,7 @@
 #define __MODULE_H__
 
 #include "Globals.h"
-
+#include "parson/parson.h"
 class Application;
 
 
@@ -14,6 +14,7 @@ private :
 
 public:
 	Application* App;
+	std::string name;
 
 	Module(Application* parent, bool start_enabled = true) : App(parent)
 	{}
@@ -21,7 +22,7 @@ public:
 	virtual ~Module()
 	{}
 
-	virtual bool Init() 
+	virtual bool Init(JSON_Object* config) 
 	{
 		return true; 
 	}
@@ -49,6 +50,11 @@ public:
 	virtual bool CleanUp() 
 	{ 
 		return true; 
+	}
+
+	virtual void Save()
+	{
+		return;
 	}
 };
 

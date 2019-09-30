@@ -138,6 +138,7 @@ void UIConfiguration::Draw()
 			// GPU stuff
 		}
 
-		ImGui::End();
+
 	}
+	ImGui::End();
 }
