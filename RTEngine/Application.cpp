@@ -198,7 +198,7 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
-	SaveConfig();
+
 	std::list<Module*>::iterator item = list_modules.begin();
 
 	while(item != list_modules.end() && ret == true)

@@ -34,7 +34,6 @@ public:
 private:
 
 	mat4x4 ViewMatrix, ViewMatrixInverse;
-	vec3 InitialPosition;
-	vec3 InitialSpeed;
+
 
 };

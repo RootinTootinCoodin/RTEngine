@@ -1,1 +1,1 @@
-{"Window":{"fullscreen":false,"resizable":true,"borderless":false,"full_desktop":false,"width":1280,"height":1024,"brightness":1,"app_name":"RTEngine"},"Input":{},"Camera":{},"Imgui":{},"Renderer3D":{}}
+{"Window":{"fullscreen":false,"resizable":true,"borderless":true,"full_desktop":false,"width":1280,"height":1024,"brightness":1,"app_name":"RTEngine"},"Input":{},"Camera":{},"Imgui":{},"Renderer3D":{}}

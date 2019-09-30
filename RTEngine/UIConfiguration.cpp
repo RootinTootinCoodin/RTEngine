@@ -166,7 +166,10 @@ void UIConfiguration::Draw()
 			// GPU stuff
 		}
 
-
+		if(ImGui::Button("SaveConfig"))
+		{
+			App->SaveConfig();
+		}
 	}
 	ImGui::End();
 }
