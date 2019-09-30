@@ -28,9 +28,22 @@ void UIConfiguration::Draw()
 			ImGui::SliderInt("Framerate limit", &App->fps_limit_display, 0, 240);
 			ImGui::Text("Current limit: ");
 			ImGui::SameLine();
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", App->fps_limit);
+			if (App->fps_limit_display > 0)
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", App->fps_limit_display);
+			else
+			{
+				App->window->UpdateRefreshRate();
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", App->window->refresh_rate);
+			}
 			ImGui::SameLine();
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "FPS");
+			if (App->window->refresh_rate < App->fps_limit_display)
+			{
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "!!!");
+				if (ImGui::IsItemHovered())
+					ImGui::SetTooltip("The current limit is above the display's refresh rate.\nHaving VSync on will limit the framerate to the display's refresh rate.");
+			}
 			char fpstitle[25];
 			sprintf_s(fpstitle, 25, "Framerate (Avg): %.1f", App->GetAvgFPS());
 			char lastframefps[25];
@@ -56,6 +69,10 @@ void UIConfiguration::Draw()
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", App->window->refresh_rate);
 			ImGui::SameLine();
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Hz");
+			ImGui::SameLine();
+			ImGui::Text("Display index: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", SDL_GetWindowDisplayIndex(App->window->window));
 
 			if (ImGui::Checkbox("Fullscreen", &App->window->fullscreen))
 			{
