@@ -53,7 +53,7 @@ public:
 		return true; 
 	}
 
-	virtual void Save()
+	virtual void Save(JSON_Object* config)
 	{
 		return;
 	}

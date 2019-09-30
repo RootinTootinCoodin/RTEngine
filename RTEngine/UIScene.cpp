@@ -20,8 +20,8 @@ void UIScene::Draw()
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar;
 	if (ImGui::Begin(name.c_str(), &show_window, window_flags))
 	{
-		ImGui::SetCursorPos((ImGui::GetWindowSize() - ImVec2(SCREEN_WIDTH, SCREEN_HEIGHT)) * 0.5f);
-		ImGui::Image((ImTextureID)App->renderer3D->framebuffer_texture, ImVec2(SCREEN_WIDTH, SCREEN_HEIGHT));
+		ImGui::SetCursorPos((ImGui::GetWindowSize() - ImVec2(App->window->width, App->window->height)) * 0.5f);
+		ImGui::Image((ImTextureID)App->renderer3D->framebuffer_texture, ImVec2(App->window->width, App->window->height));
 	}
 	ImGui::End();
 

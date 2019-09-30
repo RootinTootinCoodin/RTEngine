@@ -63,6 +63,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	void SaveConfig();
+
 private:
 
 	void AddModule(Module* mod);

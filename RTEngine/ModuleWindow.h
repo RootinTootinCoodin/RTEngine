@@ -18,6 +18,8 @@ public:
 	bool Init(JSON_Object* config);
 	bool CleanUp();
 
+	void Save(JSON_Object* config);
+
 	void SetTitle(const char* title);
 	void UpdateSize();
 	void UpdateWindowMode();

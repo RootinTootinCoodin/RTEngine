@@ -198,6 +198,7 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
+	SaveConfig();
 	std::list<Module*>::iterator item = list_modules.begin();
 
 	while(item != list_modules.end() && ret == true)
@@ -206,6 +207,34 @@ bool Application::CleanUp()
 		item++;
 	}
 	return ret;
+}
+
+void Application::SaveConfig()
+{
+	JSON_Value* config_value;
+
+	config_value = json_value_init_object();
+	if (config_value == NULL)
+	{
+		LOG("Error opening config file");
+	}
+	else
+	{
+		LOG("Sucess opening config file");
+	}
+
+
+	std::list<Module*>::iterator item = list_modules.begin();
+
+	while (item != list_modules.end())
+	{
+		JSON_Value* config_module = json_value_init_object();
+		(*item)->Save(json_object(config_module));
+		json_object_set_value(json_object(config_value), (*item)->name.c_str(), config_module);
+		item++;
+	}
+
+	json_serialize_to_file(config_value, "config_file.json");
 }
 
 void Application::AddModule(Module* mod)
