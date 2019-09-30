@@ -65,6 +65,7 @@ void UITests::Draw()
 			ImGui::Text("Integer generated: %i", result2);
 
 		}
-		ImGui::End();
+
 	}
+	ImGui::End();
 }

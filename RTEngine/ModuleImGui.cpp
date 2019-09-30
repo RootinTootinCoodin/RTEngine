@@ -13,6 +13,7 @@
 
 ModuleImGui::ModuleImGui(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	name = "Imgui";
 }
 
 
@@ -20,7 +21,7 @@ ModuleImGui::~ModuleImGui()
 {
 }
 
-bool ModuleImGui::Init()
+bool ModuleImGui::Init(JSON_Object* config)
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
