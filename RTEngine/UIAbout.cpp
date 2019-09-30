@@ -5,6 +5,7 @@
 UIAbout::UIAbout(Application * app) : UIElement(app)
 {
 	name = "About";
+	show_window = false;
 
 	//JSON_Value *file = json_parse_file("About.json");
 	//text = json_object_get_string(json_object(file), "text");

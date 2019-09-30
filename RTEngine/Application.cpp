@@ -52,6 +52,11 @@ float Application::GetCurrentMS()
 	return current_ms;
 }
 
+float Application::GetAvgFPS()
+{
+	return avg_fps;
+}
+
 bool Application::Init()
 {
 	bool ret = true;
@@ -85,8 +90,20 @@ void Application::PrepareUpdate()
 	current_ms = (float)ms_timer.Read();
 	dt = current_ms / 1000.0f;
 	current_fps = 1000.0f / current_ms;
-	ms_timer.Start();
 
+	if (fps_limit_display == 0)
+		fps_limit = window->refresh_rate;
+	else
+		fps_limit = fps_limit_display;
+
+	float expected_ms = 1000 / (float)fps_limit;
+
+	if (current_ms < expected_ms)
+	{
+		SDL_Delay(expected_ms - current_ms);
+	}
+
+	// Store current framedata
 	fps_arr[arr_iterator] = current_fps;
 	ms_arr[arr_iterator] = current_ms;
 
@@ -95,6 +112,16 @@ void Application::PrepareUpdate()
 
 	else
 	arr_iterator--;
+	// -------
+
+	avg_fps = (avg_fps + current_fps) / 2;
+
+	if (avg_fps > 2000000)
+	{
+		avg_fps = 0;
+	}
+	// Start ms timer
+	ms_timer.Start();
 }
 
 // ---------------------------------------------

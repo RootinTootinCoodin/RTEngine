@@ -32,6 +32,8 @@ public:
 
 	float fps_arr[60];
 	float ms_arr[60];
+	int fps_limit_display = 0;
+	int fps_limit = 60;
 
 private:
 
@@ -39,6 +41,7 @@ private:
 	float	dt;
 	float	current_fps;
 	float	current_ms;
+	float	avg_fps = 0;
 	std::list<Module*> list_modules;
 	int		arr_iterator = 59;
 
@@ -51,6 +54,7 @@ public:
 
 	float GetCurrentFPS();
 	float GetCurrentMS();
+	float GetAvgFPS();
 
 	bool Init();
 	update_status Update();

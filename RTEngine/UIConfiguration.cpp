@@ -20,10 +20,14 @@ void UIConfiguration::Draw()
 	{
 		if (ImGui::CollapsingHeader("Application")) // 1 - Application
 		{
-			/*if (ImGui::InputText("App Name", &App->window->title.data, IM_ARRAYSIZE(&App->window->title.data)))
+			/*if (ImGui::InputText("App Name", App->window->title.data, IM_ARRAYSIZE(App->window->title.data)))
 				App->window->UpdateTitle();*/
+
+			ImGui::SliderInt("Framerate limit", &App->fps_limit_display, 0, 240);
 			char title[25];
-			sprintf_s(title, 25, "Framerate %.1f", App->GetCurrentFPS());
+			sprintf_s(title, 25, "Framerate %.1f", App->GetAvgFPS());
+			char avgfps[25];
+			sprintf_s(avgfps, 25, "Average Framerate %.1f", App->GetAvgFPS());
 			ImGui::PlotHistogram("", App->fps_arr, IM_ARRAYSIZE(App->fps_arr), 0, title, 0.0f, 180.0f, ImVec2(310, 100));
 
 			sprintf_s(title, 25, "Miliseconds %f", App->GetCurrentMS());
