@@ -34,6 +34,7 @@ public:
 
 	uint framebuffer = 0;
 	uint framebuffer_texture = 0;
+	bool vsync = false;
 
 };
 

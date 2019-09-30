@@ -20,18 +20,25 @@ void UIConfiguration::Draw()
 	{
 		if (ImGui::CollapsingHeader("Application")) // 1 - Application
 		{
-			/*if (ImGui::InputText("App Name", App->window->title.data, IM_ARRAYSIZE(App->window->title.data)))
-				App->window->UpdateTitle();*/
+			if (ImGui::InputText("App Name", App->window->title, 25, ImGuiInputTextFlags_EnterReturnsTrue))
+				App->window->UpdateTitle();
+
+			ImGui::InputText("Organization Name", App->organization, 25, ImGuiInputTextFlags_EnterReturnsTrue);
 
 			ImGui::SliderInt("Framerate limit", &App->fps_limit_display, 0, 240);
-			char title[25];
-			sprintf_s(title, 25, "Framerate %.1f", App->GetAvgFPS());
-			char avgfps[25];
-			sprintf_s(avgfps, 25, "Average Framerate %.1f", App->GetAvgFPS());
-			ImGui::PlotHistogram("", App->fps_arr, IM_ARRAYSIZE(App->fps_arr), 0, title, 0.0f, 180.0f, ImVec2(310, 100));
+			ImGui::Text("Current limit: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", App->fps_limit);
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "FPS");
+			char fpstitle[25];
+			sprintf_s(fpstitle, 25, "Framerate (Avg): %.1f", App->GetAvgFPS());
+			char lastframefps[25];
+			sprintf_s(lastframefps, 25, "Last Frame %.1f", App->GetCurrentFPS());
+			ImGui::PlotHistogram(lastframefps, App->fps_arr.data(), App->fps_arr.size(), 0, fpstitle, 0.0f, 180.0f, ImVec2(310, 100));
 
-			sprintf_s(title, 25, "Miliseconds %f", App->GetCurrentMS());
-			ImGui::PlotHistogram("", App->ms_arr, IM_ARRAYSIZE(App->ms_arr), 0, title, 4.0f, 120.0f, ImVec2(310, 100));
+			sprintf_s(fpstitle, 25, "Miliseconds %f", App->GetCurrentMS());
+			ImGui::PlotHistogram("", App->ms_arr.data(), App->ms_arr.size(), 0, fpstitle, 4.0f, 120.0f, ImVec2(310, 100));
 		}
 
 		if (ImGui::CollapsingHeader("Window")) // 2 - Window
@@ -46,7 +53,9 @@ void UIConfiguration::Draw()
 			ImGui::Text("Display refresh rate: ");
 			ImGui::SameLine();
 			App->window->UpdateRefreshRate();
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", App->window->refresh_rate, "Hz");
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", App->window->refresh_rate);
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Hz");
 
 			if (ImGui::Checkbox("Fullscreen", &App->window->fullscreen))
 			{
@@ -57,6 +66,8 @@ void UIConfiguration::Draw()
 			{
 				App->window->UpdateWindowMode();
 			}
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Only applies after application restart.");
 			ImGui::SameLine();
 			if (ImGui::Checkbox("Borderless", &App->window->borderless))
 			{

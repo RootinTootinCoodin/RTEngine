@@ -41,7 +41,7 @@ public:
 	int height = 1024;
 	float brightness = 1.0f;
 	int refresh_rate = 60;
-	std::string title = "RTEngine";
+	char title[25] = "RTEngine";
 };
 
 #endif // __MODULE_WINDOW_H__

@@ -131,5 +131,5 @@ void ModuleWindow::UpdateRefreshRate()
 
 void ModuleWindow::UpdateTitle()
 {
-	/*SetTitle(&title.data);*/
+	SetTitle(title);
 }

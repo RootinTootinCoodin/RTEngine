@@ -30,14 +30,16 @@ public:
 	ModuleImGui* ImGui;
 	ModuleCamera3D* camera;
 
-	float fps_arr[60];
-	float ms_arr[60];
+	std::vector<float> fps_arr;
+	std::vector<float> ms_arr;
 	int fps_limit_display = 0;
 	int fps_limit = 60;
+	char organization[64] = "Akatsuki";
 
 private:
 
 	Timer	ms_timer;
+	Timer	cap_timer;
 	float	dt;
 	float	current_fps;
 	float	current_ms;

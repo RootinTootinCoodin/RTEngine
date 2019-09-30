@@ -27,14 +27,13 @@ bool ModuleImGui::Init()
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-	
+
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL2_Init();
-
 
 	scene = new UIScene(App);
 	tests = new UITests(App);
@@ -61,6 +60,12 @@ update_status ModuleImGui::PreUpdate(float dt)
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
+
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+	io.WantCaptureKeyboard = true;
+	io.WantCaptureMouse = true;
+	io.WantTextInput = true;
 
 	CreateDockspace();
 

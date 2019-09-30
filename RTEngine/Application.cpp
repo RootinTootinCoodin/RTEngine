@@ -81,52 +81,69 @@ bool Application::Init()
 	}
 	
 	ms_timer.Start();
+	cap_timer.Start();
 	return ret;
 }
 
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	current_ms = (float)ms_timer.Read();
-	dt = current_ms / 1000.0f;
-	current_fps = 1000.0f / current_ms;
+	// Start timers
+	ms_timer.Start();
+	cap_timer.Start();
+}
 
+// ---------------------------------------------
+void Application::FinishUpdate()
+{
+	// Read timer
+	current_ms = ms_timer.Read();
+	// -------
+
+	dt = current_ms / 1000.0f;
+
+	// Set limit to refresh rate if limit is 0
 	if (fps_limit_display == 0)
+	{
+		window->UpdateRefreshRate();
 		fps_limit = window->refresh_rate;
+	}
+
 	else
 		fps_limit = fps_limit_display;
+	// -------
 
+	// Delay frame
 	float expected_ms = 1000 / (float)fps_limit;
 
 	if (current_ms < expected_ms)
 	{
 		SDL_Delay(expected_ms - current_ms);
 	}
-
-	// Store current framedata
-	fps_arr[arr_iterator] = current_fps;
-	ms_arr[arr_iterator] = current_ms;
-
-	if (arr_iterator <= 0)
-		arr_iterator = 59;
-
-	else
-	arr_iterator--;
 	// -------
 
+	current_ms = cap_timer.Read();
+
+	current_fps = 1000.0f / current_ms;
+	
+	// Store current framedata
+	fps_arr.push_back(current_fps);
+	if (fps_arr.size() > 60)
+		fps_arr.erase(fps_arr.begin());
+
+	ms_arr.push_back(current_ms);
+	if (ms_arr.size() > 60)
+		ms_arr.erase(ms_arr.begin());
+	// -------
+
+	// Calculate Average FPS
 	avg_fps = (avg_fps + current_fps) / 2;
 
 	if (avg_fps > 2000000)
 	{
 		avg_fps = 0;
 	}
-	// Start ms timer
-	ms_timer.Start();
-}
-
-// ---------------------------------------------
-void Application::FinishUpdate()
-{
+	// -------
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
