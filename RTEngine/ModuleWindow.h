@@ -26,6 +26,7 @@ public:
 	void UpdateBrightness();
 	void UpdateRefreshRate();
 	void UpdateTitle();
+	void UpdateGamma();
 
 public:
 	//The window we'll be rendering to
@@ -44,6 +45,9 @@ public:
 	float brightness = 1.0f;
 	int refresh_rate = 60;
 	char title[25] = "RTEngine";
+	Uint16 r = 255;
+	Uint16 g = 255;
+	Uint16 b = 255;
 };
 
 #endif // __MODULE_WINDOW_H__

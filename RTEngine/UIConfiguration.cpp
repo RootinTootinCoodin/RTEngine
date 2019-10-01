@@ -58,6 +58,15 @@ void UIConfiguration::Draw()
 		{
 			if (ImGui::SliderFloat("Brightness", &App->window->brightness, 0.0f, 1.0f))
 				App->window->UpdateBrightness();
+			ImGui::Text("Gamma:");
+
+			if (ImGui::SliderInt("Red", (int*)App->window->r, 0, 255))
+				App->window->UpdateGamma();
+			if (ImGui::SliderInt("Green", (int*)App->window->g, 0, 255))
+				App->window->UpdateGamma();
+			if (ImGui::SliderInt("Blue", (int*)App->window->b, 0, 255))
+				App->window->UpdateGamma();
+
 			if (ImGui::DragInt("Width", &App->window->width))
 				App->window->UpdateSize();
 			if (ImGui::DragInt("Height", &App->window->height))
@@ -162,6 +171,59 @@ void UIConfiguration::Draw()
 				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "SSE4.2 ");
 
 			ImGui::Separator();
+
+			ImGui::Text("GPU Vendor: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), (char*)glGetString(GL_VENDOR));
+
+			ImGui::Text("GPU Model: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), (char*)glGetString(GL_RENDERER));
+
+			GLint dedicated_mem = 0;
+			glGetIntegerv(0x9047,
+				&dedicated_mem);
+
+			GLint total_mem = 0;
+			glGetIntegerv(0x9048,
+				&total_mem);
+
+			GLint curr_avail_mem = 0;
+			glGetIntegerv(0x9049,
+				&curr_avail_mem);
+
+			GLint eviction_count = 0;
+			glGetIntegerv(0x904A,
+				&eviction_count);
+
+			GLint evicted_mem = 0;
+			glGetIntegerv(0x904B,
+				&evicted_mem);
+
+			dedicated_mem /= 1000;
+			total_mem /= 1000;
+			curr_avail_mem /= 1000;
+			evicted_mem /= 1000;
+
+			ImGui::Text("Total Available VRAM: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%dMb", total_mem);
+
+			ImGui::Text("Current Available VRAM: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%dMb", curr_avail_mem);
+
+			ImGui::Text("Dedicated VRAM: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%dMb", dedicated_mem);
+
+			ImGui::Text("Eviction Count: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%d", eviction_count);
+
+			ImGui::Text("Evicted VRAM: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%dMb", evicted_mem);
 
 			// GPU stuff
 		}

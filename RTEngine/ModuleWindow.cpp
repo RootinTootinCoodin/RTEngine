@@ -62,6 +62,7 @@ bool ModuleWindow::Init(JSON_Object* config)
 		height = json_object_get_number(config, "height");
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 
+
 		if(window == NULL)
 		{
 			LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -151,4 +152,9 @@ void ModuleWindow::UpdateRefreshRate()
 void ModuleWindow::UpdateTitle()
 {
 	SetTitle(title);
+}
+
+void ModuleWindow::UpdateGamma()
+{
+	SDL_SetWindowGammaRamp(window, &r, &g, &b);
 }
