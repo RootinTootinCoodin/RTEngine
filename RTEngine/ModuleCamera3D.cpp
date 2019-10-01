@@ -105,10 +105,10 @@ update_status ModuleCamera3D::Update(float dt)
 	}
 
 	// Recalculate matrix -------------
-	Last_position.y += 3;
-	Look(Last_position, Camera_view.translation(), true);
+
+	Look(Position, Camera_view.translation(), true);
 	CalculateViewMatrix();
-	App->camera->Last_position = Camera_view.translation();
+
 
 	return UPDATE_CONTINUE;
 }

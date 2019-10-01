@@ -119,12 +119,6 @@ update_status ModuleImGui::PreUpdate(float dt)
 			(*item)->Draw();
 	}
 
-	//ImGui::Begin("Test");
-	//ImGui::BeginMenu("SADGSD");
-	//ImGui::EndMenu();
-	//ImGui::End();
-
-
 
 	if (show_demo_window)
 		ImGui::ShowDemoWindow();

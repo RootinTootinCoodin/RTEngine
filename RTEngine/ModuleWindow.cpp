@@ -17,6 +17,7 @@ ModuleWindow::~ModuleWindow()
 // Called before render is available
 bool ModuleWindow::Init(JSON_Object* config)
 {
+	title = json_object_get_string(config, "app_name");
 	LOG("Init SDL window & surface");
 	bool ret = true;
 
@@ -60,7 +61,7 @@ bool ModuleWindow::Init(JSON_Object* config)
 
 		width = json_object_get_number(config, "width");
 		height = json_object_get_number(config, "height");
-		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 
 		if(window == NULL)
 		{
@@ -102,12 +103,12 @@ void ModuleWindow::Save(JSON_Object * config)
 	json_object_set_number(config, "width", width);
 	json_object_set_number(config, "height", height);
 	json_object_set_number(config, "brightness", brightness);
-	json_object_set_string(config, "app_name", title);
+	json_object_set_string(config, "app_name", title.c_str());
 }
 
-void ModuleWindow::SetTitle(const char* title)
+void ModuleWindow::SetTitle(std::string title)
 {
-	SDL_SetWindowTitle(window, title);
+	SDL_SetWindowTitle(window, title.c_str());
 }
 
 void ModuleWindow::UpdateSize()
@@ -148,7 +149,8 @@ void ModuleWindow::UpdateRefreshRate()
 	refresh_rate = mode.refresh_rate;
 }
 
-void ModuleWindow::UpdateTitle()
+void ModuleWindow::UpdateTitle(std::vector<char> _title)
 {
+	title = _title.data();
 	SetTitle(title);
 }

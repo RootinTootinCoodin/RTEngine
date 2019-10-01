@@ -30,7 +30,7 @@ public:
 	
 	vec3 X, Y, Z, Position, Reference;
 	mat4x4 Camera_view;
-	vec3 Last_position;
+
 private:
 
 	mat4x4 ViewMatrix, ViewMatrixInverse;

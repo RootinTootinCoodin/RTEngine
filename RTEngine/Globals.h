@@ -33,6 +33,6 @@ enum update_status
 #define SCREEN_SIZE 1
 
 #define VSYNC true
-#define TITLE "RTEngine"
+
 
 #endif
