@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "SDL/include/SDL.h"
+#include <vector>
 
 class Application;
 
@@ -20,13 +21,13 @@ public:
 
 	void Save(JSON_Object* config);
 
-	void SetTitle(const char* title);
+	void SetTitle(std::string title);
 	void UpdateSize();
 	void UpdateWindowMode();
 	void UpdateBrightness();
 	void UpdateRefreshRate();
-	void UpdateTitle();
 	void UpdateGamma();
+	void UpdateTitle(std::vector<char> title);
 
 public:
 	//The window we'll be rendering to
@@ -44,10 +45,10 @@ public:
 	int height = 1024;
 	float brightness = 1.0f;
 	int refresh_rate = 60;
-	char title[25] = "RTEngine";
-	Uint16 r = 255;
-	Uint16 g = 255;
-	Uint16 b = 255;
+	int r = 255;
+	int g = 255;
+	int b = 255;
+	std::string title = "RTEngine";
 };
 
 #endif // __MODULE_WINDOW_H__

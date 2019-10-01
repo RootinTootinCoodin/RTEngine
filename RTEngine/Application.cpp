@@ -76,6 +76,9 @@ bool Application::Init()
 		
 	config = json_value_get_object(config_value);
 
+	JSON_Object* app_config = json_object_get_object(config, "Application");
+	organization = json_object_get_string(app_config, "organization_name");
+	//json
 	// Call Init() in all modules
 	std::list<Module*>::iterator item = list_modules.begin();
 
@@ -223,12 +226,17 @@ void Application::SaveConfig()
 		LOG("Sucess opening config file");
 	}
 
+	JSON_Value* config_module = json_value_init_object();
+	JSON_Object* app_object = json_object(config_module);
+	json_object_set_string(app_object, "organization_name", organization.c_str());
+	json_object_set_number(app_object, "fps_limit", fps_limit_display);
+	json_object_set_value(json_object(config_value), "Application", config_module);
 
 	std::list<Module*>::iterator item = list_modules.begin();
 
-	while (item != list_modules.end())
+	while (item != list_modules.end()) 
 	{
-		JSON_Value* config_module = json_value_init_object();
+		config_module = json_value_init_object();
 		(*item)->Save(json_object(config_module));
 		json_object_set_value(json_object(config_value), (*item)->name.c_str(), config_module);
 		item++;

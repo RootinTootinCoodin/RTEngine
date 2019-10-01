@@ -34,7 +34,7 @@ public:
 	std::vector<float> fps_arr;
 	std::vector<float> ms_arr;
 	int fps_limit_display = 0;
-	char organization[64] = "Akatsuki";
+	std::string organization = "Akatsuki";
 
 private:
 

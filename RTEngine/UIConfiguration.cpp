@@ -20,10 +20,13 @@ void UIConfiguration::Draw()
 	{
 		if (ImGui::CollapsingHeader("Application")) // 1 - Application
 		{
-			if (ImGui::InputText("App Name", App->window->title, 25, ImGuiInputTextFlags_EnterReturnsTrue))
-				App->window->UpdateTitle();
+			static std::vector<char> app_title(App->window->title.c_str(), App->window->title.c_str() + App->window->title.size() + 1);
+			if (ImGui::InputText("App Name",app_title.data(), 25))
+				App->window->UpdateTitle(app_title);
 
-			ImGui::InputText("Organization Name", App->organization, 25, ImGuiInputTextFlags_EnterReturnsTrue);
+			static std::vector<char> organization_name(App->organization.c_str(), App->organization.c_str() + App->organization.size() + 1);
+			if (ImGui::InputText("Organization Name", organization_name.data(), 25))
+				App->organization = organization_name.data();
 
 			ImGui::SliderInt("Framerate limit", &App->fps_limit_display, 0, 240);
 			ImGui::Text("Current limit: ");

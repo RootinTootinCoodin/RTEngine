@@ -20,8 +20,6 @@ public:
 
 	void OnResize(int width, int height);
 
-
-
 	void BindFramebuffer();
 	void UnbindFramebuffer();
 private:
