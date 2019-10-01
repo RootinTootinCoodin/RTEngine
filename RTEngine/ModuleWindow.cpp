@@ -158,5 +158,6 @@ void ModuleWindow::UpdateTitle(std::vector<char> _title)
 
 void ModuleWindow::UpdateGamma()
 {
-	SDL_SetWindowGammaRamp(window, &r, &g, &b);
+/*
+	SDL_SetWindowGammaRamp(window, &r, &g, &b);*/
 }

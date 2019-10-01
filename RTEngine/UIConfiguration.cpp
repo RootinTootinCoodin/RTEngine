@@ -63,11 +63,11 @@ void UIConfiguration::Draw()
 				App->window->UpdateBrightness();
 			ImGui::Text("Gamma:");
 
-			if (ImGui::SliderInt("Red", (int*)App->window->r, 0, 255))
+			if (ImGui::SliderInt("Red", &App->window->r, 0, 255))
 				App->window->UpdateGamma();
-			if (ImGui::SliderInt("Green", (int*)App->window->g, 0, 255))
+			if (ImGui::SliderInt("Green", &App->window->g, 0, 255))
 				App->window->UpdateGamma();
-			if (ImGui::SliderInt("Blue", (int*)App->window->b, 0, 255))
+			if (ImGui::SliderInt("Blue", &App->window->b, 0, 255))
 				App->window->UpdateGamma();
 
 			if (ImGui::DragInt("Width", &App->window->width))
