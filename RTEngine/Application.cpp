@@ -146,11 +146,11 @@ void Application::FinishUpdate()
 	
 	// Store current framedata
 	fps_arr.push_back(current_fps);
-	if (fps_arr.size() > 60)
+	if (fps_arr.size() > 400)
 		fps_arr.erase(fps_arr.begin());
 
 	ms_arr.push_back(current_ms);
-	if (ms_arr.size() > 60)
+	if (ms_arr.size() > 400)
 		ms_arr.erase(ms_arr.begin());
 	// -------
 

@@ -10,5 +10,7 @@ public:
 	~UIConfiguration();
 
 	void Draw();
+
+	int display_fps = 60;
 };
 

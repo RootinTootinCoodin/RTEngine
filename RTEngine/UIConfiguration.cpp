@@ -51,10 +51,13 @@ void UIConfiguration::Draw()
 			sprintf_s(fpstitle, 25, "Framerate (Avg): %.1f", App->GetAvgFPS());
 			char lastframefps[25];
 			sprintf_s(lastframefps, 25, "Last Frame %.1f", App->GetCurrentFPS());
-			ImGui::PlotHistogram(lastframefps, App->fps_arr.data(), App->fps_arr.size(), 0, fpstitle, 0.0f, 180.0f, ImVec2(310, 100));
+
+
+			ImGui::SliderInt("Sample count", &display_fps, 1, 400);
+			ImGui::PlotHistogram(lastframefps, App->fps_arr.data(), display_fps, 0, fpstitle, 0.0f, 180.0f, ImVec2(310, 100));
 
 			sprintf_s(fpstitle, 25, "Miliseconds %f", App->GetCurrentMS());
-			ImGui::PlotHistogram("", App->ms_arr.data(), App->ms_arr.size(), 0, fpstitle, 4.0f, 120.0f, ImVec2(310, 100));
+			ImGui::PlotHistogram("", App->ms_arr.data(), display_fps, 0, fpstitle, 4.0f, 120.0f, ImVec2(310, 100));
 		}
 
 		if (ImGui::CollapsingHeader("Window")) // 2 - Window
