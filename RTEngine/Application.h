@@ -3,6 +3,7 @@
 
 
 #include <list>
+#include <queue>
 
 
 #include "Globals.h"
@@ -37,6 +38,7 @@ public:
 	std::vector<float> ms_arr;
 	int fps_limit_display = 0;
 	std::string organization = "Akatsuki";
+	std::list<const char*> logs;
 
 private:
 
@@ -66,6 +68,8 @@ public:
 	bool CleanUp();
 
 	void SaveConfig();
+
+	void app_log(const char* string, ...);
 
 private:
 

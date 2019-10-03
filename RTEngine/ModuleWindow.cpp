@@ -18,12 +18,12 @@ ModuleWindow::~ModuleWindow()
 bool ModuleWindow::Init(JSON_Object* config)
 {
 	title = json_object_get_string(config, "app_name");
-	LOG("Init SDL window & surface");
+	App->app_log("Init SDL window & surface");
 	bool ret = true;
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		LOG("SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
+		App->app_log("SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 	else
@@ -66,7 +66,7 @@ bool ModuleWindow::Init(JSON_Object* config)
 
 		if(window == NULL)
 		{
-			LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+			App->app_log("Window could not be created! SDL_Error: %s\n", SDL_GetError());
 			ret = false;
 		}
 		else
@@ -82,7 +82,7 @@ bool ModuleWindow::Init(JSON_Object* config)
 // Called before quitting
 bool ModuleWindow::CleanUp()
 {
-	LOG("Destroying SDL window and quitting all SDL systems");
+	App->app_log("Destroying SDL window and quitting all SDL systems");
 
 	//Destroy window
 	if(window != NULL)
@@ -150,9 +150,9 @@ void ModuleWindow::UpdateRefreshRate()
 	refresh_rate = mode.refresh_rate;
 }
 
-void ModuleWindow::UpdateTitle(std::vector<char> _title)
+void ModuleWindow::UpdateTitle(char* _title)
 {
-	title = _title.data();
+	title = _title;
 	SetTitle(title);
 }
 

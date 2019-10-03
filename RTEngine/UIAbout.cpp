@@ -16,11 +16,11 @@ UIAbout::UIAbout(Application * app) : UIElement(app)
 	//config_value = json_parse_file_with_comments("user_data.json");
 	//if (config_value == NULL)
 	//{
-	//	LOG("Error opening json file");
+	//	App->app_log("Error opening json file");
 	//}
 	//else
 	//{
-	//	LOG("Sucess opening json file");
+	//	App->app_log("Sucess opening json file");
 	//}
 	//	
 

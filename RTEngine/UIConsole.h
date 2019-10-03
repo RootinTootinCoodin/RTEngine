@@ -10,5 +10,10 @@ public:
 	~UIConsole();
 
 	void Draw();
+
+private:
+	void DrawConsoleItems();
+public:
+
 };
 

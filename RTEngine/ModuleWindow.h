@@ -27,7 +27,7 @@ public:
 	void UpdateBrightness();
 	void UpdateRefreshRate();
 	void UpdateGamma();
-	void UpdateTitle(std::vector<char> title);
+	void UpdateTitle(char* name);
 
 public:
 	//The window we'll be rendering to
