@@ -13,6 +13,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleImGui.h"
 #include "ModuleCamera3D.h"
+#include "ModuleScene.h"
 
 #include "GL/glew.h"
 #include "ImGui/imgui.h"
@@ -30,6 +31,7 @@ public:
 	ModuleRenderer3D* renderer3D;
 	ModuleImGui* ImGui;
 	ModuleCamera3D* camera;
+	ModuleScene* scene;
 
 	std::vector<float> fps_arr;
 	std::vector<float> ms_arr;

@@ -91,8 +91,9 @@ bool ModuleRenderer3D::Init(JSON_Object* config)
 		
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
 
-		glEnable(GL_LIGHTING);
+		//glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 	}
 
@@ -122,9 +123,16 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
+update_status ModuleRenderer3D::Update(float dt)
+{
+
+	return UPDATE_CONTINUE;
+}
+
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	App->scene->Draw();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "UIElement.h"
 
 #define MAX_KEYS 300
 
@@ -119,6 +120,8 @@ update_status ModuleInput::PreUpdate(float dt)
 	if(quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
 		return UPDATE_STOP;
 
+	GetHotkeys();
+
 	return UPDATE_CONTINUE;
 }
 
@@ -128,4 +131,8 @@ bool ModuleInput::CleanUp()
 	LOG("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
+}
+
+void ModuleInput::GetHotkeys()
+{
 }
