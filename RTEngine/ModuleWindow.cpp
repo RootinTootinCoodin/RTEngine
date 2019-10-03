@@ -150,9 +150,9 @@ void ModuleWindow::UpdateRefreshRate()
 	refresh_rate = mode.refresh_rate;
 }
 
-void ModuleWindow::UpdateTitle(std::vector<char> _title)
+void ModuleWindow::UpdateTitle(char* _title)
 {
-	title = _title.data();
+	title = _title;
 	SetTitle(title);
 }
 
