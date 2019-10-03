@@ -29,23 +29,23 @@ int main(int argc, char ** argv)
 		{
 		case MAIN_CREATION:
 
-			LOG("-------------- Application Creation --------------");
 			App = new Application();
+			App->app_log("-------------- Application Creation --------------");
 			state = MAIN_START;
 			break;
 
 		case MAIN_START:
 
-			LOG("-------------- Application Init --------------");
+			App->app_log("-------------- Application Init --------------");
 			if (App->Init() == false)
 			{
-				LOG("Application Init exits with ERROR");
+				App->app_log("Application Init exits with ERROR");
 				state = MAIN_EXIT;
 			}
 			else
 			{
 				state = MAIN_UPDATE;
-				LOG("-------------- Application Update --------------");
+				App->app_log("-------------- Application Update --------------");
 			}
 
 			break;
@@ -56,7 +56,7 @@ int main(int argc, char ** argv)
 
 			if (update_return == UPDATE_ERROR)
 			{
-				LOG("Application Update exits with ERROR");
+				App->app_log("Application Update exits with ERROR");
 				state = MAIN_EXIT;
 			}
 

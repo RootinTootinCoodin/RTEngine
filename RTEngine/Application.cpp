@@ -67,11 +67,11 @@ bool Application::Init()
 	config_value = json_parse_file_with_comments("config_file.json");
 	if (config_value == NULL)
 	{
-		LOG("Error opening config file");
+		app_log("Error opening config file");
 	}
 	else
 	{
-		LOG("Sucess opening config file");
+		app_log("Sucess opening config file");
 	}
 		
 	config = json_value_get_object(config_value);
@@ -89,7 +89,7 @@ bool Application::Init()
 	}
 
 	// After all Init calls we call Start() in all modules
-	LOG("Application Start --------------");
+	app_log("Application Start --------------");
 	item = list_modules.begin();
 
 	while(item != list_modules.end() && ret == true)
@@ -167,6 +167,7 @@ void Application::FinishUpdate()
 // Call PreUpdate, Update and PostUpdate on all modules
 update_status Application::Update()
 {
+	app_log("yeeet");
 	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
 	
@@ -219,11 +220,11 @@ void Application::SaveConfig()
 	config_value = json_value_init_object();
 	if (config_value == NULL)
 	{
-		LOG("Error opening config file");
+		app_log("Error opening config file");
 	}
 	else
 	{
-		LOG("Sucess opening config file");
+		app_log("Sucess opening config file");
 	}
 
 	JSON_Value* config_module = json_value_init_object();
@@ -243,6 +244,12 @@ void Application::SaveConfig()
 	}
 
 	json_serialize_to_file(config_value, "config_file.json");
+}
+
+void Application::app_log(const char * string, ...)
+{
+	logs.push_back(string);
+	LOG(string);
 }
 
 void Application::AddModule(Module* mod)
