@@ -23,6 +23,14 @@ public:
 
 	void BindFramebuffer();
 	void UnbindFramebuffer();
+
+	void UpdateFaceCullSetting(int state);
+	void SetFaceCull(bool state);
+	void SetDepthTest(bool state);
+	void SetLighting(bool state);
+	void SetColorMaterial(bool state);
+	void SetTexture2D(bool state);
+	void SetWireframe(bool state);
 private:
 	void GenerateFramebuffer();
 public:
@@ -33,8 +41,14 @@ public:
 
 	uint framebuffer = 0;
 	uint framebuffer_texture = 0;
+	uint cull_mode = 0;
 	bool vsync = false;
-
+	bool cullface_enabled = true;
+	bool depth_test_enabled = true;
+	bool lighting_enabled = false;
+	bool color_material_enabled = true;
+	bool texture2D_enabled = true;
+	bool wireframe_enabled = false;
 };
 
 #endif // __MODULE_RENDERER_H__

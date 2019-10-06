@@ -179,6 +179,137 @@ void ModuleRenderer3D::UnbindFramebuffer()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void ModuleRenderer3D::UpdateFaceCullSetting(int state)
+{
+	switch (state)
+	{
+		case 0:
+			glCullFace(GL_BACK);
+			cull_mode = 0;
+			break;
+		case 1:
+			glCullFace(GL_FRONT);
+			cull_mode = 1;
+			break;
+		case 2:
+			glCullFace(GL_FRONT_AND_BACK);
+			cull_mode = 2;
+			break;
+	}
+}
+
+void ModuleRenderer3D::SetFaceCull(bool state)
+{
+	if (state)
+	{
+		glEnable(GL_CULL_FACE);
+		cullface_enabled = true;
+	}
+
+	else
+	{
+		glDisable(GL_CULL_FACE);
+		cullface_enabled = false;
+	}
+}
+
+void ModuleRenderer3D::SetDepthTest(bool state)
+{
+	if (state)
+	{
+		glEnable(GL_DEPTH_TEST);
+		depth_test_enabled = true;
+	}
+
+	else
+	{
+		glDisable(GL_DEPTH_TEST);
+		depth_test_enabled = false;
+	}
+}
+
+void ModuleRenderer3D::SetLighting(bool state)
+{
+	if (state)
+	{
+		glEnable(GL_LIGHTING);
+		lighting_enabled = true;
+	}
+
+	else
+	{
+		glDisable(GL_LIGHTING);
+		lighting_enabled = false;
+	}
+}
+
+void ModuleRenderer3D::SetColorMaterial(bool state)
+{
+	if (state)
+	{
+		glEnable(GL_COLOR_MATERIAL);
+		color_material_enabled = true;
+	}
+
+	else
+	{
+		glDisable(GL_COLOR_MATERIAL);
+		color_material_enabled = false;
+	}
+}
+
+void ModuleRenderer3D::SetTexture2D(bool state)
+{
+	if (state)
+	{
+		glEnable(GL_TEXTURE_2D);
+		texture2D_enabled = true;
+	}
+
+	else
+	{
+		glDisable(GL_TEXTURE_2D);
+		texture2D_enabled = false;
+	}
+}
+
+void ModuleRenderer3D::SetWireframe(bool state)
+{
+	if (state)
+	{
+		switch (cull_mode)
+		{
+			case 0:
+				glPolygonMode(GL_BACK, GL_LINE);
+				break;
+			case 1:
+				glPolygonMode(GL_FRONT, GL_LINE);
+				break;
+			case 2:
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+				break;
+		}
+		wireframe_enabled = true;
+	}
+
+	else
+	{
+		switch (cull_mode)
+		{
+		case 0:
+			glPolygonMode(GL_BACK, GL_FILL);
+			break;
+		case 1:
+			glPolygonMode(GL_FRONT, GL_FILL);
+			break;
+		case 2:
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			break;
+		}
+		wireframe_enabled = false;
+	}
+}
+
 void ModuleRenderer3D::GenerateFramebuffer()
 {
 	//Create the framebuffer

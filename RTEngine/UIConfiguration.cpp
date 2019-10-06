@@ -63,6 +63,139 @@ void UIConfiguration::Draw()
 			ImGui::PlotHistogram("", App->ms_arr.data(), display_fps, 0, fpstitle, 4.0f, 120.0f, ImVec2(310, 100));
 		}
 
+		if (ImGui::CollapsingHeader("Render"))
+		{
+			const char* cull_items[] = { "Back", "Front", "Back and front"};
+			static int cull_item_current = 0;
+
+			if (ImGui::Combo("Face culling", &cull_item_current, cull_items, IM_ARRAYSIZE(cull_items)))
+			{
+				App->renderer3D->UpdateFaceCullSetting(cull_item_current);
+			}
+
+			ImGui::SameLine();
+
+			char cullenable[8];
+
+			switch (App->renderer3D->cullface_enabled)
+			{
+				case (true):
+					sprintf_s(cullenable, 8, "Disable");
+					break;
+				case (false):
+					sprintf_s(cullenable, 8, "Enable");
+					break;
+			}
+
+			if (ImGui::Button(cullenable))
+			{
+				if(!App->renderer3D->cullface_enabled)
+					App->renderer3D->SetFaceCull(true);
+				else
+					App->renderer3D->SetFaceCull(false);
+			}
+
+			char depth_test[25];
+
+			switch (App->renderer3D->depth_test_enabled)
+			{
+			case (true):
+				sprintf_s(depth_test, 25, "Disable depth test");
+				break;
+			case (false):
+				sprintf_s(depth_test, 25, "Enable depth test");
+				break;
+			}
+
+			if (ImGui::Button(depth_test))
+			{
+				if (!App->renderer3D->depth_test_enabled)
+					App->renderer3D->SetDepthTest(true);
+				else
+					App->renderer3D->SetDepthTest(false);
+			}
+
+			char lighting[25];
+
+			switch (App->renderer3D->lighting_enabled)
+			{
+			case (true):
+				sprintf_s(lighting, 25, "Disable lighting");
+				break;
+			case (false):
+				sprintf_s(lighting, 25, "Enable lighting");
+				break;
+			}
+
+			if (ImGui::Button(lighting))
+			{
+				if (!App->renderer3D->lighting_enabled)
+					App->renderer3D->SetLighting(true);
+				else
+					App->renderer3D->SetLighting(false);
+			}
+
+			char color_material[25];
+
+			switch (App->renderer3D->color_material_enabled)
+			{
+			case (true):
+				sprintf_s(color_material, 25, "Disable color material");
+				break;
+			case (false):
+				sprintf_s(color_material, 25, "Enable color material");
+				break;
+			}
+
+			if (ImGui::Button(color_material))
+			{
+				if (!App->renderer3D->color_material_enabled)
+					App->renderer3D->SetColorMaterial(true);
+				else
+					App->renderer3D->SetColorMaterial(false);
+			}
+
+			char texture2D[25];
+
+			switch (App->renderer3D->texture2D_enabled)
+			{
+			case (true):
+				sprintf_s(texture2D, 25, "Disable textures");
+				break;
+			case (false):
+				sprintf_s(texture2D, 25, "Enable textures");
+				break;
+			}
+
+			if (ImGui::Button(texture2D))
+			{
+				if (!App->renderer3D->texture2D_enabled)
+					App->renderer3D->SetTexture2D(true);
+				else
+					App->renderer3D->SetTexture2D(false);
+			}
+
+			char wireframe[25];
+
+			switch (App->renderer3D->wireframe_enabled)
+			{
+			case (true):
+				sprintf_s(wireframe, 25, "Disable wireframe");
+				break;
+			case (false):
+				sprintf_s(wireframe, 25, "Enable wireframe");
+				break;
+			}
+
+			if (ImGui::Button(wireframe))
+			{
+				if (!App->renderer3D->wireframe_enabled)
+					App->renderer3D->SetWireframe(true);
+				else
+					App->renderer3D->SetWireframe(false);
+			}
+		}
+
 		if (ImGui::CollapsingHeader("Window")) // 2 - Window
 		{
 			if (ImGui::SliderFloat("Brightness", &App->window->brightness, 0.0f, 1.0f))

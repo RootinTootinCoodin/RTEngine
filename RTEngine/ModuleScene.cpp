@@ -23,8 +23,8 @@ update_status ModuleScene::Update(float dt)
 
 void ModuleScene::Draw()
 {
-	//DrawCubeDirectMode();
-	DrawCubeVertexArray();
+	DrawCubeDirectMode();
+	//DrawCubeVertexArray();
 }
 
 void ModuleScene::DrawCubeDirectMode()
@@ -83,10 +83,4 @@ void ModuleScene::DrawCubeVertexArray()
 	vert_array.push_back(-1.0f);
 	vert_array.push_back(-1.0f);
 	vert_array.push_back(1.0f);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, my_id);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glDrawArrays(GL_TRIANGLES, 0, vert_array.size());
-	glDisableClientState(GL_VERTEX_ARRAY);
 }
