@@ -1,6 +1,9 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleWindow.h"
+#include "ModuleCamera3D.h"
+#include "ModuleScene.h"
 #include "GL/glew.h"
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
@@ -25,14 +28,14 @@ ModuleRenderer3D::~ModuleRenderer3D()
 bool ModuleRenderer3D::Init(JSON_Object* config)
 {
 
-	App->app_log("Creating 3D Renderer context");
+	LOG("Creating 3D Renderer context");
 	bool ret = true;
 	
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
 	if(context == NULL)
 	{
-		App->app_log("OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
+		LOG("OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 	
@@ -40,7 +43,7 @@ bool ModuleRenderer3D::Init(JSON_Object* config)
 	{
 		//Use Vsync
 		if(vsync && SDL_GL_SetSwapInterval(1) < 0)
-			App->app_log("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+			LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
 		//Initialize Projection Matrix
 		glMatrixMode(GL_PROJECTION);
@@ -50,7 +53,7 @@ bool ModuleRenderer3D::Init(JSON_Object* config)
 		GLenum error = glGetError();
 		if(error != GL_NO_ERROR)
 		{
-			App->app_log("Error initializing OpenGL! %s\n", gluErrorString(error));
+			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
 
@@ -62,7 +65,7 @@ bool ModuleRenderer3D::Init(JSON_Object* config)
 		error = glGetError();
 		if(error != GL_NO_ERROR)
 		{
-			App->app_log("Error initializing OpenGL! %s\n", gluErrorString(error));
+			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
 		
@@ -76,7 +79,7 @@ bool ModuleRenderer3D::Init(JSON_Object* config)
 		error = glGetError();
 		if(error != GL_NO_ERROR)
 		{
-			App->app_log("Error initializing OpenGL! %s\n", gluErrorString(error));
+			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
 		

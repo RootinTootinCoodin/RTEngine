@@ -18,12 +18,12 @@ ModuleWindow::~ModuleWindow()
 bool ModuleWindow::Init(JSON_Object* config)
 {
 	title = json_object_get_string(config, "app_name");
-	App->app_log("Init SDL window & surface");
+	LOG("Init SDL window & surface");
 	bool ret = true;
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		App->app_log("SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
+		LOG("SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 	else
@@ -66,7 +66,7 @@ bool ModuleWindow::Init(JSON_Object* config)
 
 		if(window == NULL)
 		{
-			App->app_log("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+			LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());
 			ret = false;
 		}
 		else
@@ -82,7 +82,7 @@ bool ModuleWindow::Init(JSON_Object* config)
 // Called before quitting
 bool ModuleWindow::CleanUp()
 {
-	App->app_log("Destroying SDL window and quitting all SDL systems");
+	LOG("Destroying SDL window and quitting all SDL systems");
 
 	//Destroy window
 	if(window != NULL)

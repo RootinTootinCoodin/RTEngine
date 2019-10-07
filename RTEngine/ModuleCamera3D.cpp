@@ -1,8 +1,9 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleCamera3D.h"
+#include "ModuleInput.h"
 #include "Timer.h"
-#include "p2Log.h"
+
 
 
 
@@ -26,7 +27,7 @@ ModuleCamera3D::~ModuleCamera3D()
 // -----------------------------------------------------------------
 bool ModuleCamera3D::Init(JSON_Object* config)
 {
-	App->app_log("Setting up the camera");
+	LOG("Setting up the camera");
 	bool ret = true;
 	return ret;
 }
@@ -34,7 +35,7 @@ bool ModuleCamera3D::Init(JSON_Object* config)
 // -----------------------------------------------------------------
 bool ModuleCamera3D::CleanUp()
 {
-	App->app_log("Cleaning camera");
+	LOG("Cleaning camera");
 
 	return true;
 }

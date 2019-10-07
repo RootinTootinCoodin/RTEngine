@@ -1,9 +1,16 @@
 #include "Application.h"
 
 #include "p2Defs.h"
+#include "ModuleCamera3D.h"
+#include "ModuleWindow.h"
+#include "ModuleInput.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleImGui.h"
+#include "ModuleScene.h"
 
 Application::Application()
 {
+	_app = this;
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);
 	renderer3D = new ModuleRenderer3D(this);
@@ -169,7 +176,8 @@ void Application::FinishUpdate()
 // Call PreUpdate, Update and PostUpdate on all modules
 update_status Application::Update()
 {
-	app_log("yeeet");
+
+	LOG("YEET");
 	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
 	
@@ -248,13 +256,14 @@ void Application::SaveConfig()
 	json_serialize_to_file(config_value, "config_file.json");
 }
 
-void Application::app_log(const char * string, ...)
+void Application::app_log(const char * string,...)
 {
 	logs.push_back(string);
-	LOG(string);
 }
 
 void Application::AddModule(Module* mod)
 {
 	list_modules.push_back(mod);
 }
+
+Application* _app;

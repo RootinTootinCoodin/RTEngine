@@ -8,13 +8,6 @@
 
 #include "Globals.h"
 #include "Timer.h"
-#include "Module.h"
-#include "ModuleWindow.h"
-#include "ModuleInput.h"
-#include "ModuleRenderer3D.h"
-#include "ModuleImGui.h"
-#include "ModuleCamera3D.h"
-#include "ModuleScene.h"
 
 #include "GL/glew.h"
 #include "ImGui/imgui.h"
@@ -23,6 +16,13 @@
 
 #include "MathGeoLib/MathGeoLib.h"
 
+class Module;
+class ModuleWindow;
+class ModuleInput;
+class ModuleRenderer3D;
+class ModuleImGui;
+class ModuleCamera3D;
+class ModuleScene;
 
 class Application
 {
@@ -77,5 +77,7 @@ private:
 	void PrepareUpdate();
 	void FinishUpdate();
 };
+
+extern Application* _app;
 
 #endif //__APPLICATION_H__
