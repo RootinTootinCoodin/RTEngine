@@ -6,6 +6,7 @@
 #include "PCG/include/pcg_random.hpp"
 #include "pcg/include/pcg_extras.hpp"
 #include "pcg/include/pcg_uint128.hpp"
+#include "par_shapes/par_shapes.h"
 
 
 
@@ -67,7 +68,6 @@ void UITests::Draw()
 			}
 
 			ImGui::Text("Integer generated: %i", result2);
-
 		}
 
 	}

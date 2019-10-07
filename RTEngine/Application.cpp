@@ -10,7 +10,8 @@
 
 Application::Application()
 {
-	_app = this;
+	_app = this; //I get a linker error 2001 otherwise
+
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);
 	renderer3D = new ModuleRenderer3D(this);
@@ -176,8 +177,6 @@ void Application::FinishUpdate()
 // Call PreUpdate, Update and PostUpdate on all modules
 update_status Application::Update()
 {
-
-	LOG("YEET");
 	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
 	
@@ -266,4 +265,4 @@ void Application::AddModule(Module* mod)
 	list_modules.push_back(mod);
 }
 
-Application* _app;
+Application* _app; //I get a linker error 2001 otherwise
