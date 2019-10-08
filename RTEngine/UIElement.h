@@ -4,7 +4,7 @@
 #include <string>
 #include "ImGui/imgui.h"
 #include "parson/parson.h"
-
+#include "Globals.h"
 
 class Application;
 
