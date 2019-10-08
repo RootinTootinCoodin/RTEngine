@@ -102,7 +102,6 @@ bool ModuleRenderer3D::Init(JSON_Object* config)
 
 	// Projection matrix for
 	OnResize(App->window->width, App->window->height);
-	glewInit();
 	GenerateFramebuffer();
 	return ret;
 }
@@ -328,4 +327,5 @@ void ModuleRenderer3D::GenerateFramebuffer()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebuffer_texture, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

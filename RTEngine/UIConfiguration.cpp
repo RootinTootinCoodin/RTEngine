@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleScene.h"
 
 UIConfiguration::UIConfiguration(Application* app) : UIElement(app)
 {
@@ -194,6 +195,8 @@ void UIConfiguration::Draw()
 				else
 					App->renderer3D->SetWireframe(false);
 			}
+
+			ImGui::DragInt("Grid size", &App->scene->gridsize, 1.0f, 0);
 		}
 
 		if (ImGui::CollapsingHeader("Window")) // 2 - Window

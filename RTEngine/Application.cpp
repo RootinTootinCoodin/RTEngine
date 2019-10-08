@@ -70,6 +70,8 @@ float Application::GetAvgFPS()
 bool Application::Init()
 {
 	bool ret = true;
+	glewInit();
+
 
 	JSON_Object* config;
 	JSON_Value* config_value;
