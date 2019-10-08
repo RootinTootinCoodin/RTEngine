@@ -15,7 +15,7 @@ UIConsole::~UIConsole()
 
 void UIConsole::Draw()
 {
-	if (ImGui::Begin(name.c_str(), &show_window))
+	if (ImGui::Begin(name.c_str(), &show_window,ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar))
 	{
 		DrawConsoleItems();
 	}
@@ -24,9 +24,14 @@ void UIConsole::Draw()
 
 void UIConsole::DrawConsoleItems()
 {
+	LOG("yeet");
 	for (auto item = App->logs.begin(); item != App->logs.end(); item++)
 	{
-		ImGui::SetScrollHereY(1.0f);
+		if (!ImGui::IsAnyMouseDown()) {
+			ImGui::SetScrollHereY(1.0f);
+			ImGui::SetScrollHereX(1.0f);
+		}
+
 		ImGui::Text((*item));
 	}
 }
