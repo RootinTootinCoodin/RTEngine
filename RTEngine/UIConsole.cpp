@@ -34,7 +34,7 @@ void UIConsole::Draw()
 
 void UIConsole::DrawConsoleItems()
 {
-	uint num_items = App->logs.size();
+	/*uint num_items = App->logs.size();
 	for (auto item = App->logs.begin(); item != App->logs.end(); item++)
 	{
 		ImGui::Text((*item));
@@ -46,6 +46,7 @@ void UIConsole::DrawConsoleItems()
 			ImGui::SetScrollHereY(1.0f);
 			ImGui::SetScrollHereX(1.0f);
 		}
-	}
+	}*/
+	ImGui::TextUnformatted(App->logs.begin());
 }
 

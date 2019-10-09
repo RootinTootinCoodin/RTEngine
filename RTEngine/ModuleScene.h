@@ -2,6 +2,8 @@
 #include <vector>
 #include "Module.h"
 
+struct mesh;
+
 class ModuleScene :
 	public Module
 {
@@ -24,5 +26,7 @@ public:
 	int gridsize = 10;
 	uint index_id = 0;
 	uint vertex_id = 0;
+
+	mesh* model;
 };
 

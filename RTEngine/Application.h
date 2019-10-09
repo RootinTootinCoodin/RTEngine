@@ -23,6 +23,7 @@ class ModuleRenderer3D;
 class ModuleImGui;
 class ModuleCamera3D;
 class ModuleScene;
+class ModuleLoader;
 
 class Application
 {
@@ -33,12 +34,13 @@ public:
 	ModuleImGui* ImGui;
 	ModuleCamera3D* camera;
 	ModuleScene* scene;
+	ModuleLoader* loader;
 
 	std::vector<float> fps_arr;
 	std::vector<float> ms_arr;
 	int fps_limit_display = 0;
 	std::string organization = "Akatsuki";
-	std::list<const char*> logs;
+	ImGuiTextBuffer logs;
 
 private:
 

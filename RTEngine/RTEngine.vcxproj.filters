@@ -321,6 +321,9 @@
     <ClInclude Include="par_shapes\par_shapes.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleLoader.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -496,6 +499,9 @@
     </ClCompile>
     <ClCompile Include="Application.cpp">
       <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleLoader.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

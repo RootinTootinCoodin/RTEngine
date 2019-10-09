@@ -7,6 +7,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleImGui.h"
 #include "ModuleScene.h"
+#include "ModuleLoader.h"
 
 Application::Application()
 {
@@ -18,6 +19,7 @@ Application::Application()
 	ImGui = new ModuleImGui(this);
 	camera = new ModuleCamera3D(this);
 	scene = new ModuleScene(this);
+	loader = new ModuleLoader(this);
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -70,7 +72,7 @@ float Application::GetAvgFPS()
 bool Application::Init()
 {
 	bool ret = true;
-	glewInit();
+
 
 
 	JSON_Object* config;
@@ -259,7 +261,10 @@ void Application::SaveConfig()
 
 void Application::app_log(const char * string,...)
 {
-	logs.push_back(string);
+	logs.append(string);
+	logs.append("\n");
+	logs.append("\n");
+
 }
 
 void Application::AddModule(Module* mod)

@@ -311,7 +311,7 @@ namespace ImGui
     IMGUI_API ImVec2        GetWindowContentRegionMin();                                    // content boundaries min (roughly (0,0)-Scroll), in window coordinates
     IMGUI_API ImVec2        GetWindowContentRegionMax();                                    // content boundaries max (roughly (0,0)+Size-Scroll) where Size can be override with SetNextWindowContentSize(), in window coordinates
     IMGUI_API float         GetWindowContentRegionWidth();                                  //
-	IMGUI_API float			GetWindowContentRegionHeight();                                  //Made by Lorién Portella
+	IMGUI_API float			GetWindowContentRegionHeight();                                  //Made by Loriï¿½n Portella
 
     // Windows Scrolling
     IMGUI_API float         GetScrollX();                                                   // get scrolling amount [0..GetScrollMaxX()]

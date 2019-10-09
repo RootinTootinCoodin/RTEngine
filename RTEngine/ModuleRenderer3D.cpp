@@ -99,7 +99,7 @@ bool ModuleRenderer3D::Init(JSON_Object* config)
 		//glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 	}
-
+	glewInit();
 	// Projection matrix for
 	OnResize(App->window->width, App->window->height);
 	GenerateFramebuffer();
@@ -134,11 +134,15 @@ update_status ModuleRenderer3D::Update(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	int result = 0;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &result);
 	App->scene->Draw();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	ImGui::Render();
+
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &result);
 
 
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());

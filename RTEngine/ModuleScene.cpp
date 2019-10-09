@@ -9,6 +9,7 @@
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	name = "Scene";
 }
 
 
@@ -19,12 +20,9 @@ ModuleScene::~ModuleScene()
 bool ModuleScene::Init(JSON_Object* config)
 {
 	DrawCubeVertexArray();
-	DrawGrid(10);
 
-	glGenBuffers(1, (GLuint*) &(vertex_id));
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, vert_array.data(), GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+
 
 	//glGenBuffers(1, (GLuint*) &(index_id));
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_id);
@@ -36,6 +34,10 @@ bool ModuleScene::Init(JSON_Object* config)
 
 bool ModuleScene::Start()
 {
+	//glGenBuffers(1, (GLuint*) &(vertex_id));
+	//glBindBuffer(GL_ARRAY_BUFFER, vertex_id);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, vert_array.data(), GL_STATIC_DRAW);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	return true;
 }
 
@@ -49,12 +51,15 @@ void ModuleScene::Draw()
 	DrawAxis();
 	DrawGrid(gridsize);
 	//DrawCubeDirectMode();
+	int result = 0;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &result);
 
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_id);
-	glVertexPointer(3, GL_FLOAT, 0, vert_array.data());
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	glDisableClientState(GL_VERTEX_ARRAY);
+//	glEnableClientState(GL_VERTEX_ARRAY);
+//	glBindBuffer(GL_ARRAY_BUFFER, vertex_id);
+//	glVertexPointer(3, GL_FLOAT, 0, NULL);
+//	glDrawArrays(GL_TRIANGLES, 0, 36);
+//	glDisableClientState(GL_VERTEX_ARRAY);
+//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void ModuleScene::DrawGrid(int halfsize)

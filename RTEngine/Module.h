@@ -1,6 +1,7 @@
 #ifndef __MODULE_H__
 #define __MODULE_H__
 
+#include <string>
 #include "Globals.h"
 #include "parson/parson.h"
 
