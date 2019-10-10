@@ -11,14 +11,17 @@
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	name = "Camera";
+
 	CalculateViewMatrix();
 
 	X = vec3(1.0f, 0.0f, 0.0f);
 	Y = vec3(0.0f, 1.0f, 0.0f);
 	Z = vec3(0.0f, 0.0f, 1.0f);
 
-	Position = vec3(0.0f, 0.0f, 5.0f);
+	Position = vec3(10.0f, 100.0f,100.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
+
+
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -43,8 +46,6 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-	// Implement a debug camera with keys and mouse
-	// Now we can make this movememnt frame rate independant!
 	vec3 newPos = { 0,0,0 };
 	
 	float speed = 3.0f * dt;
@@ -60,13 +61,12 @@ update_status ModuleCamera3D::Update(float dt)
 
 	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
 	if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
-
-	Position += Camera_view.translation();
 	
+	Move(newPos);
 
 
 	
-	//Reference += newPos;
+	Reference += newPos;
 	
 	// Mouse motion ----------------
 
@@ -74,6 +74,7 @@ update_status ModuleCamera3D::Update(float dt)
 	{
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
+
 
 		float Sensitivity = 0.25f;
 
@@ -101,13 +102,13 @@ update_status ModuleCamera3D::Update(float dt)
 				Y = cross(Z, X);
 			}
 		}
-
 		Position = Reference + Z * length(Position);
+
 	}
 
 	// Recalculate matrix -------------
 
-	Look(Position, Camera_view.translation(), true);
+	LookAt(Reference);
 	CalculateViewMatrix();
 
 

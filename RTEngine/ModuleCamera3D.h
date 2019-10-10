@@ -2,7 +2,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "glmath.h"
-class btVector3;
+
 class Timer;
 
 
@@ -29,7 +29,6 @@ private:
 public:
 	
 	vec3 X, Y, Z, Position, Reference;
-	mat4x4 Camera_view;
 
 private:
 

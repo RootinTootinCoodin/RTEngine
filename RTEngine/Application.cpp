@@ -1,6 +1,6 @@
 #include "Application.h"
 
-#include "p2Defs.h"
+#include "Globals.h"
 #include "ModuleCamera3D.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"

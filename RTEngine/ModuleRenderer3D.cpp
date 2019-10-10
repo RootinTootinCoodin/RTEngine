@@ -40,6 +40,9 @@ bool ModuleRenderer3D::Init(JSON_Object* config)
 		ret = false;
 	}
 	
+	glewInit();
+
+
 	if(ret == true)
 	{
 		//Use Vsync
@@ -100,7 +103,6 @@ bool ModuleRenderer3D::Init(JSON_Object* config)
 		//glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 	}
-	glewInit();
 	// Projection matrix for
 	OnResize(App->window->width, App->window->height);
 	GenerateFramebuffer();
