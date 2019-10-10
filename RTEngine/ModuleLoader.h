@@ -20,8 +20,6 @@ public:
 
 	bool CleanUp();
 
-
 	bool LoadFBX(std::string path);
-	bool GenerateBufferForMesh(mesh* mesh);
 };
 

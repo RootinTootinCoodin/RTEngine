@@ -4,6 +4,7 @@
 #include "ModuleWindow.h"
 #include "ModuleCamera3D.h"
 #include "ModuleScene.h"
+#include "ModuleLoader.h"
 #include "GL/glew.h"
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
@@ -314,6 +315,22 @@ void ModuleRenderer3D::SetWireframe(bool state)
 		}
 		wireframe_enabled = false;
 	}
+}
+
+bool ModuleRenderer3D::GenerateBufferForMesh(mesh * mesh)
+{
+	glGenBuffers(1, (GLuint*)&(mesh->id_vertex));
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertex);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*mesh->num_vertices * 3, mesh->vertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glGenBuffers(1, (GLuint*)&(mesh->id_index));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)*mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+
+	return true;
 }
 
 void ModuleRenderer3D::GenerateFramebuffer()

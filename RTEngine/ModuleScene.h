@@ -28,5 +28,6 @@ public:
 	uint vertex_id = 0;
 
 	mesh* model;
+	bool model_loaded = false;
 };
 

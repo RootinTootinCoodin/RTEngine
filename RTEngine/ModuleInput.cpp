@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleLoader.h"
 #include "UIElement.h"
 
 #define MAX_KEYS 300
@@ -114,7 +115,10 @@ update_status ModuleInput::PreUpdate(float dt)
 			{
 				if(e.window.event == SDL_WINDOWEVENT_RESIZED)
 					App->renderer3D->OnResize(e.window.data1, e.window.data2);
+				break;
 			}
+			case SDL_DROPFILE:
+				App->loader->LoadFBX(e.drop.file);
 		}
 	}
 

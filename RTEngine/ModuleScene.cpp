@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "ModuleScene.h"
+#include "ModuleLoader.h"
 
 #include "GL/glew.h"
 #include "SDL\include\SDL_opengl.h"
@@ -54,6 +55,12 @@ void ModuleScene::Draw()
 	int result = 0;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &result);
 
+	if (model_loaded)
+	{
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, model->id_vertex);
+		glVertexPointer(3, GL_FLOAT, 0, NULL);		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model->id_index);		glDrawElements(GL_TRIANGLES, model->num_indices, GL_UNSIGNED_INT, NULL);		glDisableClientState(GL_VERTEX_ARRAY);		glBindBuffer(GL_ARRAY_BUFFER, 0);		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
 //	glEnableClientState(GL_VERTEX_ARRAY);
 //	glBindBuffer(GL_ARRAY_BUFFER, vertex_id);
 //	glVertexPointer(3, GL_FLOAT, 0, NULL);
