@@ -6,6 +6,9 @@
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
+#include "DevIL/include/IL/il.h"
+#include "DevIL/include/IL/ilut.h"
+#include "DevIL/include/IL/ilu.h"
 
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -21,7 +24,7 @@ ModuleScene::~ModuleScene()
 bool ModuleScene::Init(JSON_Object* config)
 {
 	DrawCubeVertexArray();
-
+	//ilInit();
 
 
 
@@ -62,9 +65,20 @@ void ModuleScene::Draw()
 		for (auto item = model.begin(); item != model.end(); item++)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, (*item)->id_vertex);
-			glVertexPointer(3, GL_FLOAT, 0, NULL);			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*item)->id_index);			glDrawElements(GL_TRIANGLES, (*item)->num_indices, GL_UNSIGNED_INT, NULL);			glBindBuffer(GL_ARRAY_BUFFER, 0);			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);		}
-		glDisableClientState(GL_VERTEX_ARRAY);
+			glVertexPointer(3, GL_FLOAT, 0, NULL);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*item)->id_index);
+			glDrawElements(GL_TRIANGLES, (*item)->num_indices, GL_UNSIGNED_INT, NULL);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		}
+		glDisableClientState(GL_VERTEX_ARRAY);
+
 	}
+
+	ilLoadImage("Lenna_(test_image)");
+
+	ilutGLBindTexImage();
+	
 //	glEnableClientState(GL_VERTEX_ARRAY);
 //	glBindBuffer(GL_ARRAY_BUFFER, vertex_id);
 //	glVertexPointer(3, GL_FLOAT, 0, NULL);
@@ -75,6 +89,7 @@ void ModuleScene::Draw()
 
 void ModuleScene::DrawGrid(int halfsize)
 {
+	glLineWidth(0.2f);
 	glBegin(GL_LINES);
 	glColor3f(0.75f, 0.75f, 0.75f);
 	for (int i = -halfsize; i <= halfsize; i++)
