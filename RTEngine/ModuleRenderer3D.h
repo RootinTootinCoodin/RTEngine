@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "glmath.h"
+#include "Light.h"
 
 #define MAX_LIGHTS 8
 
@@ -38,6 +39,7 @@ public:
 private:
 	void GenerateFramebuffer();
 public:
+	Light lights[8];
 
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
