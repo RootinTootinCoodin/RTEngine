@@ -19,8 +19,6 @@ void UIConsole::Draw()
 	{
 		if (ImGui::Button("Clear"))
 			App->logs.clear();
-		ImGui::SameLine();
-		ImGui::Checkbox("Autoscroll", &autoscroll);
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar;
 		ImGui::BeginChild("Child1", ImVec2(ImGui::GetWindowContentRegionWidth(),ImGui::GetWindowContentRegionHeight()-25), false, window_flags);
 		DrawConsoleItems();
@@ -34,19 +32,12 @@ void UIConsole::Draw()
 
 void UIConsole::DrawConsoleItems()
 {
-	/*uint num_items = App->logs.size();
-	for (auto item = App->logs.begin(); item != App->logs.end(); item++)
-	{
-		ImGui::Text((*item));
-	}
-	if (autoscroll)
-	{
-		if (num_items != prev_num_items)
-		{
-			ImGui::SetScrollHereY(1.0f);
-			ImGui::SetScrollHereX(1.0f);
-		}
-	}*/
 	ImGui::TextUnformatted(App->logs.begin());
+	if (App->update_console) {
+		ImGui::SetScrollHereY(1.0f);
+		ImGui::SetScrollHereX(1.0f);
+		App->update_console = false;
+	}
+
 }
 

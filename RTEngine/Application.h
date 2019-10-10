@@ -41,6 +41,7 @@ public:
 	int fps_limit_display = 0;
 	std::string organization = "Akatsuki";
 	ImGuiTextBuffer logs;
+	bool update_console = true;
 
 private:
 

@@ -15,7 +15,7 @@ private:
 	void DrawConsoleItems();
 public:
 private:
-	bool autoscroll = false;
+	bool has_change = false;
 	uint prev_num_items = 0;
 
 };

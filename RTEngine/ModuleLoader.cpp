@@ -37,6 +37,11 @@ bool ModuleLoader::LoadFBX(std::string path)
 			memcpy(_mesh->vertices, m->mVertices, sizeof(float) * _mesh->num_vertices * 3);
 			LOG("New mesh with %d vertices", _mesh->num_vertices);
 
+			//if (m->HasTextureCoords)
+			//{
+			//	_mesh->has_texture = true;
+			//	_mesh->uvs = new float[_mesh->numV]
+			//}
 			if (m->HasFaces())
 			{
 				_mesh->num_indices = m->mNumFaces * 3;
