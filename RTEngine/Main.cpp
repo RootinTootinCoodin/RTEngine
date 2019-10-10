@@ -5,6 +5,9 @@
 #include "SDL/include/SDL.h"
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "SDL/libx86/SDL2main.lib" )
+#pragma comment( lib, "Devil/lib/x86/Release/DevIL.lib" )
+#pragma comment( lib, "Devil/lib/x86/Release/ILU.lib" )
+#pragma comment( lib, "Devil/lib/x86/Release/ILUT.lib" )
 
 enum main_states
 {
