@@ -27,35 +27,37 @@ bool ModuleLoader::LoadFBX(std::string path)
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
-		aiMesh* m = scene->mMeshes[0];
-		mesh* _mesh = new mesh;
-
-		_mesh->num_vertices = m->mNumVertices;
-		_mesh->vertices = new float[_mesh->num_vertices * 3];
-		memcpy(_mesh->vertices, m->mVertices, sizeof(float) * _mesh->num_vertices * 3);
-		LOG("New mesh with %d vertices", _mesh->num_vertices);
-		
-		if (m->HasFaces())
+		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
-			_mesh->num_indices = m->mNumFaces * 3;
-			_mesh->indices = new uint[_mesh->num_indices];
-			
-			for (uint i = 0; i < m->mNumFaces; ++i)
+			aiMesh* m = scene->mMeshes[i];
+			mesh* _mesh = new mesh;
+
+			_mesh->num_vertices = m->mNumVertices;
+			_mesh->vertices = new float[_mesh->num_vertices * 3];
+			memcpy(_mesh->vertices, m->mVertices, sizeof(float) * _mesh->num_vertices * 3);
+			LOG("New mesh with %d vertices", _mesh->num_vertices);
+
+			if (m->HasFaces())
 			{
-				if (m->mFaces[i].mNumIndices == 3)
-					memcpy(&_mesh->indices[i * 3], m->mFaces[i].mIndices, 3 * sizeof(uint));
-				else
-					LOG("WARNING, geometry face without 3 indices !");
+				_mesh->num_indices = m->mNumFaces * 3;
+				_mesh->indices = new uint[_mesh->num_indices];
+
+				for (uint i = 0; i < m->mNumFaces; ++i)
+				{
+					if (m->mFaces[i].mNumIndices == 3)
+						memcpy(&_mesh->indices[i * 3], m->mFaces[i].mIndices, 3 * sizeof(uint));
+					else
+						LOG("WARNING, geometry face without 3 indices !");
+				}
+
+				//TODO: UGLY
+				App->renderer3D->GenerateBufferForMesh(_mesh);
+				App->scene->model.push_back(_mesh);
+				App->scene->model_loaded = true;
 			}
-
-			//TODO: UGLY
-			App->renderer3D->GenerateBufferForMesh(_mesh); 
-			App->scene->model = _mesh;
-			App->scene->model_loaded = true;
+			else
+				LOG("Error mesh from scene %s, no faces", path);
 		}
-		else
-			LOG("Error mesh from scene %s, no faces", path);
-
 		aiReleaseImport(scene);
 	}
 	else

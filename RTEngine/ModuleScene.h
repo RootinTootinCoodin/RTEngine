@@ -27,7 +27,7 @@ public:
 	uint index_id = 0;
 	uint vertex_id = 0;
 
-	mesh* model;
+	std::vector<mesh*> model;
 	bool model_loaded = false;
 };
 

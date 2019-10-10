@@ -57,9 +57,13 @@ void ModuleScene::Draw()
 
 	if (model_loaded)
 	{
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER, model->id_vertex);
-		glVertexPointer(3, GL_FLOAT, 0, NULL);		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model->id_index);		glDrawElements(GL_TRIANGLES, model->num_indices, GL_UNSIGNED_INT, NULL);		glDisableClientState(GL_VERTEX_ARRAY);		glBindBuffer(GL_ARRAY_BUFFER, 0);		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			glEnableClientState(GL_VERTEX_ARRAY);
+
+		for (auto item = model.begin(); item != model.end(); item++)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, (*item)->id_vertex);
+			glVertexPointer(3, GL_FLOAT, 0, NULL);			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*item)->id_index);			glDrawElements(GL_TRIANGLES, (*item)->num_indices, GL_UNSIGNED_INT, NULL);			glBindBuffer(GL_ARRAY_BUFFER, 0);			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);		}
+		glDisableClientState(GL_VERTEX_ARRAY);
 	}
 //	glEnableClientState(GL_VERTEX_ARRAY);
 //	glBindBuffer(GL_ARRAY_BUFFER, vertex_id);

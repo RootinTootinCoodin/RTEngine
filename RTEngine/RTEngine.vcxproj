@@ -157,6 +157,7 @@
     <ClInclude Include="PCG\include\pcg_extras.hpp" />
     <ClInclude Include="PCG\include\pcg_random.hpp" />
     <ClInclude Include="PCG\include\pcg_uint128.hpp" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UIAbout.h" />
     <ClInclude Include="UIConfiguration.h" />
@@ -236,6 +237,13 @@
     <None Include="MathGeoLib\Geometry\TriangleMesh_IntersectRay_CPP.inl" />
     <None Include="MathGeoLib\Geometry\TriangleMesh_IntersectRay_SSE.inl" />
     <None Include="MathGeoLib\Math\Matrix.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RTEngine.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="bitmap1.bmp" />
+    <Image Include="Game\icon.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
