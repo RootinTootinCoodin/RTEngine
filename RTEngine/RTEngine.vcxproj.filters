@@ -534,5 +534,6 @@
   <ItemGroup>
     <Image Include="bitmap1.bmp" />
     <Image Include="Game\icon.png" />
+    <Image Include="Game\icon.ico" />
   </ItemGroup>
 </Project>

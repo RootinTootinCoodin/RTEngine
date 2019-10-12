@@ -6,9 +6,9 @@
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
-#include "DevIL/include/IL/il.h"
-#include "DevIL/include/IL/ilut.h"
-#include "DevIL/include/IL/ilu.h"
+//#include "DevIL/include/IL/il.h"
+//#include "DevIL/include/IL/ilut.h"
+//#include "DevIL/include/IL/ilu.h"
 
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -42,6 +42,8 @@ bool ModuleScene::Start()
 	//glBindBuffer(GL_ARRAY_BUFFER, vertex_id);
 	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, vert_array.data(), GL_STATIC_DRAW);
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	GenerateCheckerTexture();
+
 	return true;
 }
 
@@ -50,41 +52,62 @@ update_status ModuleScene::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
+void ModuleScene::GenerateCheckerTexture()
+{
+	for (int i = 0; i < checker_size; i++) {
+		for (int j = 0; j < checker_size; j++) {
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkImage[i][j][0] = (GLubyte)c;
+			checkImage[i][j][1] = (GLubyte)c;
+			checkImage[i][j][2] = (GLubyte)c;
+			checkImage[i][j][3] = (GLubyte)255;
+		}
+	}
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &id_image);
+	glBindTexture(GL_TEXTURE_2D, id_image);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, checker_size, checker_size,
+		0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
+}
+
 void ModuleScene::Draw()
 {
 	DrawAxis();
 	DrawGrid(gridsize);
 	//DrawCubeDirectMode();
 	int result = 0;
-	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &result);
 
 	if (model_loaded)
 	{
 			glEnableClientState(GL_VERTEX_ARRAY);
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 		for (auto item = model.begin(); item != model.end(); item++)
 		{
+			glBindTexture(GL_TEXTURE_2D, id_image);
+			glBindBuffer(GL_TEXTURE_COORD_ARRAY, (*item)->id_uvs);
 			glBindBuffer(GL_ARRAY_BUFFER, (*item)->id_vertex);
 			glVertexPointer(3, GL_FLOAT, 0, NULL);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*item)->id_index);
 			glDrawElements(GL_TRIANGLES, (*item)->num_indices, GL_UNSIGNED_INT, NULL);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			glBindBuffer(GL_TEXTURE_COORD_ARRAY, (*item)->id_uvs);
+			glBindTexture(GL_TEXTURE_2D, id_image);
 		}
 		glDisableClientState(GL_VERTEX_ARRAY);
 
 	}
 
-	ilLoadImage("Lenna_(test_image)");
+	//ilLoadImage("Lenna_(test_image)");
 
-	ilutGLBindTexImage();
-	
-//	glEnableClientState(GL_VERTEX_ARRAY);
-//	glBindBuffer(GL_ARRAY_BUFFER, vertex_id);
-//	glVertexPointer(3, GL_FLOAT, 0, NULL);
-//	glDrawArrays(GL_TRIANGLES, 0, 36);
-//	glDisableClientState(GL_VERTEX_ARRAY);
-//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	//ilutGLBindTexImage();
+
 }
 
 void ModuleScene::DrawGrid(int halfsize)

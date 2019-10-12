@@ -341,7 +341,14 @@ bool ModuleRenderer3D::GenerateBufferForMesh(mesh * mesh)
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)*mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
+	if(mesh->has_texture)
+	{
+		glGenBuffers(1, (GLuint*)&(mesh->id_uvs));
+		glBindBuffer(GL_TEXTURE_COORD_ARRAY, mesh->id_uvs);
+		glBufferData(GL_TEXTURE_COORD_ARRAY, sizeof(uint)*mesh->num_vertices * 2, mesh->uvs, GL_STATIC_DRAW);
+		glBindBuffer(GL_TEXTURE_COORD_ARRAY,0);
 
+	}
 	return true;
 }
 
@@ -360,5 +367,6 @@ void ModuleRenderer3D::GenerateFramebuffer()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebuffer_texture, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

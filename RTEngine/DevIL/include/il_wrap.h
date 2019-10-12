@@ -3,13 +3,15 @@
 
 /*#include <il/il.h>
 #include <il/ilu.h>*/
-#include <IL/ilut.h>  // Probably only have to #include this one
+#include"ilut.h"// Probably only have to #include this one
 
 #ifdef _MSC_VER
 	#ifndef _IL_WRAP_BUILD_LIB
-		#pragma comment(lib, "il_wrap.lib")
+		#pragma comment(lib,"../libx86/il_wrap.lib")
 	#endif
 #endif
+
+typedef void			ILvoid;
 
 class ilImage
 {

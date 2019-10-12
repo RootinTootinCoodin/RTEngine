@@ -17,6 +17,7 @@ public:
 	std::vector<float> vert_array;
 	std::vector<uint> index_array;
 
+	void GenerateCheckerTexture();
 	void Draw();
 	void DrawGrid(int halfsize);
 	void DrawAxis();
@@ -27,7 +28,11 @@ public:
 	uint index_id = 0;
 	uint vertex_id = 0;
 
+	GLubyte checkImage[100][100][4];
+	uint id_image = 0;
+
 	std::vector<mesh*> model;
 	bool model_loaded = false;
+	int checker_size = 100; //if i do a define, i get an error WTF
 };
 

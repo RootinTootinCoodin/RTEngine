@@ -14,7 +14,8 @@ ModuleLoader::ModuleLoader(Application * parent, bool start_enabled) : Module(pa
 	name = "Loader";
 	struct aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
-	aiAttachLogStream(&stream);
+	aiAttachLogStream(&stream);
+
 }
 
 ModuleLoader::~ModuleLoader()
@@ -31,17 +32,19 @@ bool ModuleLoader::LoadFBX(std::string path)
 		{
 			aiMesh* m = scene->mMeshes[i];
 			mesh* _mesh = new mesh;
-
+			
 			_mesh->num_vertices = m->mNumVertices;
 			_mesh->vertices = new float[_mesh->num_vertices * 3];
 			memcpy(_mesh->vertices, m->mVertices, sizeof(float) * _mesh->num_vertices * 3);
 			LOG("New mesh with %d vertices", _mesh->num_vertices);
 
-			//if (m->HasTextureCoords)
-			//{
-			//	_mesh->has_texture = true;
-			//	_mesh->uvs = new float[_mesh->numV]
-			//}
+			if (m->HasTextureCoords(i))
+			{
+				_mesh->has_texture = true;
+				_mesh->uvs = new float[_mesh->num_vertices*2];
+				memcpy(_mesh->uvs, m->mTextureCoords, sizeof(float)*_mesh->num_vertices * 2);
+			}
+
 			if (m->HasFaces())
 			{
 				_mesh->num_indices = m->mNumFaces * 3;
