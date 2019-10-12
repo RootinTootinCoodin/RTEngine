@@ -104,9 +104,9 @@ bool ModuleRenderer3D::Init(JSON_Object* config)
 		
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
+		//glCullFace(GL_BACK);
 
-		//glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 	}
 	// Projection matrix for

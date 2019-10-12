@@ -9,6 +9,17 @@
 #include "Assimp/include/cfileio.h"
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
+
+#include "DevIL/include/il.h"
+#include "DevIL/include/ilut.h"
+#include "DevIL/include/ilu.h"
+
+#pragma comment( lib, "Devil/libx86/DevIL.lib" )
+#pragma comment( lib, "Devil/libx86/ILU.lib" )
+#pragma comment( lib, "Devil/libx86/ILUT.lib" )
+
+
+
 ModuleLoader::ModuleLoader(Application * parent, bool start_enabled) : Module(parent)
 {
 	name = "Loader";
@@ -16,10 +27,25 @@ ModuleLoader::ModuleLoader(Application * parent, bool start_enabled) : Module(pa
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
 
+	ilInit();
+	iluInit();
+	ilutRenderer(ILUT_OPENGL);
+
 }
 
 ModuleLoader::~ModuleLoader()
 {
+}
+
+bool ModuleLoader::FileReceived(std::string path)
+{
+	if (App->scene->model_loaded == true)
+	{
+		LoadTexture(path);
+	}
+	else
+		LoadFBX(path);
+	return true;
 }
 
 bool ModuleLoader::LoadFBX(std::string path)
@@ -71,6 +97,18 @@ bool ModuleLoader::LoadFBX(std::string path)
 	else
 		LOG("Error loading scene %s", path);
 	return true;
+}
+
+bool ModuleLoader::LoadTexture(std::string path)
+{
+	ILuint il_img_name = 0;
+	ilGenImages(1,&il_img_name);
+	ilBindImage(il_img_name);
+	if (iluLoadImage("Baker_House_DDS.dds"))
+	{
+		App->scene->GenerateTexture((uint*)ilGetData(),ilGetInteger(IL_IMAGE_WIDTH),ilGetInteger(IL_IMAGE_HEIGHT));
+	}
+	return false;
 }
 
 bool ModuleLoader::CleanUp()

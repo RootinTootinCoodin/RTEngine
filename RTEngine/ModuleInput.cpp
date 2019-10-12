@@ -118,7 +118,7 @@ update_status ModuleInput::PreUpdate(float dt)
 				break;
 			}
 			case SDL_DROPFILE:
-				App->loader->LoadFBX(e.drop.file);
+				App->loader->FileReceived(e.drop.file);
 		}
 	}
 

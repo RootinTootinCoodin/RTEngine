@@ -6,9 +6,6 @@
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
-//#include "DevIL/include/IL/il.h"
-//#include "DevIL/include/IL/ilut.h"
-//#include "DevIL/include/IL/ilu.h"
 
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -75,6 +72,20 @@ void ModuleScene::GenerateCheckerTexture()
 		0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
 }
 
+void ModuleScene::GenerateTexture(uint* texture, uint width, uint height)
+{
+	id_image = 0;
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &id_image);
+	glBindTexture(GL_TEXTURE_2D, id_image);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
+		0, GL_RGBA, GL_UNSIGNED_BYTE, texture);
+}
+
 void ModuleScene::Draw()
 {
 	DrawAxis();
@@ -87,17 +98,19 @@ void ModuleScene::Draw()
 			glEnableClientState(GL_VERTEX_ARRAY);
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
+
+
 		for (auto item = model.begin(); item != model.end(); item++)
 		{
 			glBindTexture(GL_TEXTURE_2D, id_image);
-			glBindBuffer(GL_TEXTURE_COORD_ARRAY, (*item)->id_uvs);
 			glBindBuffer(GL_ARRAY_BUFFER, (*item)->id_vertex);
 			glVertexPointer(3, GL_FLOAT, 0, NULL);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*item)->id_index);
 			glDrawElements(GL_TRIANGLES, (*item)->num_indices, GL_UNSIGNED_INT, NULL);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-			glBindBuffer(GL_TEXTURE_COORD_ARRAY, (*item)->id_uvs);
+			glTexCoordPointer(2, GL_FLOAT, 0, &(*item)->uvs[0]);
+
 			glBindTexture(GL_TEXTURE_2D, id_image);
 		}
 		glDisableClientState(GL_VERTEX_ARRAY);

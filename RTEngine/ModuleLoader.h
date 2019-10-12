@@ -24,6 +24,8 @@ public:
 
 	bool CleanUp();
 
+	bool FileReceived(std::string path);
 	bool LoadFBX(std::string path);
+	bool LoadTexture(std::string path);
 };
 
