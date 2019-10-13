@@ -147,15 +147,11 @@ update_status ModuleRenderer3D::Update(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-	int result = 0;
-	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &result);
 	App->scene->Draw();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	ImGui::Render();
-
-	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &result);
 
 
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());

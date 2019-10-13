@@ -64,11 +64,20 @@ bool ModuleLoader::LoadFBX(std::string path)
 			memcpy(_mesh->vertices, m->mVertices, sizeof(float) * _mesh->num_vertices * 3);
 			LOG("New mesh with %d vertices", _mesh->num_vertices);
 
-			if (m->HasTextureCoords(i))
+			if (m->HasTextureCoords(0))
 			{
 				_mesh->has_texture = true;
-				_mesh->uvs = new float[_mesh->num_vertices*2];
-				memcpy(_mesh->uvs, m->mTextureCoords, sizeof(float)*_mesh->num_vertices * 2);
+				//_mesh->uvs = new float[_mesh->num_vertices*2];
+				//
+				//memcpy(_mesh->uvs, m->mTextureCoords, sizeof(float)*_mesh->num_vertices * 2);
+				_mesh->uvs = new float[_mesh->num_vertices * 2];
+
+				for (int t = 0; t < _mesh->num_vertices * 2; t += 2)
+				{
+					_mesh->uvs[t] = m->mTextureCoords[0][t / 2].x;
+					_mesh->uvs[t + 1] = m->mTextureCoords[0][t / 2].y;
+					LOG("UV: %f, %f",_mesh->uvs[t], _mesh->uvs[t + 1]);
+				}
 			}
 
 			if (m->HasFaces())
@@ -104,7 +113,7 @@ bool ModuleLoader::LoadTexture(std::string path)
 	ILuint il_img_name = 0;
 	ilGenImages(1,&il_img_name);
 	ilBindImage(il_img_name);
-	if (iluLoadImage("Baker_House_DDS.dds"))
+	if (ilLoadImage(path.c_str()))
 	{
 		App->scene->GenerateTexture((uint*)ilGetData(),ilGetInteger(IL_IMAGE_WIDTH),ilGetInteger(IL_IMAGE_HEIGHT));
 	}

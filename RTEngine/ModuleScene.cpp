@@ -82,45 +82,44 @@ void ModuleScene::GenerateTexture(uint* texture, uint width, uint height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
-		0, GL_RGBA, GL_UNSIGNED_BYTE, texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,0, GL_RGB, GL_UNSIGNED_BYTE, texture);
 }
 
 void ModuleScene::Draw()
 {
 	DrawAxis();
 	DrawGrid(gridsize);
-	//DrawCubeDirectMode();
+	/*glBindTexture(GL_TEXTURE_2D, id_image);
+
+	DrawCubeDirectMode();*/
 	int result = 0;
 
 	if (model_loaded)
 	{
-			glEnableClientState(GL_VERTEX_ARRAY);
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
 
 
 		for (auto item = model.begin(); item != model.end(); item++)
 		{
+			glEnableClientState(GL_VERTEX_ARRAY);
+
 			glBindTexture(GL_TEXTURE_2D, id_image);
-			glBindBuffer(GL_ARRAY_BUFFER, (*item)->id_vertex);
-			glVertexPointer(3, GL_FLOAT, 0, NULL);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*item)->id_index);
-			glDrawElements(GL_TRIANGLES, (*item)->num_indices, GL_UNSIGNED_INT, NULL);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			glVertexPointer(3, GL_FLOAT, 0, &(*item)->vertices[0]);
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
 			glTexCoordPointer(2, GL_FLOAT, 0, &(*item)->uvs[0]);
 
+			glDrawElements(GL_TRIANGLES, (*item)->num_indices, GL_UNSIGNED_INT, NULL);
+
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
 			glBindTexture(GL_TEXTURE_2D, id_image);
+
+			glDisableClientState(GL_VERTEX_ARRAY);
+			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
-		glDisableClientState(GL_VERTEX_ARRAY);
 
 	}
-
-	//ilLoadImage("Lenna_(test_image)");
-
-	//ilutGLBindTexImage();
-
 }
 
 void ModuleScene::DrawGrid(int halfsize)
@@ -166,13 +165,23 @@ void ModuleScene::DrawCubeDirectMode()
 	glBegin(GL_TRIANGLES);
 
 	// Front
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(-1.0f, 1.0f, 1.0f);
+
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(1.0f, 1.0f, 1.0f);
+
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(-1.0f, -1.0f, 1.0f);
 
 	//
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(1.0f, 1.0f, 1.0f);
+
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(1.0f, -1.0f, 1.0f);
+
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(-1.0f, -1.0f, 1.0f);
 
 	// Right
