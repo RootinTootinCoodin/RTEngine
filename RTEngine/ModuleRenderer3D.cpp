@@ -123,14 +123,17 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 {
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 	glBindTexture(GL_TEXTURE_2D, framebuffer_texture);
+
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
+
 	glLoadMatrixf(App->camera->GetViewMatrix());
 
 	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
@@ -143,7 +146,6 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 update_status ModuleRenderer3D::Update(float dt)
 {
-
 	return UPDATE_CONTINUE;
 }
 
@@ -156,10 +158,10 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	ImGui::Render();
 
-
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 
 	SDL_GL_SwapWindow(App->window->window);
+
 	return UPDATE_CONTINUE;
 }
 
@@ -295,35 +297,12 @@ void ModuleRenderer3D::SetWireframe(bool state)
 {
 	if (state)
 	{
-		switch (cull_mode)
-		{
-			case 0:
-				glPolygonMode(GL_BACK, GL_LINE);
-				break;
-			case 1:
-				glPolygonMode(GL_FRONT, GL_LINE);
-				break;
-			case 2:
-				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-				break;
-		}
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		wireframe_enabled = true;
 	}
-
 	else
 	{
-		switch (cull_mode)
-		{
-		case 0:
-			glPolygonMode(GL_BACK, GL_FILL);
-			break;
-		case 1:
-			glPolygonMode(GL_FRONT, GL_FILL);
-			break;
-		case 2:
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			break;
-		}
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		wireframe_enabled = false;
 	}
 }
