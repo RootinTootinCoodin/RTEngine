@@ -3,6 +3,7 @@
 #include "Module.h"
 
 struct mesh;
+struct par_shapes_mesh_s;
 
 class ModuleScene :
 	public Module
@@ -34,6 +35,7 @@ public:
 
 
 	std::vector<mesh*> model;
+	std::vector<par_shapes_mesh_s*> primitive;
 	bool model_loaded = false;
 	int checker_size = 100; 
 };

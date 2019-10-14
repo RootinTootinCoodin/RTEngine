@@ -8,6 +8,7 @@
 #include "ModuleImGui.h"
 #include "ModuleScene.h"
 #include "ModuleLoader.h"
+#include "ModuleDebug.h"
 
 Application::Application()
 {
@@ -20,6 +21,7 @@ Application::Application()
 	camera = new ModuleCamera3D(this);
 	scene = new ModuleScene(this);
 	loader = new ModuleLoader(this);
+	debug = new ModuleDebug(this);
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -30,6 +32,7 @@ Application::Application()
 
 	AddModule(camera);
 	AddModule(scene);
+	AddModule(debug);
 	// Renderer last!
 	AddModule(ImGui);
 	AddModule(renderer3D);

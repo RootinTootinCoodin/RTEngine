@@ -325,6 +325,9 @@
       <Filter>Sources\Containers</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="ModuleDebug.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -506,6 +509,9 @@
     </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>Sources\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleDebug.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

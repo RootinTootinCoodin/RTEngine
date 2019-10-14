@@ -28,12 +28,12 @@ public:
 	void UnbindFramebuffer();
 
 	void UpdateFaceCullSetting(int state);
-	void SetFaceCull(bool state);
-	void SetDepthTest(bool state);
-	void SetLighting(bool state);
-	void SetColorMaterial(bool state);
-	void SetTexture2D(bool state);
-	void SetWireframe(bool state);
+	void SetFaceCull();
+	void SetDepthTest();
+	void SetLighting();
+	void SetColorMaterial();
+	void SetTexture2D();
+	void SetWireframe();
 
 	bool GenerateBufferForMesh(mesh* mesh);
 private:

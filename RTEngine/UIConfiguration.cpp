@@ -4,6 +4,10 @@
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleScene.h"
+#include "ModuleDebug.h"
+
+#define PAR_SHAPES_IMPLEMENTATION
+#include "par_shapes/par_shapes.h"
 
 UIConfiguration::UIConfiguration(Application* app) : UIElement(app)
 {
@@ -76,125 +80,19 @@ void UIConfiguration::Draw()
 
 			ImGui::SameLine();
 
-			char cullenable[8];
+			if (ImGui::Checkbox("Enable culling", &App->renderer3D->cullface_enabled))
+				App->renderer3D->SetFaceCull();
+			if (ImGui::Checkbox("Enable depth test", &App->renderer3D->depth_test_enabled))
+				App->renderer3D->SetDepthTest();
+			if (ImGui::Checkbox("Enable lighting", &App->renderer3D->lighting_enabled))
+				App->renderer3D->SetLighting();
+			if (ImGui::Checkbox("Enable color material", &App->renderer3D->color_material_enabled))
+				App->renderer3D->SetColorMaterial();
+			if (ImGui::Checkbox("Enable 2D textures", &App->renderer3D->texture2D_enabled))
+				App->renderer3D->SetTexture2D();
+			if (ImGui::Checkbox("Enable wireframe", &App->renderer3D->wireframe_enabled))
+				App->renderer3D->SetWireframe();
 
-			switch (App->renderer3D->cullface_enabled)
-			{
-				case (true):
-					sprintf_s(cullenable, 8, "Disable");
-					break;
-				case (false):
-					sprintf_s(cullenable, 8, "Enable");
-					break;
-			}
-
-			if (ImGui::Button(cullenable))
-			{
-				if(!App->renderer3D->cullface_enabled)
-					App->renderer3D->SetFaceCull(true);
-				else
-					App->renderer3D->SetFaceCull(false);
-			}
-
-			char depth_test[25];
-
-			switch (App->renderer3D->depth_test_enabled)
-			{
-			case (true):
-				sprintf_s(depth_test, 25, "Disable depth test");
-				break;
-			case (false):
-				sprintf_s(depth_test, 25, "Enable depth test");
-				break;
-			}
-
-			if (ImGui::Button(depth_test))
-			{
-				if (!App->renderer3D->depth_test_enabled)
-					App->renderer3D->SetDepthTest(true);
-				else
-					App->renderer3D->SetDepthTest(false);
-			}
-
-			char lighting[25];
-
-			switch (App->renderer3D->lighting_enabled)
-			{
-			case (true):
-				sprintf_s(lighting, 25, "Disable lighting");
-				break;
-			case (false):
-				sprintf_s(lighting, 25, "Enable lighting");
-				break;
-			}
-
-			if (ImGui::Button(lighting))
-			{
-				if (!App->renderer3D->lighting_enabled)
-					App->renderer3D->SetLighting(true);
-				else
-					App->renderer3D->SetLighting(false);
-			}
-
-			char color_material[25];
-
-			switch (App->renderer3D->color_material_enabled)
-			{
-			case (true):
-				sprintf_s(color_material, 25, "Disable color material");
-				break;
-			case (false):
-				sprintf_s(color_material, 25, "Enable color material");
-				break;
-			}
-
-			if (ImGui::Button(color_material))
-			{
-				if (!App->renderer3D->color_material_enabled)
-					App->renderer3D->SetColorMaterial(true);
-				else
-					App->renderer3D->SetColorMaterial(false);
-			}
-
-			char texture2D[25];
-
-			switch (App->renderer3D->texture2D_enabled)
-			{
-			case (true):
-				sprintf_s(texture2D, 25, "Disable textures");
-				break;
-			case (false):
-				sprintf_s(texture2D, 25, "Enable textures");
-				break;
-			}
-
-			if (ImGui::Button(texture2D))
-			{
-				if (!App->renderer3D->texture2D_enabled)
-					App->renderer3D->SetTexture2D(true);
-				else
-					App->renderer3D->SetTexture2D(false);
-			}
-
-			char wireframe[25];
-
-			switch (App->renderer3D->wireframe_enabled)
-			{
-			case (true):
-				sprintf_s(wireframe, 25, "Disable wireframe");
-				break;
-			case (false):
-				sprintf_s(wireframe, 25, "Enable wireframe");
-				break;
-			}
-
-			if (ImGui::Button(wireframe))
-			{
-				if (!App->renderer3D->wireframe_enabled)
-					App->renderer3D->SetWireframe(true);
-				else
-					App->renderer3D->SetWireframe(false);
-			}
 
 			ImGui::DragInt("Grid size", &App->scene->gridsize, 1.0f, 0);
 		}
@@ -371,6 +269,25 @@ void UIConfiguration::Draw()
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%dMb", evicted_mem);
 
 			// GPU stuff
+		}
+
+		if (ImGui::CollapsingHeader("Geometry"))
+		{
+			if (ImGui::Button("Create AABB"))
+			{
+
+			}
+
+			if (ImGui::Button("Create OOBB"))
+			{
+
+			}
+
+			if (ImGui::Button("Create sphere"))
+			{
+				par_shapes_mesh* newprim = par_shapes_create_parametric_sphere(10, 10);
+				App->debug->CreatePrimitive(newprim);
+			}
 		}
 
 		if(ImGui::Button("SaveConfig"))

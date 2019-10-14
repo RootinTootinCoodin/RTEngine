@@ -216,84 +216,74 @@ void ModuleRenderer3D::UpdateFaceCullSetting(int state)
 	}
 }
 
-void ModuleRenderer3D::SetFaceCull(bool state)
+void ModuleRenderer3D::SetFaceCull()
 {
-	if (state)
+	if (!cullface_enabled)
 	{
 		glEnable(GL_CULL_FACE);
-		cullface_enabled = true;
 	}
 
 	else
 	{
 		glDisable(GL_CULL_FACE);
-		cullface_enabled = false;
 	}
 }
 
-void ModuleRenderer3D::SetDepthTest(bool state)
+void ModuleRenderer3D::SetDepthTest()
 {
-	if (state)
+	if (!depth_test_enabled)
 	{
 		glEnable(GL_DEPTH_TEST);
-		depth_test_enabled = true;
 	}
 
 	else
 	{
 		glDisable(GL_DEPTH_TEST);
-		depth_test_enabled = false;
 	}
 }
 
-void ModuleRenderer3D::SetLighting(bool state)
+void ModuleRenderer3D::SetLighting()
 {
-	if (state)
+	if (lighting_enabled)
 	{
 		glEnable(GL_LIGHTING);
-		lighting_enabled = true;
 	}
 
 	else
 	{
 		glDisable(GL_LIGHTING);
-		lighting_enabled = false;
 	}
 }
 
-void ModuleRenderer3D::SetColorMaterial(bool state)
+void ModuleRenderer3D::SetColorMaterial()
 {
-	if (state)
+	if (!color_material_enabled)
 	{
 		glEnable(GL_COLOR_MATERIAL);
-		color_material_enabled = true;
 	}
 
 	else
 	{
 		glDisable(GL_COLOR_MATERIAL);
-		color_material_enabled = false;
 	}
 }
 
-void ModuleRenderer3D::SetTexture2D(bool state)
+void ModuleRenderer3D::SetTexture2D()
 {
-	if (state)
+	if (!texture2D_enabled)
 	{
 		glEnable(GL_TEXTURE_2D);
-		texture2D_enabled = true;
 	}
 
 	else
 	{
 		glDisable(GL_TEXTURE_2D);
-		texture2D_enabled = false;
 	}
 }
 
-void ModuleRenderer3D::SetWireframe(bool state)
+void ModuleRenderer3D::SetWireframe()
 {
-	if (state)
+	if (!wireframe_enabled)
 	{
 		switch (cull_mode)
 		{
@@ -307,7 +297,6 @@ void ModuleRenderer3D::SetWireframe(bool state)
 				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 				break;
 		}
-		wireframe_enabled = true;
 	}
 
 	else
@@ -324,7 +313,6 @@ void ModuleRenderer3D::SetWireframe(bool state)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			break;
 		}
-		wireframe_enabled = false;
 	}
 }
 

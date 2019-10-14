@@ -92,13 +92,11 @@ void ModuleScene::Draw()
 	DrawGrid(gridsize);
 	glBindTexture(GL_TEXTURE_2D, id_image);
 
-	DrawCubeDirectMode();
+	//DrawCubeDirectMode();
 	int result = 0;
 
 	if (model_loaded)
 	{
-
-
 		for (auto item = model.begin(); item != model.end(); item++)
 		{
 			glEnableClientState(GL_VERTEX_ARRAY);
@@ -119,7 +117,6 @@ void ModuleScene::Draw()
 			glDisableClientState(GL_VERTEX_ARRAY);
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
-
 	}
 }
 
