@@ -39,7 +39,7 @@ bool ModuleScene::Start()
 	//glBindBuffer(GL_ARRAY_BUFFER, vertex_id);
 	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, vert_array.data(), GL_STATIC_DRAW);
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	GenerateCheckerTexture();
+	//GenerateCheckerTexture();
 
 	return true;
 }
@@ -83,15 +83,16 @@ void ModuleScene::GenerateTexture(uint* texture, uint width, uint height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,0, GL_RGB, GL_UNSIGNED_BYTE, texture);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void ModuleScene::Draw()
 {
 	DrawAxis();
 	DrawGrid(gridsize);
-	/*glBindTexture(GL_TEXTURE_2D, id_image);
+	glBindTexture(GL_TEXTURE_2D, id_image);
 
-	DrawCubeDirectMode();*/
+	DrawCubeDirectMode();
 	int result = 0;
 
 	if (model_loaded)

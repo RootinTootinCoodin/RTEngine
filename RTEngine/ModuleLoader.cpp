@@ -113,10 +113,35 @@ bool ModuleLoader::LoadTexture(std::string path)
 	ILuint il_img_name = 0;
 	ilGenImages(1,&il_img_name);
 	ilBindImage(il_img_name);
+
+	
 	if (ilLoadImage(path.c_str()))
 	{
-		App->scene->GenerateTexture((uint*)ilGetData(),ilGetInteger(IL_IMAGE_WIDTH),ilGetInteger(IL_IMAGE_HEIGHT));
+		ILinfo il_img_data;
+		iluGetImageInfo(&il_img_data);
+		if (!ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE))
+		{
+			LOG("DevIL Error: %s", iluErrorString(ilGetError()));
+		}
+
+		if (il_img_data.Origin == IL_ORIGIN_UPPER_LEFT)
+			iluFlipImage();
+
+		//App->scene->GenerateTexture((uint*)ilGetData(), il_img_data.Width, il_img_data.Height);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glGenTextures(1, &App->scene->id_image);
+		glBindTexture(GL_TEXTURE_2D, App->scene->id_image);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		ILubyte* data = ilGetData();
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, il_img_data.Width, il_img_data.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData());
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+	else
+		LOG("Error loading texture: %s", iluErrorString(ilGetError()));
+	ilDeleteImage(il_img_name);
 	return false;
 }
 

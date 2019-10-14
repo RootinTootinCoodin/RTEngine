@@ -105,9 +105,12 @@ bool ModuleRenderer3D::Init(JSON_Object* config)
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 		//glCullFace(GL_BACK);
+		lights[0].Active(true);
 
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
+		glEnable(GL_TEXTURE_2D);
+
 	}
 	// Projection matrix for
 	OnResize(App->window->width, App->window->height);
