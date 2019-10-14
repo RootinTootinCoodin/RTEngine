@@ -67,16 +67,13 @@ bool ModuleLoader::LoadFBX(std::string path)
 			if (m->HasTextureCoords(0))
 			{
 				_mesh->has_texture = true;
-				//_mesh->uvs = new float[_mesh->num_vertices*2];
-				//
-				//memcpy(_mesh->uvs, m->mTextureCoords, sizeof(float)*_mesh->num_vertices * 2);
-				_mesh->uvs = new float[_mesh->num_vertices * 2];
 
+				//Can't use memcpy because m->mTextureCoords is a 3D vector but we only use x and y
+				_mesh->uvs = new float[_mesh->num_vertices * 2];
 				for (int t = 0; t < _mesh->num_vertices * 2; t += 2)
 				{
 					_mesh->uvs[t] = m->mTextureCoords[0][t / 2].x;
 					_mesh->uvs[t + 1] = m->mTextureCoords[0][t / 2].y;
-					LOG("UV: %f, %f",_mesh->uvs[t], _mesh->uvs[t + 1]);
 				}
 			}
 
@@ -85,10 +82,10 @@ bool ModuleLoader::LoadFBX(std::string path)
 				_mesh->num_indices = m->mNumFaces * 3;
 				_mesh->indices = new uint[_mesh->num_indices];
 
-				for (uint i = 0; i < m->mNumFaces; ++i)
+				for (uint k = 0; k < m->mNumFaces; ++k)
 				{
-					if (m->mFaces[i].mNumIndices == 3)
-						memcpy(&_mesh->indices[i * 3], m->mFaces[i].mIndices, 3 * sizeof(uint));
+					if (m->mFaces[k].mNumIndices == 3)
+						memcpy(&_mesh->indices[k * 3], m->mFaces[k].mIndices, 3 * sizeof(uint));
 					else
 						LOG("WARNING, geometry face without 3 indices !");
 				}
