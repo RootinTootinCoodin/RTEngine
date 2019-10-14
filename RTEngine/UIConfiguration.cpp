@@ -290,6 +290,8 @@ void UIConfiguration::Draw()
 			}
 		}
 
+		ImGui::Separator();
+
 		if(ImGui::Button("SaveConfig"))
 		{
 			App->SaveConfig();
