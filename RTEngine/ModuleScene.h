@@ -2,7 +2,7 @@
 #include <vector>
 #include "Module.h"
 
-struct mesh;
+struct model;
 struct par_shapes_mesh_s;
 
 class ModuleScene :
@@ -19,7 +19,6 @@ public:
 	std::vector<uint> index_array;
 
 	void GenerateCheckerTexture();
-	void GenerateTexture(uint* texture, uint width, uint height);
 	void Draw();
 	void DrawGrid(int halfsize);
 	void DrawAxis();
@@ -34,7 +33,12 @@ public:
 	uint id_image = 0;
 
 
-	std::vector<mesh*> model;
+	std::vector<model*> models;
+	uint current_model_index = 0;
+
+	std::vector<uint*> textures;
+	uint current_texture_index = 0;
+
 	std::vector<par_shapes_mesh_s*> primitive;
 	bool model_loaded = false;
 	int checker_size = 100; 

@@ -15,6 +15,12 @@ struct mesh
 	float* uvs = nullptr;
 	bool has_texture = false;
 };
+
+struct model
+{
+	std::vector<mesh*> meshes;
+};
+
 class ModuleLoader :
 	public Module
 {

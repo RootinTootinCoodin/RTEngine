@@ -54,6 +54,7 @@ bool ModuleLoader::LoadFBX(std::string path)
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
+		model* new_model = new model;
 		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
 			aiMesh* m = scene->mMeshes[i];
@@ -92,12 +93,14 @@ bool ModuleLoader::LoadFBX(std::string path)
 
 				//TODO: UGLY
 				App->renderer3D->GenerateBufferForMesh(_mesh);
-				App->scene->model.push_back(_mesh);
+				new_model->meshes.push_back(_mesh);
 				App->scene->model_loaded = true;
 			}
 			else
 				LOG("Error mesh from scene %s, no faces", path);
 		}
+		App->scene->models.push_back(new_model);
+
 		aiReleaseImport(scene);
 	}
 	else
@@ -114,20 +117,22 @@ bool ModuleLoader::LoadTexture(std::string path)
 	
 	if (ilLoadImage(path.c_str()))
 	{
+		uint* new_texture = new uint;
 		ILinfo il_img_data;
 		iluGetImageInfo(&il_img_data);
+
 		if (!ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE))
-		{
-			LOG("DevIL Error: %s", iluErrorString(ilGetError()));
-		}
+			LOG("Error converting image: %s", iluErrorString(ilGetError()));
+		
 
+		//Fuck different coordinate systems
 		if (il_img_data.Origin == IL_ORIGIN_UPPER_LEFT)
-			iluFlipImage();
+			if (!iluFlipImage())
+				LOG("Error rotating image: %s", iluErrorString(ilGetError()));
 
-		//App->scene->GenerateTexture((uint*)ilGetData(), il_img_data.Width, il_img_data.Height);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glGenTextures(1, &App->scene->id_image);
-		glBindTexture(GL_TEXTURE_2D, App->scene->id_image);
+		glGenTextures(1, new_texture);
+		glBindTexture(GL_TEXTURE_2D, *new_texture);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -135,9 +140,12 @@ bool ModuleLoader::LoadTexture(std::string path)
 		ILubyte* data = ilGetData();
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, il_img_data.Width, il_img_data.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData());
 		glBindTexture(GL_TEXTURE_2D, 0);
+
+		App->scene->textures.push_back(new_texture);
 	}
 	else
 		LOG("Error loading texture: %s", iluErrorString(ilGetError()));
+
 	ilDeleteImage(il_img_name);
 	return false;
 }

@@ -54,7 +54,10 @@ void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data)
 
 	memcpy(&_primitive->indices, data->triangles, _primitive->num_indices * sizeof(uint));
 
+	model* new_model = new model;
+	new_model->meshes.push_back(_primitive);
+
 	App->renderer3D->GenerateBufferForMesh(_primitive);
-	App->scene->model.push_back(_primitive);
+	App->scene->models.push_back(new_model);
 	App->scene->model_loaded = true;
 }

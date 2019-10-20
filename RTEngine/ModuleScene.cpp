@@ -72,19 +72,6 @@ void ModuleScene::GenerateCheckerTexture()
 		0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
 }
 
-void ModuleScene::GenerateTexture(uint* texture, uint width, uint height)
-{
-	id_image = 0;
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glGenTextures(1, &id_image);
-	glBindTexture(GL_TEXTURE_2D, id_image);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,0, GL_RGB, GL_UNSIGNED_BYTE, texture);
-	glBindTexture(GL_TEXTURE_2D, 0);
-}
 
 void ModuleScene::Draw()
 {
@@ -95,29 +82,38 @@ void ModuleScene::Draw()
 	//DrawCubeDirectMode();
 	int result = 0;
 
-	if (model_loaded)
+	if (models.size() > 0)
 	{
-		for (auto item = model.begin(); item != model.end(); item++)
+		model* tmp = models[current_model_index];
+
+		for (auto item = tmp->meshes.begin(); item != tmp->meshes.end(); item++)
 		{
 			glEnableClientState(GL_VERTEX_ARRAY);
-
-			glBindTexture(GL_TEXTURE_2D, id_image);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*item)->id_index);
 			glVertexPointer(3, GL_FLOAT, 0, &(*item)->vertices[0]);
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-			glTexCoordPointer(2, GL_FLOAT, 0, &(*item)->uvs[0]);
+			if (textures.size() > 0)
+			{
+				glBindTexture(GL_TEXTURE_2D, *textures[current_texture_index]);
+				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+				glTexCoordPointer(2, GL_FLOAT, 0, &(*item)->uvs[0]);
+			}
 
 			glDrawElements(GL_TRIANGLES, (*item)->num_indices, GL_UNSIGNED_INT, NULL);
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-			glBindTexture(GL_TEXTURE_2D, id_image);
+			if (textures.size() > 0)
+			{
+				glBindTexture(GL_TEXTURE_2D, 0);
+				glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+			}
 
 			glDisableClientState(GL_VERTEX_ARRAY);
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		
 		}
 	}
+	
 }
 
 void ModuleScene::DrawGrid(int halfsize)
