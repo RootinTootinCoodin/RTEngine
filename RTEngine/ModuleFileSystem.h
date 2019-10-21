@@ -14,7 +14,7 @@ class ModuleFileSystem : public Module
 {
 public:
 
-	ModuleFileSystem(Application* app, bool start_enabled);
+	ModuleFileSystem(Application* app, bool start_enabled = true);
 
 	// Destructor
 	~ModuleFileSystem();
