@@ -55,11 +55,13 @@ bool ModuleLoader::LoadFBX(std::string path)
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		model* new_model = new model;
+		new_model->name = scene->mRootNode->mName.C_Str();
 		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
 			aiMesh* m = scene->mMeshes[i];
 			mesh* _mesh = new mesh;
-			
+			_mesh->mesh_name = m->mName.C_Str();
+
 			_mesh->num_vertices = m->mNumVertices;
 			_mesh->vertices = new float[_mesh->num_vertices * 3];
 			memcpy(_mesh->vertices, m->mVertices, sizeof(float) * _mesh->num_vertices * 3);
@@ -124,7 +126,6 @@ bool ModuleLoader::LoadTexture(std::string path)
 		if (!ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE))
 			LOG("Error converting image: %s", iluErrorString(ilGetError()));
 		
-
 		//Fuck different coordinate systems
 		if (il_img_data.Origin == IL_ORIGIN_UPPER_LEFT)
 			if (!iluFlipImage())

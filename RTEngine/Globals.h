@@ -2,6 +2,8 @@
 #define __GLOBALS_H__
 
 #include <stdio.h>
+#include <vector>
+#include <string>
 
 // Warning disabled ---
 #pragma warning( disable : 4577 ) // Warning that exceptions are disabled
@@ -97,5 +99,37 @@ inline const char* const PATH(const char* folder, const char* file)
 #define PERF_START(timer) timer.Start()
 #define PERF_PEEK(timer) LOG("%s took %f ms", __FUNCTION__, timer.ReadMs())
 
+struct mesh
+{
+	std::string mesh_name;
+
+	uint id_index = 0;
+	uint num_indices = 0;
+	uint* indices = nullptr;
+
+	uint num_vertices = 0;
+	float* vertices = nullptr;
+
+	uint id_uvs = 0;
+	float* uvs = nullptr;
+	bool has_texture = false;
+};
+
+struct model
+{
+	std::string name;
+	std::vector<mesh*> meshes;
+};
+
+struct texture
+{
+	std::string name;
+	uint id_texture;
+	uint with;
+	uint height;
+	uint depth;
+	uint bpp;
+	
+};
 
 #endif

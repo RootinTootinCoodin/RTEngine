@@ -297,11 +297,6 @@ void ModuleRenderer3D::SetWireframe()
 
 bool ModuleRenderer3D::GenerateBufferForMesh(mesh * mesh)
 {
-	glGenBuffers(1, (GLuint*)&(mesh->id_vertex));
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertex);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*mesh->num_vertices * 3, mesh->vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 	glGenBuffers(1, (GLuint*)&(mesh->id_index));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)*mesh->num_indices, mesh->indices, GL_STATIC_DRAW);

@@ -1,5 +1,7 @@
 #pragma once
 #include "UIElement.h"
+
+struct model;
 class UIInspector :
 	public UIElement
 {
@@ -8,5 +10,7 @@ public:
 	~UIInspector();
 
 	void Draw();
+
+	void DrawModelInfo(model* _model);
 };
 
