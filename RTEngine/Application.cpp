@@ -9,6 +9,7 @@
 #include "ModuleScene.h"
 #include "ModuleLoader.h"
 #include "ModuleDebug.h"
+#include "ModuleFileSystem.h"
 
 Application::Application()
 {
@@ -22,14 +23,16 @@ Application::Application()
 	scene = new ModuleScene(this);
 	loader = new ModuleLoader(this);
 	debug = new ModuleDebug(this);
+	fileSystem = new ModuleFileSystem(this);
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
 
 	// Main Modules
+	
 	AddModule(window);
 	AddModule(input);
-
+	AddModule(fileSystem);
 	AddModule(camera);
 	AddModule(scene);
 	AddModule(debug);
