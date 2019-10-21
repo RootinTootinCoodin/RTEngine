@@ -22,7 +22,6 @@ void UIInspector::Draw()
 	{
 		if (App->scene->models.size() > 0)
 		{
-
 			for (auto item = App->scene->models.begin(); item != App->scene->models.end(); item++)
 			{
 				if (ImGui::TreeNode((*item)->name.c_str()))
@@ -35,6 +34,9 @@ void UIInspector::Draw()
 					ImGui::TreePop();
 				}
 			}
+			std::string model = "Current model: ";
+			model += App->scene->models[App->scene->current_model_index]->name;
+			ImGui::Text(model.c_str());
 		}
 		else
 			ImGui::Text("No models loaded");
