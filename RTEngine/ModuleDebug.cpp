@@ -34,20 +34,18 @@ void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data)
 	memcpy(_primitive->vertices, data->points, sizeof(float) * _primitive->num_vertices);
 	LOG("New mesh (primitive) with %d vertices", _primitive->num_vertices);
 
-	_primitive->vertices[50];
-
 	_primitive->has_texture = true;
 	_primitive->uvs = new float[_primitive->num_vertices * 2];
 
 	memcpy(_primitive->uvs, data->tcoords, sizeof(float) * _primitive->num_vertices * 2);
 
-	//for (int t = 0; t <= _primitive->num_vertices * 2; t++)
-	//{
-	//	_primitive->uvs[t] = data->tcoords[t];
+	for (int t = 0; t <= _primitive->num_vertices * 2; t++)
+	{
+		_primitive->uvs[t] = data->tcoords[t];
 
-	//	if (t % 2 != 0)
-	//	LOG("UV: %f, %f", _primitive->uvs[t], _primitive->uvs[t + 1]);
-	//}
+		if (t % 2 != 0)
+		LOG("UV: %f, %f", _primitive->uvs[t], _primitive->uvs[t + 1]);
+	}
 
 	_primitive->num_indices = data->ntriangles * 3;
 	_primitive->indices = new uint[_primitive->num_indices];

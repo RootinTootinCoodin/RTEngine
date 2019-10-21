@@ -273,20 +273,14 @@ void UIConfiguration::Draw()
 
 		if (ImGui::CollapsingHeader("Geometry"))
 		{
-			if (ImGui::Button("Create AABB"))
-			{
-
-			}
-
-			if (ImGui::Button("Create OOBB"))
-			{
-
-			}
-
 			if (ImGui::Button("Create sphere"))
 			{
-				par_shapes_mesh* newprim = par_shapes_create_parametric_sphere(10, 10);
-				App->debug->CreatePrimitive(newprim);
+				App->debug->CreatePrimitive(par_shapes_create_parametric_sphere(10, 10));
+			}
+
+			if (ImGui::Button("Create plane"))
+			{
+				App->debug->CreatePrimitive(par_shapes_create_plane(5, 5));
 			}
 		}
 
