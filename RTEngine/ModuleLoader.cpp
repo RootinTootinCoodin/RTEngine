@@ -2,6 +2,7 @@
 #include "ModuleLoader.h"
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleFileSystem.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -39,12 +40,12 @@ ModuleLoader::~ModuleLoader()
 
 bool ModuleLoader::FileReceived(std::string path)
 {
-	if (App->scene->model_loaded == true)
-	{
-		LoadTexture(path);
-	}
-	else
+	std::string extension;
+	App->fileSystem->SplitFilePath(path.c_str(), nullptr, nullptr, &extension);
+	if (MODEL_EXTENSIONS(extension))
 		LoadFBX(path);
+	if (TEXTURE_EXTENSIONS(extension))
+		LoadTexture(path);
 	return true;
 }
 
