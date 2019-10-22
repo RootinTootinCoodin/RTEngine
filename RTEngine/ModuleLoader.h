@@ -13,7 +13,7 @@ public:
 	bool CleanUp();
 
 	bool FileReceived(std::string path);
-	bool LoadFBX(std::string path);
-	bool LoadTexture(std::string path);
+	bool LoadFBX(std::string path, std::string name);
+	bool LoadTexture(std::string path, std::string name);
 };
 
