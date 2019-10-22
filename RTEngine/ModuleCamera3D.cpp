@@ -22,6 +22,7 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	Reference = vec3(0.0f, 0.0f, 0.0f);
 
 
+	LookAt(Reference);
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -108,7 +109,6 @@ update_status ModuleCamera3D::Update(float dt)
 
 	// Recalculate matrix -------------
 
-	LookAt(Reference);
 	CalculateViewMatrix();
 
 
