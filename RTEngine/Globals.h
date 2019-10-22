@@ -105,6 +105,9 @@ inline const char* const PATH(const char* folder, const char* file)
 #define ASSETS_MODELS_FOLDER "/Assets/Models/"
 #define ASSETS_TEXTURES_FOLDER "/Assets/Textures/"
 
+#define MODEL_EXTENSIONS "fbx","FBX"
+#define TEXTURE_EXTENSIONS "png","PNG","dds","DDS"
+
 struct mesh
 {
 	std::string mesh_name;
