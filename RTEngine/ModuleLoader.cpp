@@ -42,9 +42,9 @@ bool ModuleLoader::FileReceived(std::string path)
 {
 	std::string extension;
 	App->fileSystem->SplitFilePath(path.c_str(), nullptr, nullptr, &extension);
-	if (extension == MODEL_EXTENSIONS)
+	if (MODEL_EXTENSIONS(extension))
 		LoadFBX(path);
-	if (extension == TEXTURE_EXTENSIONS)
+	if (TEXTURE_EXTENSIONS(extension))
 		LoadTexture(path);
 	return true;
 }
