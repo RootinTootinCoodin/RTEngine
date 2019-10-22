@@ -188,12 +188,12 @@ bool ModuleFileSystem::Copy(const char * source, const char * destination)
 	return ret;
 }
 
-void ModuleFileSystem::SplitFilePath(const char * full_path, std::string * path, std::string * file, std::string * extension) const
+void ModuleFileSystem::SplitFilePath(const char * full_path, std::string * path, std::string * name, std::string * extension) const
 {
 	if (full_path != nullptr)
 	{
 		string full(full_path);
-		NormalizePath(full);
+		//NormalizePath(full);
 		size_t pos_separator = full.find_last_of("\\/");
 		size_t pos_dot = full.find_last_of(".");
 
@@ -205,12 +205,15 @@ void ModuleFileSystem::SplitFilePath(const char * full_path, std::string * path,
 				path->clear();
 		}
 
-		if (file != nullptr)
+		if (name != nullptr)
 		{
 			if (pos_separator < full.length())
-				*file = full.substr(pos_separator + 1);
+			{
+				*name = full.substr(pos_separator + 1);
+				*name = name->substr(0,name->find_last_of("."));
+			}
 			else
-				*file = full;
+				*name = full;
 		}
 
 		if (extension != nullptr)
@@ -310,16 +313,6 @@ SDL_RWops* ModuleFileSystem::Load(const char* file) const
 	}
 	else
 		return nullptr;
-}
-
-void * ModuleFileSystem::BassLoad(const char * file) const
-{
-	PHYSFS_file* fs_file = PHYSFS_openRead(file);
-
-	if(fs_file == nullptr)
-		LOG("File System error while opening file %s: %s\n", file, PHYSFS_getLastError());
-
-	return (void*) fs_file;
 }
 
 int close_sdl_rwops(SDL_RWops *rw)

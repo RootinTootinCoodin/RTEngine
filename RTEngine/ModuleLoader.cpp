@@ -41,22 +41,24 @@ ModuleLoader::~ModuleLoader()
 bool ModuleLoader::FileReceived(std::string path)
 {
 	std::string extension;
-	App->fileSystem->SplitFilePath(path.c_str(), nullptr, nullptr, &extension);
+	std::string name;
+	App->fileSystem->SplitFilePath(path.c_str(),nullptr, &name, &extension);
 	if (MODEL_EXTENSIONS(extension))
-		LoadFBX(path);
+		LoadFBX(path, name);
 	if (TEXTURE_EXTENSIONS(extension))
-		LoadTexture(path);
+		LoadTexture(path, name);
 	return true;
 }
 
-bool ModuleLoader::LoadFBX(std::string path)
+bool ModuleLoader::LoadFBX(std::string path, std::string name)
 {
 	const aiScene* scene = aiImportFile(path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
+
 		model* new_model = new model;
-		new_model->name = scene->mRootNode->mName.C_Str();
+		new_model->name = name;
 		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
 			aiMesh* m = scene->mMeshes[i];
@@ -111,7 +113,7 @@ bool ModuleLoader::LoadFBX(std::string path)
 	return true;
 }
 
-bool ModuleLoader::LoadTexture(std::string path)
+bool ModuleLoader::LoadTexture(std::string path, std::string name)
 {
 	ILuint il_img_name = 0;
 	ilGenImages(1,&il_img_name);
