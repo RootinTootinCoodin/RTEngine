@@ -172,7 +172,6 @@ bool ModuleRenderer3D::CleanUp()
 	return true;
 }
 
-
 void ModuleRenderer3D::OnResize(int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -220,7 +219,7 @@ void ModuleRenderer3D::UpdateFaceCullSetting(int state)
 
 void ModuleRenderer3D::SetFaceCull()
 {
-	if (!cullface_enabled)
+	if (cullface_enabled)
 	{
 		glEnable(GL_CULL_FACE);
 	}
@@ -285,7 +284,7 @@ void ModuleRenderer3D::SetTexture2D()
 
 void ModuleRenderer3D::SetWireframe()
 {
-	if (!wireframe_enabled)
+	if (wireframe_enabled)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
@@ -306,7 +305,7 @@ bool ModuleRenderer3D::GenerateBufferForMesh(mesh * mesh)
 	{
 		glGenBuffers(1, (GLuint*)&(mesh->id_uvs));
 		glBindBuffer(GL_TEXTURE_COORD_ARRAY, mesh->id_uvs);
-		glBufferData(GL_TEXTURE_COORD_ARRAY, sizeof(uint)*mesh->num_vertices * 2, mesh->uvs, GL_STATIC_DRAW);
+		glBufferData(GL_TEXTURE_COORD_ARRAY, sizeof(uint)*mesh->num_uvs, mesh->uvs, GL_STATIC_DRAW);
 		glBindBuffer(GL_TEXTURE_COORD_ARRAY,0);
 
 	}

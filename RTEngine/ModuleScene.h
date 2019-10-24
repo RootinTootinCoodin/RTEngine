@@ -27,6 +27,10 @@ public:
 	void DrawCubeDirectMode();
 
 	bool drawaxis = true;
+	bool showedges = true;
+	float axis_x = 0.0f;
+	float axis_y = 0.0f;
+	float axis_z = 0.0f;
 	int gridsize = 10;
 	uint index_id = 0;
 	uint vertex_id = 0;

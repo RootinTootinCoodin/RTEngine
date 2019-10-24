@@ -107,6 +107,7 @@ par_shapes_mesh* par_shapes_create_dodecahedron();
 par_shapes_mesh* par_shapes_create_octahedron();
 par_shapes_mesh* par_shapes_create_tetrahedron();
 par_shapes_mesh* par_shapes_create_cube();
+par_shapes_mesh* par_shapes_create_3d_cube();
 
 // Generate an orientable disk shape in 3-space.  Does not include normals or
 // texture coordinates.
@@ -1049,6 +1050,47 @@ par_shapes_mesh* par_shapes_create_cube()
         *tris++ = quad[0];
     }
     return mesh;
+}
+
+par_shapes_mesh* par_shapes_create_3d_cube()
+{
+	par_shapes_mesh* ret;
+
+	par_shapes_mesh* planes[6];
+	for (int i = 0; i < 6; i++)
+	{
+		planes[i] = par_shapes_create_plane(1, 1);
+	}
+
+	float axis[3];
+
+	//Rotate and move them around to create the cube
+	par_shapes_translate(planes[0], 0.f, 0.f, 1.f); // 1st Face (since the plane is generated 1 unit backwards in space)
+
+	axis[0] = 0.f; axis[1] = 1.f; axis[2] = 0.f;		// 2nd Face
+	par_shapes_rotate(planes[1], DegToRad(90), axis);
+	par_shapes_translate(planes[1], 1.f, 0.f, 1.f);
+
+	par_shapes_rotate(planes[2], DegToRad(180), axis);  // 3rd Face
+	par_shapes_translate(planes[2], 1.f, 0.f, 0.f);
+
+	par_shapes_rotate(planes[3], DegToRad(270), axis);  // 4th Face
+
+	axis[0] = 1.f; axis[1] = 0.f; axis[2] = 0.f;
+	par_shapes_rotate(planes[4], DegToRad(90), axis);  // 5th Face
+
+	par_shapes_rotate(planes[5], DegToRad(270), axis);  // 6th Face
+	par_shapes_translate(planes[5], 0.f, 1.f, 1.f);
+
+	for (int i = 1; i < 6; i++)
+	{
+		par_shapes_merge(planes[0], planes[i]);
+	}
+
+	ret = planes[0];
+	par_shapes_weld(ret, 0, nullptr); //Weld to remove duplicate vertices
+
+	return ret;
 }
 
 typedef struct {

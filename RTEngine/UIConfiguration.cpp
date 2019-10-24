@@ -79,17 +79,18 @@ void UIConfiguration::Draw()
 			const char* cull_items[] = { "Back", "Front", "Back and front"};
 			static int cull_item_current = 0;
 
-			if (ImGui::Combo("Culling Mode", &cull_item_current, cull_items, IM_ARRAYSIZE(cull_items)))
-			{
-				App->renderer3D->UpdateFaceCullSetting(cull_item_current);
-			}
-
+			ImGui::Text("Culling Mode");
 			ImGui::SameLine();
+			if (ImGui::Combo("", &cull_item_current, cull_items, IM_ARRAYSIZE(cull_items)))
+				App->renderer3D->UpdateFaceCullSetting(cull_item_current);
+
 			if (ImGui::Checkbox("Face Culling", &App->renderer3D->cullface_enabled))
 				App->renderer3D->SetFaceCull();
 
-			if (ImGui::Checkbox("Wireframe", &App->renderer3D->wireframe_enabled))
+			if (ImGui::Checkbox("Wireframe only ", &App->renderer3D->wireframe_enabled))
 				App->renderer3D->SetWireframe();
+			ImGui::SameLine();
+			ImGui::Checkbox("Wireframe", &App->scene->showedges);
 
 			if (ImGui::Checkbox("Lighting  ", &App->renderer3D->lighting_enabled))
 				App->renderer3D->SetLighting();
@@ -106,6 +107,17 @@ void UIConfiguration::Draw()
 			ImGui::Separator();
 
 			ImGui::Checkbox("Display Axis", &App->scene->drawaxis);
+			ImGui::SameLine();
+			if (ImGui::Button("Reset to origin"))
+			{
+				App->scene->axis_x = 0;
+				App->scene->axis_y = 0;
+				App->scene->axis_z = 0;
+			}
+
+			ImGui::DragFloat("Axis x", &App->scene->axis_x);
+			ImGui::DragFloat("Axis y", &App->scene->axis_y);
+			ImGui::DragFloat("Axis z", &App->scene->axis_z);
 			ImGui::DragInt("Grid size", &App->scene->gridsize, 1.0f, 0);
 		}
 
@@ -285,10 +297,16 @@ void UIConfiguration::Draw()
 
 		if (ImGui::CollapsingHeader("Geometry"))
 		{
-			static int slices = 10;
-			static int stacks = 10;
-			ImGui::SliderInt("Slices", &slices, 1, 240);
-			ImGui::SliderInt("Stacks", &stacks, 1, 240);
+			static int slices = 30;
+			static int stacks = 30;
+
+			ImGui::Text("Slices");
+			ImGui::SameLine();
+			ImGui::InputInt("", &slices);
+
+			ImGui::Text("Stacks");
+			ImGui::SameLine();
+			ImGui::InputInt("", &stacks);
 
 			if (ImGui::TreeNode("Basic Geometry"))
 			{
@@ -299,15 +317,20 @@ void UIConfiguration::Draw()
 
 				if (ImGui::Button("Create cube"))
 				{
-					App->debug->CreatePrimitive(par_shapes_create_cube(), "Cube");
+					App->debug->CreatePrimitive(par_shapes_create_3d_cube(), "Cube");
 				}
 
 				if (ImGui::Button("Create sphere"))
 				{
-					App->debug->CreatePrimitive(par_shapes_create_parametric_sphere(slices, stacks), "Sphere");
+					App->debug->CreatePrimitive(par_shapes_create_parametric_sphere(slices, stacks), "Par_Sphere");
 				}
 
-				if (ImGui::Button("Create cylinder"))
+				if (ImGui::Button("Create hemisphere"))
+				{
+					App->debug->CreatePrimitive(par_shapes_create_hemisphere(slices, stacks), "Hemisphere");
+				}
+
+				if (ImGui::Button("Create tube"))
 				{
 					App->debug->CreatePrimitive(par_shapes_create_cylinder(slices, stacks), "Cylinder");
 				}
@@ -329,9 +352,9 @@ void UIConfiguration::Draw()
 					App->debug->CreatePrimitive(par_shapes_create_klein_bottle(slices, stacks), "Klein bottle");
 				}
 
-				if (ImGui::Button("Create Klein bottle"))
+				if (ImGui::Button("Create trefoil knot"))
 				{
-					App->debug->CreatePrimitive(par_shapes_create_klein_bottle(slices, stacks), "Klein bottle");
+					App->debug->CreatePrimitive(par_shapes_create_trefoil_knot(slices, stacks, 1), "Trefoil");
 				}
 				ImGui::TreePop();
 			}
