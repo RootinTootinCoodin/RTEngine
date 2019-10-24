@@ -102,14 +102,12 @@ bool ModuleRenderer3D::Init(JSON_Object* config)
 		GLfloat MaterialDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
 		
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
+		glEnable(GL_DEPTH_TEST); depth_test_enabled = true;
+		glEnable(GL_CULL_FACE); cullface_enabled = true;
 		//glCullFace(GL_BACK);
 		lights[0].Active(true);
 
-		glEnable(GL_LIGHTING);
-		glEnable(GL_COLOR_MATERIAL);
-		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_COLOR_MATERIAL); color_material_enabled = true;
 
 	}
 	// Projection matrix for
@@ -222,7 +220,7 @@ void ModuleRenderer3D::UpdateFaceCullSetting(int state)
 
 void ModuleRenderer3D::SetFaceCull()
 {
-	if (cullface_enabled)
+	if (!cullface_enabled)
 	{
 		glEnable(GL_CULL_FACE);
 	}
@@ -235,7 +233,7 @@ void ModuleRenderer3D::SetFaceCull()
 
 void ModuleRenderer3D::SetDepthTest()
 {
-	if (depth_test_enabled)
+	if (!depth_test_enabled)
 	{
 		glEnable(GL_DEPTH_TEST);
 	}
@@ -261,7 +259,7 @@ void ModuleRenderer3D::SetLighting()
 
 void ModuleRenderer3D::SetColorMaterial()
 {
-	if (color_material_enabled)
+	if (!color_material_enabled)
 	{
 		glEnable(GL_COLOR_MATERIAL);
 	}
@@ -274,7 +272,7 @@ void ModuleRenderer3D::SetColorMaterial()
 
 void ModuleRenderer3D::SetTexture2D()
 {
-	if (texture2D_enabled)
+	if (!texture2D_enabled)
 	{
 		glEnable(GL_TEXTURE_2D);
 	}
@@ -287,7 +285,7 @@ void ModuleRenderer3D::SetTexture2D()
 
 void ModuleRenderer3D::SetWireframe()
 {
-	if (wireframe_enabled)
+	if (!wireframe_enabled)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}

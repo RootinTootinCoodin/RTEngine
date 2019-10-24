@@ -71,7 +71,9 @@ void ModuleScene::GenerateCheckerTexture()
 
 void ModuleScene::Draw()
 {
-	DrawAxis();
+	if (drawaxis)
+		DrawAxis();
+
 	DrawGrid(gridsize);
 	glBindTexture(GL_TEXTURE_2D, id_image);
 
@@ -125,6 +127,18 @@ void ModuleScene::DrawGrid(int halfsize)
 		glVertex3f((float)-halfsize, 0, (float)i);
 		glVertex3f((float)halfsize, 0, (float)i);
 	}
+	glEnd();
+
+	glLineWidth(0.4f);
+	glBegin(GL_LINES);
+	glColor3f(0.6f, 0.6f, 0.6f);
+
+	glVertex3f(0.1f, 0, 0.1f);
+	glVertex3f(-0.1f, 0, -0.1f);
+
+	glVertex3f(-0.1f, 0, 0.1f);
+	glVertex3f(0.1f, 0, -0.1f);
+
 	glEnd();
 }
 

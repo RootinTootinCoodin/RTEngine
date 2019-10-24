@@ -59,7 +59,6 @@ bool ModuleLoader::LoadFBX(std::string path, std::string name)
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
-
 		model* new_model = new model;
 		new_model->name = name;
 		for (int i = 0; i < scene->mNumMeshes; i++)

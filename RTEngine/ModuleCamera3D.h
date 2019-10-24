@@ -29,6 +29,7 @@ private:
 public:
 	
 	vec3 X, Y, Z, Position, Reference, Dot;
+	float Sensitivity = 0.25f;
 
 private:
 

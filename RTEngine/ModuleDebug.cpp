@@ -50,14 +50,14 @@ void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data, char* name)
 	// Set UVs
 	_primitive->has_texture = true;
 	_primitive->num_uvs = data->npoints * 2; // Set UV number
-	_primitive->uvs = new float[data->npoints]; // Allocate memory
+	_primitive->uvs = new float[data->npoints * 2]; // Allocate memory
 	for (int i = 0; i < _primitive->num_uvs; i++) // Fill data
 	{
 		_primitive->uvs[i] = data->tcoords[i];
 	}
 
 	// Get and render normals
-	RenderNormals(data);
+	//RenderNormals(data);
 
 	model* new_model = new model;
 	new_model->meshes.push_back(_primitive);
@@ -71,7 +71,7 @@ void ModuleDebug::RenderNormals(par_shapes_mesh_s* data)
 {
 	glLineWidth(2.0f);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_COLOR_MATERIAL); App->renderer3D->color_material_enabled = true;
 
 	glBegin(GL_LINES);
 	glColor3f(0.0f, 0.5f, 0.5f);

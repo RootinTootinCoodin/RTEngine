@@ -5,6 +5,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleScene.h"
 #include "ModuleDebug.h"
+#include "ModuleCamera3D.h"
 
 #define PAR_SHAPES_IMPLEMENTATION
 #include "par_shapes/par_shapes.h"
@@ -68,32 +69,43 @@ void UIConfiguration::Draw()
 			ImGui::PlotHistogram("", App->ms_arr.data(), display_fps, 0, fpstitle, 4.0f, 120.0f, ImVec2(310, 100));
 		}
 
+		if (ImGui::CollapsingHeader("Camera"))
+		{
+			ImGui::SliderFloat("Mouse sensitivity", &App->camera->Sensitivity, 0.0f, 10.0f);
+		}
+
 		if (ImGui::CollapsingHeader("Render"))
 		{
 			const char* cull_items[] = { "Back", "Front", "Back and front"};
 			static int cull_item_current = 0;
 
-			if (ImGui::Combo("Face culling", &cull_item_current, cull_items, IM_ARRAYSIZE(cull_items)))
+			if (ImGui::Combo("Culling Mode", &cull_item_current, cull_items, IM_ARRAYSIZE(cull_items)))
 			{
 				App->renderer3D->UpdateFaceCullSetting(cull_item_current);
 			}
 
 			ImGui::SameLine();
-
-			if (ImGui::Checkbox("Enable culling", &App->renderer3D->cullface_enabled))
+			if (ImGui::Checkbox("Face Culling", &App->renderer3D->cullface_enabled))
 				App->renderer3D->SetFaceCull();
-			if (ImGui::Checkbox("Enable depth test", &App->renderer3D->depth_test_enabled))
-				App->renderer3D->SetDepthTest();
-			if (ImGui::Checkbox("Enable lighting", &App->renderer3D->lighting_enabled))
-				App->renderer3D->SetLighting();
-			if (ImGui::Checkbox("Enable color material", &App->renderer3D->color_material_enabled))
-				App->renderer3D->SetColorMaterial();
-			if (ImGui::Checkbox("Enable 2D textures", &App->renderer3D->texture2D_enabled))
-				App->renderer3D->SetTexture2D();
-			if (ImGui::Checkbox("Enable wireframe", &App->renderer3D->wireframe_enabled))
+
+			if (ImGui::Checkbox("Wireframe", &App->renderer3D->wireframe_enabled))
 				App->renderer3D->SetWireframe();
 
+			if (ImGui::Checkbox("Lighting  ", &App->renderer3D->lighting_enabled))
+				App->renderer3D->SetLighting();
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Color Material", &App->renderer3D->color_material_enabled))
+				App->renderer3D->SetColorMaterial();
+		
+			if (ImGui::Checkbox("Depth Test", &App->renderer3D->depth_test_enabled))
+				App->renderer3D->SetDepthTest();
+			ImGui::SameLine();
+			if (ImGui::Checkbox("2D Textures", &App->renderer3D->texture2D_enabled))
+				App->renderer3D->SetTexture2D();
 
+			ImGui::Separator();
+
+			ImGui::Checkbox("Display Axis", &App->scene->drawaxis);
 			ImGui::DragInt("Grid size", &App->scene->gridsize, 1.0f, 0);
 		}
 
@@ -273,24 +285,55 @@ void UIConfiguration::Draw()
 
 		if (ImGui::CollapsingHeader("Geometry"))
 		{
-			if (ImGui::Button("Create sphere"))
+			static int slices = 10;
+			static int stacks = 10;
+			ImGui::SliderInt("Slices", &slices, 1, 240);
+			ImGui::SliderInt("Stacks", &stacks, 1, 240);
+
+			if (ImGui::TreeNode("Basic Geometry"))
 			{
-				App->debug->CreatePrimitive(par_shapes_create_parametric_sphere(10, 10), "Sphere");
+				if (ImGui::Button("Create plane"))
+				{
+					App->debug->CreatePrimitive(par_shapes_create_plane(slices, stacks), "Plane");
+				}
+
+				if (ImGui::Button("Create cube"))
+				{
+					App->debug->CreatePrimitive(par_shapes_create_cube(), "Cube");
+				}
+
+				if (ImGui::Button("Create sphere"))
+				{
+					App->debug->CreatePrimitive(par_shapes_create_parametric_sphere(slices, stacks), "Sphere");
+				}
+
+				if (ImGui::Button("Create cylinder"))
+				{
+					App->debug->CreatePrimitive(par_shapes_create_cylinder(slices, stacks), "Cylinder");
+				}
+
+				if (ImGui::Button("Create cone"))
+				{
+					App->debug->CreatePrimitive(par_shapes_create_cone(slices, stacks), "Cone");
+				}
+
+				ImGui::TreePop();
 			}
 
-			if (ImGui::Button("Create plane"))
+			ImGui::Separator();
+			
+			if (ImGui::TreeNode("Test Geometry"))
 			{
-				App->debug->CreatePrimitive(par_shapes_create_plane(1, 1), "Plane");
-			}
+				if (ImGui::Button("Create Klein bottle"))
+				{
+					App->debug->CreatePrimitive(par_shapes_create_klein_bottle(slices, stacks), "Klein bottle");
+				}
 
-			if (ImGui::Button("Create cylinder"))
-			{
-				App->debug->CreatePrimitive(par_shapes_create_cylinder(10, 2), "Cyl");
-			}
-
-			if (ImGui::Button("Create Klein bottle"))
-			{
-				App->debug->CreatePrimitive(par_shapes_create_klein_bottle(7, 7), "Klein bottle");
+				if (ImGui::Button("Create Klein bottle"))
+				{
+					App->debug->CreatePrimitive(par_shapes_create_klein_bottle(slices, stacks), "Klein bottle");
+				}
+				ImGui::TreePop();
 			}
 		}
 

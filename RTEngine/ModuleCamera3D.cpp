@@ -4,10 +4,6 @@
 #include "ModuleInput.h"
 #include "Timer.h"
 
-
-
-
-
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	name = "Camera";
@@ -52,7 +48,7 @@ update_status ModuleCamera3D::Update(float dt)
 	
 	float speed = 3.0f * dt;
 	
-	
+	// Dot = TODO: FILL WITH POSITION OF SELECTED GAMEOBJECT
 	
 
 	if(App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
@@ -67,7 +63,7 @@ update_status ModuleCamera3D::Update(float dt)
 		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed * 3;
 		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed * 3;
 
-		newPos += Z * speed * App->input->GetMouseZ();
+		newPos -= Z * speed * App->input->GetMouseZ() * 100;
 
 		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos += X * speed;
 		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos -= X * speed;
@@ -79,7 +75,6 @@ update_status ModuleCamera3D::Update(float dt)
 		// Mouse motion ----------------
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
-		float Sensitivity = 0.25f;
 
 		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 		{
@@ -108,20 +103,17 @@ update_status ModuleCamera3D::Update(float dt)
 				}
 			}
 			Position = Reference + Z * length(Position);
+
+			LookAt(Dot);
 		}
 
 		else
 		{
-			if (dx != 0)
+			if (dx != 0 || dy != 0)
 			{
 				float DeltaX = (float)dx * Sensitivity;
-
-			}
-
-			if (dy != 0)
-			{
 				float DeltaY = (float)dy * Sensitivity;
-				
+
 				
 			}
 		}
