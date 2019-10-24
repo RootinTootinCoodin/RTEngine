@@ -120,6 +120,7 @@ struct mesh
 	float* vertices = nullptr;
 
 	uint id_uvs = 0;
+	uint num_uvs = 0;
 	float* uvs = nullptr;
 	bool has_texture = false;
 };

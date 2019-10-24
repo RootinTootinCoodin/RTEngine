@@ -275,12 +275,22 @@ void UIConfiguration::Draw()
 		{
 			if (ImGui::Button("Create sphere"))
 			{
-				App->debug->CreatePrimitive(par_shapes_create_parametric_sphere(10, 10));
+				App->debug->CreatePrimitive(par_shapes_create_parametric_sphere(10, 10), "Sphere");
 			}
 
 			if (ImGui::Button("Create plane"))
 			{
-				App->debug->CreatePrimitive(par_shapes_create_plane(5, 5));
+				App->debug->CreatePrimitive(par_shapes_create_plane(1, 1), "Plane");
+			}
+
+			if (ImGui::Button("Create cylinder"))
+			{
+				App->debug->CreatePrimitive(par_shapes_create_cylinder(10, 2), "Cyl");
+			}
+
+			if (ImGui::Button("Create Klein bottle"))
+			{
+				App->debug->CreatePrimitive(par_shapes_create_klein_bottle(7, 7), "Klein bottle");
 			}
 		}
 

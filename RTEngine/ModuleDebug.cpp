@@ -24,33 +24,40 @@ bool ModuleDebug::CleanUp()
 	return true;
 }
 
-void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data)
+void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data, char* name)
 {
-	mesh* _primitive = new mesh;
+	mesh* _primitive = new mesh();
+	_primitive->mesh_name = name;
 
-	_primitive->num_vertices = data->npoints;
-	_primitive->vertices = new float[_primitive->num_vertices];
-
-	memcpy(_primitive->vertices, data->points, sizeof(float) * _primitive->num_vertices);
-	LOG("New mesh (primitive) with %d vertices", _primitive->num_vertices);
-
-	_primitive->has_texture = true;
-	_primitive->uvs = new float[_primitive->num_vertices * 2];
-
-	memcpy(_primitive->uvs, data->tcoords, sizeof(float) * _primitive->num_vertices * 2);
-
-	for (int t = 0; t <= _primitive->num_vertices * 2; t++)
+	// Set vertices
+	_primitive->num_vertices = data->npoints * 3; // Set vertex number
+	_primitive->vertices = new float[_primitive->num_vertices * 3]; // Allocate memory
+	for (int i = 0; i < _primitive->num_vertices; i++) // Fill data
 	{
-		_primitive->uvs[t] = data->tcoords[t];
+		_primitive->vertices[i] = data->points[i];
+	}
+	LOG("New mesh (primitive) with %d vertices,", _primitive->num_vertices);
 
-		if (t % 2 != 0)
-		LOG("UV: %f, %f", _primitive->uvs[t], _primitive->uvs[t + 1]);
+	// Set index
+	_primitive->num_indices = data->ntriangles * 3; // Set index number
+	_primitive->indices = new uint[_primitive->num_indices]; // Allocate memory
+	for (int i = 0; i < _primitive->num_indices; i++) // Fill data
+	{
+		_primitive->indices[i] = (uint)data->triangles[i];
+	}
+	LOG("%d indices.", _primitive->num_vertices);
+
+	// Set UVs
+	_primitive->has_texture = true;
+	_primitive->num_uvs = data->npoints * 2; // Set UV number
+	_primitive->uvs = new float[data->npoints]; // Allocate memory
+	for (int i = 0; i < _primitive->num_uvs; i++) // Fill data
+	{
+		_primitive->uvs[i] = data->tcoords[i];
 	}
 
-	_primitive->num_indices = data->ntriangles * 3;
-	_primitive->indices = new uint[_primitive->num_indices];
-
-	memcpy(&_primitive->indices, data->triangles, _primitive->num_indices * sizeof(uint));
+	// Get and render normals
+	RenderNormals(data);
 
 	model* new_model = new model;
 	new_model->meshes.push_back(_primitive);
@@ -58,4 +65,22 @@ void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data)
 	App->renderer3D->GenerateBufferForMesh(_primitive);
 	App->scene->models.push_back(new_model);
 	App->scene->model_loaded = true;
+}
+
+void ModuleDebug::RenderNormals(par_shapes_mesh_s* data)
+{
+	glLineWidth(2.0f);
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+	glEnable(GL_COLOR_MATERIAL);
+
+	glBegin(GL_LINES);
+	glColor3f(0.0f, 0.5f, 0.5f);
+
+	for (int i = 0; data->normals[i] != NULL; i = i+3)
+	{
+		glVertex3d(data->points[i], data->points[i + 1], data->points[i + 2]);
+		glVertex3f(data->normals[i], data->normals[i+1], data->normals[i+2]);
+	}
+
+	glEnd();
 }

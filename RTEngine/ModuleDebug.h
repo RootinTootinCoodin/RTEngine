@@ -17,7 +17,8 @@ private:
 
 public:
 
-	void CreatePrimitive(par_shapes_mesh_s* data);
+	void CreatePrimitive(par_shapes_mesh_s* data, char* name);
+	void RenderNormals(par_shapes_mesh_s* data);
 
 private:
 
