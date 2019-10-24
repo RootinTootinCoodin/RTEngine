@@ -79,8 +79,6 @@ bool Application::Init()
 {
 	bool ret = true;
 
-
-
 	JSON_Object* config;
 	JSON_Value* config_value;
 
@@ -109,7 +107,7 @@ bool Application::Init()
 	}
 
 	// After all Init calls we call Start() in all modules
-	LOG(" --------------Application Start --------------");
+	LOG("--------------Application Start --------------");
 	item = list_modules.begin();
 
 	while(item != list_modules.end() && ret == true)
@@ -268,7 +266,7 @@ void Application::SaveConfig()
 void Application::app_log(const char * string,...)
 {
 	logs.append(string);
-	logs.append("\n");
+	logs.append("\n\n");
 
 	update_console = true;
 }

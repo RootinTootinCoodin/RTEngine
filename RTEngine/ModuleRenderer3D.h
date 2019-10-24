@@ -37,7 +37,7 @@ public:
 
 	bool GenerateBufferForMesh(mesh* mesh);
 private:
-	void GenerateFramebuffer();
+	void GenerateFramebuffer(uint width, uint height);
 public:
 	Light lights[8];
 
@@ -47,6 +47,7 @@ public:
 
 	uint framebuffer = 0;
 	uint framebuffer_texture = 0;
+	uint renderbuffer_object = 0;
 	uint cull_mode = 0;
 	bool vsync = false;
 	bool cullface_enabled = true;

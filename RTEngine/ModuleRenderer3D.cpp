@@ -114,7 +114,6 @@ bool ModuleRenderer3D::Init(JSON_Object* config)
 	}
 	// Projection matrix for
 	OnResize(App->window->width, App->window->height);
-	GenerateFramebuffer();
 	return ret;
 }
 
@@ -187,6 +186,9 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
+	GenerateFramebuffer(width, height);
+
 }
 
 void ModuleRenderer3D::BindFramebuffer()
@@ -313,7 +315,7 @@ bool ModuleRenderer3D::GenerateBufferForMesh(mesh * mesh)
 	return true;
 }
 
-void ModuleRenderer3D::GenerateFramebuffer()
+void ModuleRenderer3D::GenerateFramebuffer(uint width, uint height)
 {
 	//Create the framebuffer
 	glGenFramebuffers(1, &framebuffer);
@@ -322,12 +324,19 @@ void ModuleRenderer3D::GenerateFramebuffer()
 	glGenTextures(1, &framebuffer_texture);
 	glBindTexture(GL_TEXTURE_2D, framebuffer_texture);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, App->window->width, App->window->height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebuffer_texture, 0);
+
+	glGenRenderbuffers(1, &renderbuffer_object);
+	glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer_object);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderbuffer_object);
+
 	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

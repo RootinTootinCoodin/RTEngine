@@ -26,8 +26,8 @@ ModuleFileSystem::ModuleFileSystem(Application* app, bool start_enabled) : Modul
 	//	AddPath(game_path);
 
 	// Dump list of paths
-	LOG("FileSystem Operations base is [%s] plus:", GetBasePath());
-	LOG(GetReadPaths());
+	LOG("FileSystem Operations base is [%s] ", GetBasePath());
+	//LOG(GetReadPaths());
 
 	// enable us to write in the game's dir area
 	if(PHYSFS_setWriteDir(".") == 0)

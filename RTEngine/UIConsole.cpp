@@ -35,7 +35,6 @@ void UIConsole::DrawConsoleItems()
 	ImGui::TextUnformatted(App->logs.begin());
 	if (App->update_console) {
 		ImGui::SetScrollHereY(1.0f);
-		ImGui::SetScrollHereX(1.0f);
 		App->update_console = false;
 	}
 
