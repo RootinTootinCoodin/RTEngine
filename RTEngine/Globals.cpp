@@ -19,3 +19,16 @@ void log(const char file[], int line, const char* format, ...)
 		_app->app_log(tmp_string2);
 
 }
+
+uint Generate_UUID()
+{
+	//I hate PCG for C++
+	unsigned int uuid = 0;
+	pcg32 seed;
+
+	seed.seed(pcg_extras::seed_seq_from<std::random_device>());
+	std::uniform_int_distribution<uint> uniform_dist(1, (uint)(std::numeric_limits<uint>::max)());
+	uuid = uniform_dist(seed);
+
+	return uuid;
+}

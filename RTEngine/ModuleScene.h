@@ -1,9 +1,11 @@
 #pragma once
 #include <vector>
+#include <map>
 #include "Module.h"
 
 struct model;
 struct par_shapes_mesh_s;
+class GameObject;
 
 class ModuleScene :
 	public Module
@@ -23,7 +25,6 @@ public:
 	void DrawGrid(int halfsize);
 	void DrawAxis();
 	void DrawCubeDirectMode();
-	void DrawCubeVertexArray();
 
 	int gridsize = 10;
 	uint index_id = 0;
@@ -42,5 +43,7 @@ public:
 	std::vector<par_shapes_mesh_s*> primitive;
 	bool model_loaded = false;
 	int checker_size = 100; 
+
+	GameObject* root;
 };
 

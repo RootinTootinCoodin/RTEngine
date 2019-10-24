@@ -2,10 +2,14 @@
 #include "ModuleScene.h"
 #include "ModuleLoader.h"
 
+
 #include "GL/glew.h"
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
+
+#include <random>
+
 
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -20,15 +24,7 @@ ModuleScene::~ModuleScene()
 
 bool ModuleScene::Init(JSON_Object* config)
 {
-	DrawCubeVertexArray();
-	//ilInit();
 
-
-
-	//glGenBuffers(1, (GLuint*) &(index_id));
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_id);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 36, index_array.data(), GL_STATIC_DRAW);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	return true;
 }
@@ -39,7 +35,7 @@ bool ModuleScene::Start()
 	//glBindBuffer(GL_ARRAY_BUFFER, vertex_id);
 	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, vert_array.data(), GL_STATIC_DRAW);
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	//GenerateCheckerTexture();
+	GenerateCheckerTexture();
 
 	return true;
 }
@@ -231,161 +227,6 @@ void ModuleScene::DrawCubeDirectMode()
 	glEnd();
 }
 
-void ModuleScene::DrawCubeVertexArray()
-{
-	//FRONT
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
 
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
 
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(1.0f);
 
-	//
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-
-	vert_array.push_back(1.0f);
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(1.0f);
-
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(1.0f);
-
-	//BACK
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-	vert_array.push_back(-1.0f);
-
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(1.0f);
-	vert_array.push_back(-1.0f);
-
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-
-	//
-	vert_array.push_back(1.0f);
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-	vert_array.push_back(-1.0f);
-
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-
-	//RIGHT
-	vert_array.push_back(1.0f);
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(1.0f);
-
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-
-	vert_array.push_back(1.0f);
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-
-	//
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-	vert_array.push_back(-1.0f);
-
-	vert_array.push_back(1.0f);
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-
-	//LEFT
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(1.0f);
-
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-
-	//
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(1.0f);
-	vert_array.push_back(-1.0f);
-
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-
-	//TOP
-	vert_array.push_back(1.0f);
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(1.0f);
-
-	//
-	vert_array.push_back(1.0f);
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(1.0f);
-
-	vert_array.push_back(1.0f);
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(1.0f);
-
-	//BOTTOM
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-	vert_array.push_back(-1.0f);
-
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-
-	//
-	vert_array.push_back(-1.0f);
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-	vert_array.push_back(-1.0f);
-
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-	vert_array.push_back(1.0f);
-}
