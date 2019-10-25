@@ -13,17 +13,28 @@ public:
 	GameObject(std::string name, GameObject* parent, uint uuid);
 
 	~GameObject();
+
+
+	Component* AddComponent(componentType type);
+	GameObject* AddChildren(std::string name);
+	uint GetUUID() { return uuid; };
+	void RecursiveGetChildren(std::vector<GameObject*>* buffer);
+
+	Component* GetComponent(componentType type);
+
 private:
 	std::string name;
 	uint uuid = 0;
 	bool active = true;
 	GameObject* parent;
 	std::map<uint, Component*> components;
+	std::map<uint, GameObject*> children;
 
 public:
 private:
 
 	void Update();
-	Component* AddComponent(componentType type);
+
+	
 };
 

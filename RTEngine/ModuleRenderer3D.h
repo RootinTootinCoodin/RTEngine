@@ -8,7 +8,7 @@
 
 #define MAX_LIGHTS 8
 
-class mesh;
+class ComponentMesh;
 
 class ModuleRenderer3D : public Module
 {
@@ -35,7 +35,7 @@ public:
 	void SetTexture2D();
 	void SetWireframe();
 
-	bool GenerateBufferForMesh(mesh* mesh);
+	bool GenerateBufferForMesh(ComponentMesh* mesh);
 private:
 	void GenerateFramebuffer(uint width, uint height);
 public:

@@ -5,6 +5,7 @@
 #include "ModuleCamera3D.h"
 #include "ModuleScene.h"
 #include "ModuleLoader.h"
+#include "ComponentMesh.h"
 #include "GL/glew.h"
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
@@ -108,6 +109,7 @@ bool ModuleRenderer3D::Init(JSON_Object* config)
 		lights[0].Active(true);
 
 		glEnable(GL_COLOR_MATERIAL); color_material_enabled = true;
+		glEnable(GL_TEXTURE_2D); texture2D_enabled = true;
 
 	}
 	// Projection matrix for
@@ -271,7 +273,7 @@ void ModuleRenderer3D::SetColorMaterial()
 
 void ModuleRenderer3D::SetTexture2D()
 {
-	if (!texture2D_enabled)
+	if (texture2D_enabled)
 	{
 		glEnable(GL_TEXTURE_2D);
 	}
@@ -294,21 +296,20 @@ void ModuleRenderer3D::SetWireframe()
 	}
 }
 
-bool ModuleRenderer3D::GenerateBufferForMesh(mesh * mesh)
+bool ModuleRenderer3D::GenerateBufferForMesh(ComponentMesh * mesh)
 {
 	glGenBuffers(1, (GLuint*)&(mesh->id_index));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)*mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	if(mesh->has_texture)
-	{
-		glGenBuffers(1, (GLuint*)&(mesh->id_uvs));
-		glBindBuffer(GL_TEXTURE_COORD_ARRAY, mesh->id_uvs);
-		glBufferData(GL_TEXTURE_COORD_ARRAY, sizeof(uint)*mesh->num_uvs, mesh->uvs, GL_STATIC_DRAW);
-		glBindBuffer(GL_TEXTURE_COORD_ARRAY,0);
 
-	}
+	glGenBuffers(1, (GLuint*)&(mesh->id_uvs));
+	glBindBuffer(GL_TEXTURE_COORD_ARRAY, mesh->id_uvs);
+	glBufferData(GL_TEXTURE_COORD_ARRAY, sizeof(uint)*mesh->num_uvs, mesh->uvs, GL_STATIC_DRAW);
+	glBindBuffer(GL_TEXTURE_COORD_ARRAY,0);
+
+	
 	return true;
 }
 

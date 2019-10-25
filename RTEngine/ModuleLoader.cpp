@@ -3,6 +3,9 @@
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleFileSystem.h"
+#include "GameObject.h"
+#include "Component.h"
+#include "ComponentMesh.h"
 
 
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
@@ -59,12 +62,14 @@ bool ModuleLoader::LoadFBX(std::string path, std::string name)
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
-		model* new_model = new model;
-		new_model->name = name;
+		GameObject* new_model = App->scene->root->AddChildren(name);
+
 		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
+			
 			aiMesh* m = scene->mMeshes[i];
-			mesh* _mesh = new mesh;
+			
+			ComponentMesh* _mesh = (ComponentMesh*)new_model->AddComponent(MESH);
 			_mesh->mesh_name = m->mName.C_Str();
 
 			_mesh->num_vertices = m->mNumVertices;
@@ -74,7 +79,6 @@ bool ModuleLoader::LoadFBX(std::string path, std::string name)
 
 			if (m->HasTextureCoords(0))
 			{
-				_mesh->has_texture = true;
 
 				//Can't use memcpy because m->mTextureCoords is a 3D vector but we only use x and y
 				_mesh->uvs = new float[_mesh->num_vertices * 2];
@@ -83,6 +87,12 @@ bool ModuleLoader::LoadFBX(std::string path, std::string name)
 					_mesh->uvs[t] = m->mTextureCoords[0][t / 2].x;
 					_mesh->uvs[t + 1] = m->mTextureCoords[0][t / 2].y;
 				}
+			}
+
+			if (m->HasVertexColors(0))
+			{
+				_mesh->colors = new float[_mesh->num_vertices * 4];
+				memcpy(_mesh->colors, m->mColors[0], sizeof(float)*_mesh->num_vertices * 4);
 			}
 
 			if (m->HasFaces())
@@ -100,14 +110,12 @@ bool ModuleLoader::LoadFBX(std::string path, std::string name)
 
 				//TODO: UGLY
 				App->renderer3D->GenerateBufferForMesh(_mesh);
-				new_model->meshes.push_back(_mesh);
+				
 				App->scene->model_loaded = true;
 			}
 			else
 				LOG("Error mesh from scene %s, no faces", path);
 		}
-		App->scene->models.push_back(new_model);
-
 		aiReleaseImport(scene);
 	}
 	else

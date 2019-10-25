@@ -1,6 +1,9 @@
 #include "Application.h"
 #include "ModuleScene.h"
 #include "ModuleLoader.h"
+#include "GameObject.h"
+#include "Component.h"
+#include "ComponentMesh.h"
 
 
 #include "GL/glew.h"
@@ -15,6 +18,7 @@
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	name = "Scene";
+	root = new GameObject("Root", nullptr);
 }
 
 
@@ -80,24 +84,25 @@ void ModuleScene::Draw()
 	//DrawCubeDirectMode();
 	int result = 0;
 
-	if (models.size() > 0)
-	{
-		model* tmp = models[current_model_index];
+	std::vector<GameObject*> gameObjects;
+	root->RecursiveGetChildren(&gameObjects);
 
-		for (auto item = tmp->meshes.begin(); item != tmp->meshes.end(); item++)
+	for (auto item = gameObjects.begin(); item != gameObjects.end(); item++)
+	{
+		if (ComponentMesh* mesh = (ComponentMesh*)(*item)->GetComponent(MESH))
 		{
 			glEnableClientState(GL_VERTEX_ARRAY);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*item)->id_index);
-			glVertexPointer(3, GL_FLOAT, 0, &(*item)->vertices[0]);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
+			glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);
 
 			if (textures.size() > 0)
 			{
 				glBindTexture(GL_TEXTURE_2D, *textures[current_texture_index]);
 				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-				glTexCoordPointer(2, GL_FLOAT, 0, &(*item)->uvs[0]);
+				glTexCoordPointer(2, GL_FLOAT, 0, &mesh->uvs[0]);
 			}
 
-			glDrawElements(GL_TRIANGLES, (*item)->num_indices, GL_UNSIGNED_INT, NULL);
+			glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
@@ -108,9 +113,10 @@ void ModuleScene::Draw()
 			}
 
 			glDisableClientState(GL_VERTEX_ARRAY);
-		
+
 		}
 	}
+	
 
 	
 

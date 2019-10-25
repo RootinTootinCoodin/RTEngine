@@ -3,6 +3,8 @@
 #include "ModuleLoader.h"
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
+#include "GameObject.h"
+#include "ComponentMesh.h"
 #include "par_shapes/par_shapes.h"
 
 ModuleDebug::ModuleDebug(Application * app, bool start_enabled) : Module(app, start_enabled)
@@ -26,7 +28,8 @@ bool ModuleDebug::CleanUp()
 
 void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data, char* name)
 {
-	mesh* _primitive = new mesh();
+	GameObject* game_object = App->scene->root->AddChildren(name);
+	ComponentMesh* _primitive = (ComponentMesh*)game_object->AddComponent(MESH);
 	_primitive->mesh_name = name;
 
 	// Set vertices
@@ -48,7 +51,6 @@ void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data, char* name)
 	LOG("%d indices.", _primitive->num_vertices);
 
 	// Set UVs
-	_primitive->has_texture = true;
 	_primitive->num_uvs = data->npoints * 2; // Set UV number
 	_primitive->uvs = new float[data->npoints * 2]; // Allocate memory
 	for (int i = 0; i < _primitive->num_uvs; i++) // Fill data
@@ -60,10 +62,8 @@ void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data, char* name)
 	//RenderNormals(data);
 
 	model* new_model = new model;
-	new_model->meshes.push_back(_primitive);
 
 	App->renderer3D->GenerateBufferForMesh(_primitive);
-	App->scene->models.push_back(new_model);
 	App->scene->model_loaded = true;
 }
 

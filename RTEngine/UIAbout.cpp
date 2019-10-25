@@ -6,27 +6,6 @@ UIAbout::UIAbout(Application * app) : UIElement(app)
 {
 	name = "About";
 	show_window = false;
-
-	//JSON_Value *file = json_parse_file("About.json");
-	//text = json_object_get_string(json_object(file), "text");
-	////json_value_free(file);
-	//JSON_Object* config;
-	//JSON_Value* config_value;
-
-	//config_value = json_parse_file_with_comments("user_data.json");
-	//if (config_value == NULL)
-	//{
-	//	App->app_log("Error opening json file");
-	//}
-	//else
-	//{
-	//	App->app_log("Sucess opening json file");
-	//}
-	//	
-
-	//config = json_value_get_object(config_value);
-	//text = json_object_get_string(json_object_get_object(config,"name"),"name2");
-	
 }
 
 UIAbout::~UIAbout()
