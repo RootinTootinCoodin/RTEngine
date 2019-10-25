@@ -27,8 +27,8 @@ void UIScene::Draw()
 			previous_size.y = size.y;
 			//App->renderer3D->OnResize(previous_size.y, previous_size.x);
 		}
-		ImGui::SetCursorPos((ImGui::GetWindowSize() - ImVec2(App->window->width, App->window->height)) * 0.5f);
-		ImGui::Image((ImTextureID)App->renderer3D->framebuffer_texture, ImVec2(App->window->width, App->window->height), { 1,1 }, { 0,0 });
+		//ImGui::SetCursorPos((ImGui::GetWindowSize() - ImVec2(1920, 1080)) * 0.5f);
+		ImGui::Image((ImTextureID)App->renderer3D->framebuffer_texture, size, { 1,1 }, { 0,0 });
 	}
 	ImGui::End();
 
