@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __UI_ABOUT_H__
+#define __UI_ABOUT_H__
+
 #include "UIElement.h"
 class UIAbout : public UIElement
 {
@@ -10,4 +12,6 @@ public:
 
 	std::string text;
 };
+
+#endif // !__UI_ABOUT_H__
 

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __UI_INSPECTOR_H__
+#define __UI_INSPECTOR_H__
+
 #include "UIElement.h"
 
 struct model;
@@ -13,4 +15,6 @@ public:
 
 	void DrawModelInfo(model* _model);
 };
+
+#endif // !__UI_INSPECTOR_H__
 

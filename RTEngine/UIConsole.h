@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __UI_CONSOLE_H__
+#define __UI_CONSOLE_H__
+
 #include "UIElement.h"
 
 class UIConsole :
@@ -20,3 +22,4 @@ private:
 
 };
 
+#endif

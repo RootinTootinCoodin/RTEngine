@@ -1,4 +1,7 @@
-#pragma once
+#ifndef __UI_CONFIGURATION_H__
+#define __UI_CONFIGURATION_H__
+
+
 #include "UIElement.h"
 #include "SDL/include/SDL.h"
 
@@ -13,4 +16,6 @@ public:
 
 	int display_fps = 60;
 };
+
+#endif // !__UI_CONFIGURATION_H__
 

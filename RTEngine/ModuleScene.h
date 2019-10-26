@@ -1,4 +1,7 @@
-#pragma once
+#ifndef __MODULE_SCENE_H__
+#define __MODULE_SCENE_H__
+
+
 #include <vector>
 #include <map>
 #include "Module.h"
@@ -51,4 +54,7 @@ public:
 
 	GameObject* root;
 };
+
+#endif // !__MODULE_SCENE_H__
+
 
