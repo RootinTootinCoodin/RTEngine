@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __MODULE_DEBUG_H__
+#define __MODULE_DEBUG_H__
+
 #include "Module.h"
 
 struct par_shapes_mesh_s;
@@ -24,3 +26,5 @@ private:
 
 
 };
+
+#endif // !__MODULE_DEBUG_H__

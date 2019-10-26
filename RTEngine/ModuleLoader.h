@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __MODULE_LOADER_H__
+#define __MODULE_LOADER_H__
+
 #include "Module.h"
 
 #include "Assimp/include/cimport.h"
@@ -24,4 +26,6 @@ public:
 private:
 	aiLogStream stream;
 };
+
+#endif
 

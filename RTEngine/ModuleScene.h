@@ -1,4 +1,7 @@
-#pragma once
+#ifndef __MODULE_SCENE_H__
+#define __MODULE_SCENE_H__
+
+
 #include <vector>
 #include <map>
 #include "Module.h"
@@ -25,7 +28,6 @@ public:
 	void DrawGrid(int halfsize);
 	void DrawAxis();
 	void DrawCubeDirectMode();
-
 	bool drawaxis = true;
 	bool showedges = true;
 	float axis_x = 0.0f;
@@ -49,6 +51,10 @@ public:
 	bool model_loaded = false;
 	int checker_size = 100; 
 
-	GameObject* root;
+	GameObject* root = nullptr;
+	GameObject* selected_go = nullptr;
 };
+
+#endif // !__MODULE_SCENE_H__
+
 

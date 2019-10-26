@@ -1,10 +1,13 @@
-#pragma once
+#ifndef __GAME_OBJECT_H__
+#define __GAME_OBJECT_H__
 
-#include <string>
-#include <map>
+
 #include "Globals.h"
+#include <map>
 
 class Component;
+
+
 class GameObject
 {
 public:
@@ -18,7 +21,9 @@ public:
 	Component* AddComponent(componentType type);
 	GameObject* AddChildren(std::string name);
 	uint GetUUID() { return uuid; };
+
 	void RecursiveGetChildren(std::vector<GameObject*>* buffer);
+	void RecursiveHierarchyChildren();
 
 	Component* GetComponent(componentType type);
 
@@ -30,6 +35,8 @@ private:
 	std::map<uint, Component*> components;
 	std::map<uint, GameObject*> children;
 
+	math::AABB bounding_box;
+
 public:
 private:
 
@@ -37,4 +44,7 @@ private:
 
 	
 };
+
+#endif // !__GAME_OBJECT_H__
+
 

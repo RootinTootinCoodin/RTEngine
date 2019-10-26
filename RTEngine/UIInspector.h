@@ -1,7 +1,11 @@
-#pragma once
+#ifndef __UI_INSPECTOR_H__
+#define __UI_INSPECTOR_H__
+
 #include "UIElement.h"
 
 struct model;
+class GameObject;
+
 class UIInspector :
 	public UIElement
 {
@@ -12,5 +16,8 @@ public:
 	void Draw();
 
 	void DrawModelInfo(model* _model);
+
 };
+
+#endif // !__UI_INSPECTOR_H__
 

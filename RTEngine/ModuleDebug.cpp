@@ -30,7 +30,6 @@ void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data, char* name)
 {
 	GameObject* game_object = App->scene->root->AddChildren(name);
 	ComponentMesh* _primitive = (ComponentMesh*)game_object->AddComponent(MESH);
-	_primitive->mesh_name = name;
 
 	// Set vertices
 	_primitive->num_vertices = data->npoints * 3; // Set vertex number

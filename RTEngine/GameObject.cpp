@@ -4,6 +4,8 @@
 #include "Component.h"
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
+#include "MathGeoLib/Geometry/AABB.h"
+
 
 
 GameObject::GameObject()
@@ -14,6 +16,7 @@ GameObject::GameObject(std::string name, GameObject * parent) : name(name), pare
 {
 	uuid = Generate_UUID();
 	AddComponent(TRANSFORM);
+	bounding_box.SetNegativeInfinity();
 }
 
 GameObject::GameObject(std::string name, GameObject * parent, uint uuid): name(name), parent(parent), uuid(uuid)
@@ -67,7 +70,7 @@ Component* GameObject::AddComponent(componentType type)
 GameObject * GameObject::AddChildren(std::string name)
 {
 	GameObject* ret = new GameObject(name, this);
-	children.insert({ GetUUID(),ret });
+	children.insert({ ret->GetUUID(),ret });
 	return ret;
 }
 
@@ -78,6 +81,30 @@ void GameObject::RecursiveGetChildren(std::vector<GameObject*>* buffer)
 		(*item).second->RecursiveGetChildren(buffer);
 	}
 	buffer->push_back(this);
+}
+
+void GameObject::RecursiveHierarchyChildren()
+{
+	for (auto item = children.begin(); item != children.end(); item++)
+	{
+		ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+		if (_app->scene->selected_go == (*item).second)
+		{
+			node_flags |= ImGuiTreeNodeFlags_Selected;
+		}
+		bool open = ImGui::TreeNodeEx((*item).second->name.c_str(), node_flags);
+		if (ImGui::IsItemClicked())
+		{
+			_app->scene->selected_go = (*item).second;
+		}
+		if (open)
+		{
+			(*item).second->RecursiveHierarchyChildren();
+			ImGui::TreePop();
+		}
+	}
+	
+
 }
 
 Component * GameObject::GetComponent(componentType type)

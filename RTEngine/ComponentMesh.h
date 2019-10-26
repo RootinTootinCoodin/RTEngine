@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __COMPONENT_MESH_H__
+#define __COMPONENT_MESH_H__
 #include "Component.h"
 
 
@@ -16,8 +17,6 @@ public:
 	~ComponentMesh();
 private:
 public:
-	std::string mesh_name;
-
 	uint id_index = 0;
 	uint num_indices = 0;
 	uint* indices = nullptr;
@@ -35,4 +34,6 @@ public:
 private:
 
 };
+
+#endif
 
