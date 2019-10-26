@@ -82,7 +82,7 @@ bool Application::Init()
 	JSON_Object* config;
 	JSON_Value* config_value;
 
-	config_value = json_parse_file_with_comments("config_file.json");
+	config_value = json_parse_file_with_comments("Settings\\config_file.json");
 	if (config_value == NULL)
 	{
 		LOG("Error opening config file");

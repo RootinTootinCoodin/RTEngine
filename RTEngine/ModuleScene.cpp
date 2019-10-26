@@ -1,6 +1,8 @@
 #include "Application.h"
 #include "ModuleScene.h"
 #include "ModuleLoader.h"
+#include "ModuleImGui.h"
+#include "UIInspector.h"
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentMesh.h"
@@ -46,6 +48,7 @@ bool ModuleScene::Start()
 
 update_status ModuleScene::Update(float dt)
 {
+	root->RecursiveHierarchyChildren();
 	return UPDATE_CONTINUE;
 }
 
@@ -82,7 +85,6 @@ void ModuleScene::Draw()
 	glBindTexture(GL_TEXTURE_2D, id_image);
 
 	//DrawCubeDirectMode();
-	int result = 0;
 
 	std::vector<GameObject*> gameObjects;
 	root->RecursiveGetChildren(&gameObjects);
@@ -284,3 +286,4 @@ void ModuleScene::DrawCubeDirectMode()
 
 	glEnd();
 }
+

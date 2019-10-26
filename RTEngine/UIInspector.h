@@ -4,6 +4,8 @@
 #include "UIElement.h"
 
 struct model;
+class GameObject;
+
 class UIInspector :
 	public UIElement
 {
@@ -14,6 +16,7 @@ public:
 	void Draw();
 
 	void DrawModelInfo(model* _model);
+
 };
 
 #endif // !__UI_INSPECTOR_H__

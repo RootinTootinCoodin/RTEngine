@@ -66,11 +66,11 @@ bool ModuleLoader::LoadFBX(std::string path, std::string name)
 
 		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
-			
 			aiMesh* m = scene->mMeshes[i];
-			
-			ComponentMesh* _mesh = (ComponentMesh*)new_model->AddComponent(MESH);
-			_mesh->mesh_name = m->mName.C_Str();
+			GameObject* mesh_gameobject = new_model->AddChildren(m->mName.C_Str());
+
+			ComponentMesh* _mesh = (ComponentMesh*)mesh_gameobject->AddComponent(MESH);
+
 
 			_mesh->num_vertices = m->mNumVertices;
 			_mesh->vertices = new float[_mesh->num_vertices * 3];
