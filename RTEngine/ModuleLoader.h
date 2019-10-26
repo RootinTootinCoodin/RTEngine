@@ -7,6 +7,7 @@
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
+class ComponentMaterial;
 
 class ModuleLoader :
 	public Module
@@ -19,7 +20,7 @@ public:
 
 	bool FileReceived(std::string path);
 	bool LoadFBX(std::string path, std::string name);
-	bool LoadTexture(std::string path, std::string name);
+	bool LoadTexture(std::string path, ComponentMaterial* material = nullptr);
 
 private:
 public:

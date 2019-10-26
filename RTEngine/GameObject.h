@@ -3,6 +3,8 @@
 
 
 #include "Globals.h"
+#include "MathGeoLib/Geometry/AABB.h" //I dont like this, but i get compiler errors otherwise
+
 #include <map>
 
 class Component;
@@ -20,10 +22,13 @@ public:
 
 	Component* AddComponent(componentType type);
 	GameObject* AddChildren(std::string name);
-	uint GetUUID() { return uuid; };
+	uint GetUUID() const { return uuid; }; 
+	std::string GetName() const { return name; }; 
 
 	void RecursiveGetChildren(std::vector<GameObject*>* buffer);
 	void RecursiveHierarchyChildren();
+	void RecalculateAABB();
+	void ParentRecalculateAABB();
 
 	Component* GetComponent(componentType type);
 
@@ -35,7 +40,7 @@ private:
 	std::map<uint, Component*> components;
 	std::map<uint, GameObject*> children;
 
-	math::AABB bounding_box;
+	AABB bounding_box;
 
 public:
 private:

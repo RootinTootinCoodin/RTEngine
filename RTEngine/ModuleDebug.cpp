@@ -5,6 +5,7 @@
 #include "ModuleRenderer3D.h"
 #include "GameObject.h"
 #include "ComponentMesh.h"
+#include "ComponentMaterial.h"
 #include "par_shapes/par_shapes.h"
 
 ModuleDebug::ModuleDebug(Application * app, bool start_enabled) : Module(app, start_enabled)
@@ -30,7 +31,8 @@ void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data, char* name)
 {
 	GameObject* game_object = App->scene->root->AddChildren(name);
 	ComponentMesh* _primitive = (ComponentMesh*)game_object->AddComponent(MESH);
-
+	ComponentMaterial* _material = (ComponentMaterial*)game_object->AddComponent(MATERIAL);
+	_material->CopyTextureToThis(App->scene->textures[0]);
 	// Set vertices
 	_primitive->num_vertices = data->npoints * 3; // Set vertex number
 	_primitive->vertices = new float[_primitive->num_vertices * 3]; // Allocate memory
@@ -63,7 +65,6 @@ void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data, char* name)
 	model* new_model = new model;
 
 	App->renderer3D->GenerateBufferForMesh(_primitive);
-	App->scene->model_loaded = true;
 }
 
 void ModuleDebug::RenderNormals(par_shapes_mesh_s* data)
@@ -82,4 +83,6 @@ void ModuleDebug::RenderNormals(par_shapes_mesh_s* data)
 	}
 
 	glEnd();
+	glLineWidth(STANDARD_LINE_SIZE);
+
 }

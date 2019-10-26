@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentMesh.h"
+#include "ComponentMaterial.h"
 
 
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
@@ -52,7 +53,7 @@ bool ModuleLoader::FileReceived(std::string path)
 	if (MODEL_EXTENSIONS(extension))
 		LoadFBX(path, name);
 	if (TEXTURE_EXTENSIONS(extension))
-		LoadTexture(path, name);
+		LoadTexture(path);
 	return true;
 }
 
@@ -63,14 +64,14 @@ bool ModuleLoader::LoadFBX(std::string path, std::string name)
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		GameObject* new_model = App->scene->root->AddChildren(name);
-
+		
 		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
 			aiMesh* m = scene->mMeshes[i];
 			GameObject* mesh_gameobject = new_model->AddChildren(m->mName.C_Str());
 
 			ComponentMesh* _mesh = (ComponentMesh*)mesh_gameobject->AddComponent(MESH);
-
+			ComponentMaterial* _material = (ComponentMaterial*)mesh_gameobject->AddComponent(MATERIAL);
 
 			_mesh->num_vertices = m->mNumVertices;
 			_mesh->vertices = new float[_mesh->num_vertices * 3];
@@ -88,6 +89,27 @@ bool ModuleLoader::LoadFBX(std::string path, std::string name)
 					_mesh->uvs[t + 1] = m->mTextureCoords[0][t / 2].y;
 				}
 			}
+
+			if (aiMaterial* material = scene->mMaterials[m->mMaterialIndex])
+			{
+				aiString texture_name;
+				material->GetTexture(aiTextureType_DIFFUSE, 0, &texture_name);
+
+				std::string texture_path;
+				App->fileSystem->SplitFilePath(path.c_str(), &texture_path);
+				texture_path += texture_name.C_Str();
+				if (!LoadTexture(texture_path, _material))
+				{
+					std::string texture_path_2 = App->fileSystem->GetWritePath();
+					texture_path_2 += ASSETS_TEXTURES_FOLDER;
+					texture_path_2 += texture_name.C_Str();
+					LOG("Texture is not located in the same path as the mesh");
+					if (!LoadTexture(texture_path_2, _material))
+						LOG("Failed to load texture for model %s", mesh_gameobject->GetName())
+				}
+			}
+			else
+				_material->CopyTextureToThis(App->scene->textures[0]);
 
 			if (m->HasVertexColors(0))
 			{
@@ -110,8 +132,7 @@ bool ModuleLoader::LoadFBX(std::string path, std::string name)
 
 				//TODO: UGLY
 				App->renderer3D->GenerateBufferForMesh(_mesh);
-				
-				App->scene->model_loaded = true;
+				mesh_gameobject->ParentRecalculateAABB();
 			}
 			else
 				LOG("Error mesh from scene %s, no faces", path);
@@ -123,16 +144,16 @@ bool ModuleLoader::LoadFBX(std::string path, std::string name)
 	return true;
 }
 
-bool ModuleLoader::LoadTexture(std::string path, std::string name)
+bool ModuleLoader::LoadTexture(std::string path, ComponentMaterial* material)
 {
+	bool ret = false;
 	ILuint il_img_name = 0;
 	ilGenImages(1,&il_img_name);
 	ilBindImage(il_img_name);
 
-	
 	if (ilLoadImage(path.c_str()))
 	{
-		uint* new_texture = new uint;
+		texture* new_texture = new texture;
 		ILinfo il_img_data;
 		iluGetImageInfo(&il_img_data);
 
@@ -145,8 +166,8 @@ bool ModuleLoader::LoadTexture(std::string path, std::string name)
 				LOG("Error rotating image: %s", iluErrorString(ilGetError()));
 
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glGenTextures(1, new_texture);
-		glBindTexture(GL_TEXTURE_2D, *new_texture);
+		glGenTextures(1, &new_texture->id_texture);
+		glBindTexture(GL_TEXTURE_2D, new_texture->id_texture);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -156,12 +177,23 @@ bool ModuleLoader::LoadTexture(std::string path, std::string name)
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		App->scene->textures.push_back(new_texture);
+
+
+		App->fileSystem->SplitFilePath(path.c_str(), nullptr, &material->name, nullptr);
+
+		material->id_texture = new_texture->id_texture;
+		material->width = il_img_data.Width;
+		material->height = il_img_data.Height;
+		material->depth = il_img_data.Depth;
+		material->bpp = il_img_data.Bpp;
+
+		ret = true;
 	}
 	else
-		LOG("Error loading texture: %s", iluErrorString(ilGetError()));
+		LOG("Error loading texture: %s", path.c_str());
 
 	ilDeleteImage(il_img_name);
-	return false;
+	return ret;
 }
 
 bool ModuleLoader::CleanUp()

@@ -49,6 +49,8 @@ enum componentType
 
 #define SCREEN_SIZE 1
 
+#define STANDARD_LINE_SIZE 0.5f
+
 #define VSYNC true
 
 //  NULL just in case ----------------------
@@ -114,10 +116,10 @@ inline const char* const PATH(const char* folder, const char* file)
 #define PERF_PEEK(timer) LOG("%s took %f ms", __FUNCTION__, timer.ReadMs())
 
 #define VERSION "0.4-alpha"
-#define ASSETS_FOLDER "/Assets/"
-#define SETTINGS_FOLDER "/Settings/"
-#define ASSETS_MODELS_FOLDER "/Assets/Models/"
-#define ASSETS_TEXTURES_FOLDER "/Assets/Textures/"
+#define ASSETS_FOLDER "\\Assets\\"
+#define SETTINGS_FOLDER "\\Settings\\"
+#define ASSETS_MODELS_FOLDER "\\Assets\\Models\\"
+#define ASSETS_TEXTURES_FOLDER "\\Assets\\Textures\\"
 
 #define MODEL_EXTENSIONS(extension) extension=="fbx"|| extension=="FBX"
 #define TEXTURE_EXTENSIONS(extension) extension=="png"|| extension=="PNG"|| extension=="dds"|| extension=="DDS"
@@ -149,7 +151,7 @@ struct texture
 {
 	std::string name;
 	uint id_texture;
-	uint with;
+	uint width;
 	uint height;
 	uint depth;
 	uint bpp;

@@ -24,12 +24,13 @@ public:
 	std::vector<uint> index_array;
 
 	void GenerateCheckerTexture();
+	void DefaultTexture();
 	void Draw();
 	void DrawGrid(int halfsize);
 	void DrawAxis();
-	void DrawCubeDirectMode();
 	bool drawaxis = true;
-	bool showedges = true;
+	bool showedges = false;
+	bool wireframe_when_selected_enabled = true;
 	float axis_x = 0.0f;
 	float axis_y = 0.0f;
 	float axis_z = 0.0f;
@@ -40,15 +41,13 @@ public:
 	GLubyte checkImage[100][100][4];
 	uint id_image = 0;
 
-
 	std::vector<model*> models;
 	uint current_model_index = 0;
 
-	std::vector<uint*> textures;
+	std::vector<texture*> textures;
 	uint current_texture_index = 0;
 
 	std::vector<par_shapes_mesh_s*> primitive;
-	bool model_loaded = false;
 	int checker_size = 100; 
 
 	GameObject* root = nullptr;

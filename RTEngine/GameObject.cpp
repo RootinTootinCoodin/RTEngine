@@ -4,7 +4,7 @@
 #include "Component.h"
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
-#include "MathGeoLib/Geometry/AABB.h"
+#include "ComponentMaterial.h"
 
 
 
@@ -22,6 +22,7 @@ GameObject::GameObject(std::string name, GameObject * parent) : name(name), pare
 GameObject::GameObject(std::string name, GameObject * parent, uint uuid): name(name), parent(parent), uuid(uuid)
 {
 	AddComponent(TRANSFORM);
+	bounding_box.SetNegativeInfinity();
 }
 
 
@@ -57,7 +58,7 @@ Component* GameObject::AddComponent(componentType type)
 		break;
 	case MATERIAL:
 
-
+		ret = new ComponentMaterial(this);
 		break;
 	default:
 		break;
@@ -103,8 +104,25 @@ void GameObject::RecursiveHierarchyChildren()
 			ImGui::TreePop();
 		}
 	}
-	
 
+
+}
+
+void GameObject::RecalculateAABB()
+{
+	if (ComponentMesh* mesh = (ComponentMesh*)GetComponent(MESH))
+	{
+		bounding_box.Enclose((float3*)mesh->vertices, mesh->num_vertices);
+	}
+}
+
+void GameObject::ParentRecalculateAABB()
+{
+	RecalculateAABB();
+	if (parent)
+	{
+		parent->ParentRecalculateAABB();
+	}
 }
 
 Component * GameObject::GetComponent(componentType type)
