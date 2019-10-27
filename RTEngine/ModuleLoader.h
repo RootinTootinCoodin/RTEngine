@@ -9,6 +9,7 @@
 #include "Assimp/include/cfileio.h"
 class ComponentMaterial;
 class ComponentMesh;
+class GameObject;
 
 class ModuleLoader :
 	public Module
