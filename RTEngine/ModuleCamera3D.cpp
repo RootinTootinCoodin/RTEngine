@@ -35,6 +35,9 @@ ModuleCamera3D::~ModuleCamera3D()
 bool ModuleCamera3D::Init(JSON_Object* config)
 {
 	LOG("Setting up the camera");
+
+	Sensitivity = json_object_get_number(config, "sensitivity");
+
 	bool ret = true;
 	return ret;
 }
@@ -45,6 +48,11 @@ bool ModuleCamera3D::CleanUp()
 	LOG("Cleaning camera");
 
 	return true;
+}
+
+void ModuleCamera3D::Save(JSON_Object * config)
+{
+	json_object_set_number(config, "sensitivity", Sensitivity);
 }
 
 // -----------------------------------------------------------------

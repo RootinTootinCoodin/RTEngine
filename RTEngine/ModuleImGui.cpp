@@ -83,8 +83,6 @@ update_status ModuleImGui::PreUpdate(float dt)
 
 		if (ImGui::BeginMenu("Help"))
 		{
-			ImGui::MenuItem("Show demo", "S", &show_demo_window);
-
 			if (ImGui::MenuItem("Documentation"))
 				App->RequestBrowser("https://github.com/RootinTootinCoodin/RTEngine/wiki");
 
