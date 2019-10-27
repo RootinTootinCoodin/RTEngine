@@ -68,81 +68,7 @@ bool ModuleLoader::LoadFBX(std::string path, std::string name)
 		
 		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
-			aiMesh* m = scene->mMeshes[i];
-			GameObject* mesh_gameobject = new_model->AddChildren(m->mName.C_Str());
-
-			ComponentMesh* _mesh = (ComponentMesh*)mesh_gameobject->AddComponent(MESH);
-			ComponentMaterial* _material = (ComponentMaterial*)mesh_gameobject->AddComponent(MATERIAL);
-
-			_mesh->num_vertices = m->mNumVertices;
-			_mesh->vertices = new float[_mesh->num_vertices * 3];
-			memcpy(_mesh->vertices, m->mVertices, sizeof(float) * _mesh->num_vertices * 3);
-			LOG("New mesh with %d vertices", _mesh->num_vertices);
-
-			if (m->HasTextureCoords(0))
-			{
-
-				//Can't use memcpy because m->mTextureCoords is a 3D vector but we only use x and y
-				_mesh->uvs = new float[_mesh->num_vertices * 2];
-				for (int t = 0; t < _mesh->num_vertices * 2; t += 2)
-				{
-					_mesh->uvs[t] = m->mTextureCoords[0][t / 2].x;
-					_mesh->uvs[t + 1] = m->mTextureCoords[0][t / 2].y;
-				}
-			}
-
-			if (m->HasNormals())
-			{
-				_mesh->normals = new float[_mesh->num_vertices * 3];
-				memcpy(_mesh->normals, m->mNormals, sizeof(float) * _mesh->num_vertices * 3);
-				LOG("Normals copied");
-			}
-
-			if (aiMaterial* material = scene->mMaterials[m->mMaterialIndex])
-			{
-				aiString texture_name;
-				material->GetTexture(aiTextureType_DIFFUSE, 0, &texture_name);
-
-				std::string texture_path;
-				App->fileSystem->SplitFilePath(path.c_str(), &texture_path);
-				texture_path += texture_name.C_Str();
-				if (!LoadTexture(texture_path, _material))
-				{
-					std::string texture_path_2 = App->fileSystem->GetWritePath();
-					texture_path_2 += ASSETS_TEXTURES_FOLDER;
-					texture_path_2 += texture_name.C_Str();
-					LOG("Texture is not located in the same path as the mesh");
-					if (LoadTexture(texture_path_2, _material))
-						LOG("Texture found in the Textures folder");
-				}
-			}
-			else
-				_material->CopyTextureToThis(App->scene->textures[0]);
-
-			if (m->HasVertexColors(0))
-			{
-				_mesh->colors = new float[_mesh->num_vertices * 4];
-				memcpy(_mesh->colors, m->mColors[0], sizeof(float)*_mesh->num_vertices * 4);
-			}
-
-			if (m->HasFaces())
-			{
-				_mesh->num_indices = m->mNumFaces * 3;
-				_mesh->indices = new uint[_mesh->num_indices];
-
-				for (uint k = 0; k < m->mNumFaces; ++k)
-				{
-					if (m->mFaces[k].mNumIndices == 3)
-						memcpy(&_mesh->indices[k * 3], m->mFaces[k].mIndices, 3 * sizeof(uint));
-					else
-						LOG("WARNING, geometry face without 3 indices !");
-				}
-
-				App->renderer3D->GenerateBufferForMesh(_mesh);
-				mesh_gameobject->ParentRecalculateAABB();
-			}
-			else
-				LOG("Error mesh from scene %s, no faces", path);
+			LoadMesh(scene->mMeshes[i], new_model,scene,path);
 		}
 		aiReleaseImport(scene);
 		App->camera->AdjustCameraToAABB(new_model->GetAABB());
@@ -206,6 +132,107 @@ bool ModuleLoader::LoadTexture(std::string path, ComponentMaterial* material)
 
 	ilDeleteImage(il_img_name);
 	return ret;
+}
+
+void ModuleLoader::LoadVertices(ComponentMesh * _mesh, aiMesh * m)
+{
+	_mesh->num_vertices = m->mNumVertices;
+	_mesh->vertices = new float[_mesh->num_vertices * 3];
+	memcpy(_mesh->vertices, m->mVertices, sizeof(float) * _mesh->num_vertices * 3);
+	LOG("New mesh with %d vertices", _mesh->num_vertices);
+}
+
+void ModuleLoader::LoadUVS(ComponentMesh * _mesh, aiMesh * m)
+{
+	//Can't use memcpy because m->mTextureCoords is a 3D vector but we only use x and y
+	_mesh->uvs = new float[_mesh->num_vertices * 2];
+	for (int t = 0; t < _mesh->num_vertices * 2; t += 2)
+	{
+		_mesh->uvs[t] = m->mTextureCoords[0][t / 2].x;
+		_mesh->uvs[t + 1] = m->mTextureCoords[0][t / 2].y;
+	}
+}
+
+void ModuleLoader::LoadNormals(ComponentMesh * _mesh, aiMesh * m)
+{
+	_mesh->normals = new float[_mesh->num_vertices * 3];
+	memcpy(_mesh->normals, m->mNormals, sizeof(float) * _mesh->num_vertices * 3);
+	LOG("Normals copied");
+}
+
+void ModuleLoader::LoadMeshTexture(ComponentMaterial * _material, aiMaterial* material, std::string path)
+{
+	aiString texture_name;
+	material->GetTexture(aiTextureType_DIFFUSE, 0, &texture_name);
+
+	std::string texture_path;
+	App->fileSystem->SplitFilePath(path.c_str(), &texture_path);
+	texture_path += texture_name.C_Str();
+	if (!LoadTexture(texture_path, _material))
+	{
+		std::string texture_path_2 = App->fileSystem->GetWritePath();
+		texture_path_2 += ASSETS_TEXTURES_FOLDER;
+		texture_path_2 += texture_name.C_Str();
+		LOG("Texture is not located in the same path as the mesh");
+		if (LoadTexture(texture_path_2, _material))
+			LOG("Texture found in the Textures folder");
+	}
+}
+
+void ModuleLoader::LoadMeshFaces(ComponentMesh * _mesh, aiMesh * m)
+{
+	_mesh->num_indices = m->mNumFaces * 3;
+	_mesh->indices = new uint[_mesh->num_indices];
+
+	for (uint k = 0; k < m->mNumFaces; ++k)
+	{
+		if (m->mFaces[k].mNumIndices == 3)
+			memcpy(&_mesh->indices[k * 3], m->mFaces[k].mIndices, 3 * sizeof(uint));
+		else
+			LOG("WARNING, geometry face without 3 indices !");
+	}
+}
+
+void ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiScene* scene, std::string path)
+{
+	GameObject* mesh_gameobject = new_model->AddChildren(m->mName.C_Str());
+
+	ComponentMesh* _mesh = (ComponentMesh*)mesh_gameobject->AddComponent(MESH);
+	ComponentMaterial* _material = (ComponentMaterial*)mesh_gameobject->AddComponent(MATERIAL);
+
+	LoadVertices(_mesh, m);
+
+	if (m->HasTextureCoords(0))
+	{
+		LoadUVS(_mesh, m);
+	}
+
+	if (m->HasNormals())
+	{
+		LoadNormals(_mesh, m);
+	}
+
+	if (aiMaterial* material = scene->mMaterials[m->mMaterialIndex])
+	{
+		LoadMeshTexture(_material, material, path);
+	}
+	else
+		_material->CopyTextureToThis(App->scene->textures[0]);
+
+	if (m->HasVertexColors(0))
+	{
+		_mesh->colors = new float[_mesh->num_vertices * 4];
+		memcpy(_mesh->colors, m->mColors[0], sizeof(float)*_mesh->num_vertices * 4);
+	}
+
+	if (m->HasFaces())
+	{
+		LoadMeshFaces(_mesh,m);
+		App->renderer3D->GenerateBufferForMesh(_mesh);
+		mesh_gameobject->ParentRecalculateAABB();
+	}
+	else
+		LOG("Error mesh from scene %s, no faces", path);
 }
 
 bool ModuleLoader::CleanUp()
