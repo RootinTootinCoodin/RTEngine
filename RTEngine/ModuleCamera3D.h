@@ -20,6 +20,8 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
+	void Save(JSON_Object* config);
+
 	void Look(const vec3 &Position, const vec3 &Reference);
 	void LookAt(const vec3 &Spot);
 
@@ -35,7 +37,7 @@ private:
 
 public:
 	
-vec3 X, Y, Z;
+	vec3 X, Y, Z;
 	mat4x4 CameraView;
 
 	vec3 cameraRef;
