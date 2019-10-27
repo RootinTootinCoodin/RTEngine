@@ -25,12 +25,15 @@ public:
 	float* vertices = nullptr;
 
 	float* colors = nullptr;
+	float* normals = nullptr;
 
 	uint id_uvs = 0;
 	uint num_uvs = 0;
 	float* uvs = nullptr;
 
 	ComponentMaterial* material = nullptr;
+
+	bool draw_normals = false;
 private:
 
 };

@@ -24,6 +24,7 @@ public:
 	GameObject* AddChildren(std::string name);
 	uint GetUUID() const { return uuid; }; 
 	std::string GetName() const { return name; }; 
+	AABB GetAABB() const { return bounding_box; };
 
 	void RecursiveGetChildren(std::vector<GameObject*>* buffer);
 	void RecursiveHierarchyChildren();
@@ -33,9 +34,8 @@ public:
 	Component* GetComponent(componentType type);
 
 private:
-	std::string name;
+	std::string name = "No name";
 	uint uuid = 0;
-	bool active = true;
 	GameObject* parent;
 	std::map<uint, Component*> components;
 	std::map<uint, GameObject*> children;
@@ -43,6 +43,10 @@ private:
 	AABB bounding_box;
 
 public:
+	bool active = true;
+	bool draw_aabb = false;
+
+
 private:
 
 	void Update();

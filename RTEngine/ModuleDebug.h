@@ -4,6 +4,7 @@
 #include "Module.h"
 
 struct par_shapes_mesh_s;
+class ComponentMesh;
 
 class ModuleDebug : public Module
 {
@@ -13,6 +14,10 @@ public:
 
 	bool Init(JSON_Object* config);
 	bool CleanUp();
+
+	void DrawNormals(ComponentMesh* mesh);
+
+	void DrawAABB(AABB &aabb)const;
 
 private:
 

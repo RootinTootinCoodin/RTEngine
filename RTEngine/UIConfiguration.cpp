@@ -91,7 +91,8 @@ void UIConfiguration::Draw()
 				App->renderer3D->SetWireframe();
 			ImGui::SameLine();
 			ImGui::Checkbox("Wireframe", &App->scene->showedges);
-
+			ImGui::Checkbox("Draw AABBs", &App->scene->draw_aabb);
+			ImGui::Checkbox("Draw Normals", &App->scene->draw_normals);
 			if (ImGui::Checkbox("Lighting  ", &App->renderer3D->lighting_enabled))
 				App->renderer3D->SetLighting();
 			ImGui::SameLine();

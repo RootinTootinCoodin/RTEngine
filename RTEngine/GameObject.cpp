@@ -12,8 +12,12 @@ GameObject::GameObject()
 {
 }
 
-GameObject::GameObject(std::string name, GameObject * parent) : name(name), parent(parent)
+GameObject::GameObject(std::string _name, GameObject * parent) : parent(parent)
 {
+	if (_name.size() > 0)
+		name = _name;
+	else
+		name = "No name";
 	uuid = Generate_UUID();
 	AddComponent(TRANSFORM);
 	bounding_box.SetNegativeInfinity();
@@ -113,6 +117,10 @@ void GameObject::RecalculateAABB()
 	if (ComponentMesh* mesh = (ComponentMesh*)GetComponent(MESH))
 	{
 		bounding_box.Enclose((float3*)mesh->vertices, mesh->num_vertices);
+	}
+	for (auto item = children.begin(); item != children.end(); item++)
+	{
+		bounding_box.Enclose((*item).second->bounding_box);
 	}
 }
 

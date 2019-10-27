@@ -5,6 +5,8 @@
 
 struct model;
 class GameObject;
+class ComponentTransform;
+class ComponentMesh;
 
 class UIInspector :
 	public UIElement
@@ -14,8 +16,10 @@ public:
 	~UIInspector();
 
 	void Draw();
+	void DrawGameObjectInfo(GameObject* gameobject);
+	void DrawTransformInfo(ComponentTransform* transform);
+	void DrawMeshInfo(ComponentMesh* mesh);
 
-	void DrawModelInfo(model* _model);
 
 };
 
