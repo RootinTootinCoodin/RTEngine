@@ -114,12 +114,6 @@ bool ModuleLoader::LoadFBX(std::string path, std::string name)
 					LOG("Texture is not located in the same path as the mesh");
 					if (LoadTexture(texture_path_2, _material))
 						LOG("Texture found in the Textures folder");
-
-									//if (!LoadTexture(texture_path_2, _material))
-					//	LOG("Failed to load texture for model %s", mesh_gameobject->GetName())
-					//else
-					//	LOG("Texture found in the Textures folder");
-
 				}
 			}
 			else
