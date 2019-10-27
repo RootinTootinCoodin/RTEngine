@@ -134,6 +134,15 @@ update_status ModuleImGui::PostUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
+bool ModuleImGui::CleanUp()
+{
+	for (auto item = UI.begin(); item != UI.end(); item++)
+	{
+		RELEASE(*item);
+	}
+	return true;
+}
+
 void ModuleImGui::CreateDockspace()
 {
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;

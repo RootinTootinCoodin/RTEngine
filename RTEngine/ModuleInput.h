@@ -21,9 +21,9 @@ public:
 	ModuleInput(Application* app, bool start_enabled = true);
 	~ModuleInput();
 
-	bool Init(JSON_Object* config);
-	update_status PreUpdate(float dt);
-	bool CleanUp();
+	bool Init(JSON_Object* config) override;
+	update_status PreUpdate(float dt) override;
+	bool CleanUp() override;
 
 	KEY_STATE GetKey(int id) const
 	{
@@ -59,8 +59,6 @@ public:
 	{
 		return mouse_y_motion;
 	}
-
-	void GetHotkeys();
 
 private:
 	KEY_STATE* keyboard;

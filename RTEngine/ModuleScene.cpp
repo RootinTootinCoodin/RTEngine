@@ -2,7 +2,9 @@
 #include "ModuleScene.h"
 #include "ModuleLoader.h"
 #include "ModuleImGui.h"
+#include "ModuleFileSystem.h"
 #include "ModuleDebug.h"
+#include "ModuleRenderer3D.h"
 #include "UIInspector.h"
 #include "GameObject.h"
 #include "Component.h"
@@ -39,10 +41,10 @@ bool ModuleScene::Init(JSON_Object* config)
 
 bool ModuleScene::Start()
 {
-	//glGenBuffers(1, (GLuint*) &(vertex_id));
-	//glBindBuffer(GL_ARRAY_BUFFER, vertex_id);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, vert_array.data(), GL_STATIC_DRAW);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	std::string path = App->fileSystem->GetWritePath();
+	path += ASSETS_MODELS_FOLDER;
+	path += "BakerHouse.fbx";
+	App->loader->FileReceived(path);
 	DefaultTexture();
 	GenerateCheckerTexture();
 
@@ -127,10 +129,56 @@ void ModuleScene::Draw()
 		DrawAxis();
 
 	DrawGrid(gridsize);
-	glBindTexture(GL_TEXTURE_2D, id_image);
 
 	std::vector<GameObject*> gameObjects;
 	root->RecursiveGetChildren(&gameObjects);
+
+	if (!App->renderer3D->wireframe_enabled)
+	{
+		for (auto item = gameObjects.begin(); item != gameObjects.end(); item++)
+		{
+			if ((*item)->active)
+			{
+				if (draw_aabb || (*item)->draw_aabb)
+					App->debug->DrawAABB((*item)->GetAABB());
+
+				if (ComponentMesh* mesh = (ComponentMesh*)(*item)->GetComponent(MESH))
+				{
+					if (draw_normals || mesh->draw_normals)
+						App->debug->DrawNormals(mesh);
+
+					glEnableClientState(GL_VERTEX_ARRAY);
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
+					glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);
+
+					ComponentMaterial* material = (ComponentMaterial*)(*item)->GetComponent(MATERIAL);
+					if (material)
+					{
+						glBindTexture(GL_TEXTURE_2D, material->id_texture);
+						glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+						glTexCoordPointer(2, GL_FLOAT, 0, &mesh->uvs[0]);
+					}
+
+					glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
+
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+					if (material)
+					{
+						glBindTexture(GL_TEXTURE_2D, 0);
+						glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+					}
+
+					glDisableClientState(GL_VERTEX_ARRAY);
+
+				}
+			}
+		}
+	}
+
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 
 	for (auto item = gameObjects.begin(); item != gameObjects.end(); item++)
 	{
@@ -139,51 +187,16 @@ void ModuleScene::Draw()
 			if (draw_aabb || (*item)->draw_aabb)
 				App->debug->DrawAABB((*item)->GetAABB());
 
-			if (ComponentMesh* mesh = (ComponentMesh*)(*item)->GetComponent(MESH))
-			{
-				if (draw_normals || mesh->draw_normals)
-					App->debug->DrawNormals(mesh);
-
-				glEnableClientState(GL_VERTEX_ARRAY);
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
-				glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);
-
-				ComponentMaterial* material = (ComponentMaterial*)(*item)->GetComponent(MATERIAL);
-				if (material)
-				{
-					glBindTexture(GL_TEXTURE_2D, material->id_texture);
-					glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-					glTexCoordPointer(2, GL_FLOAT, 0, &mesh->uvs[0]);
-				}
-
-				glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
-
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-				if (material)
-				{
-					glBindTexture(GL_TEXTURE_2D, 0);
-					glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-				}
-
-				glDisableClientState(GL_VERTEX_ARRAY);
-
-			}
-		}
-	}
-
-
-	glLineWidth(3.0f);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	for (auto item = gameObjects.begin(); item != gameObjects.end(); item++)
-	{
-		if ((*item)->active)
-		{
-			if (showedges || (*item) == selected_go)
+			if (showedges || (*item) == selected_go || App->renderer3D->wireframe_enabled)
 			{
 				if (ComponentMesh* mesh = (ComponentMesh*)(*item)->GetComponent(MESH))
 				{
+					if (draw_normals || mesh->draw_normals)
+						App->debug->DrawNormals(mesh);
+
+					glLineWidth(3.0f);
+
+					glColor3f(0,0,1);
 					glEnableClientState(GL_VERTEX_ARRAY);
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
 					glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);

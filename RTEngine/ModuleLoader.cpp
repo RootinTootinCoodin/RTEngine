@@ -3,6 +3,7 @@
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleFileSystem.h"
+#include "ModuleCamera3D.h"
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentMesh.h"
@@ -111,10 +112,13 @@ bool ModuleLoader::LoadFBX(std::string path, std::string name)
 					texture_path_2 += ASSETS_TEXTURES_FOLDER;
 					texture_path_2 += texture_name.C_Str();
 					LOG("Texture is not located in the same path as the mesh");
-					if (!LoadTexture(texture_path_2, _material))
-						LOG("Failed to load texture for model %s", mesh_gameobject->GetName())
-					else
+					if (LoadTexture(texture_path_2, _material))
 						LOG("Texture found in the Textures folder");
+
+									//if (!LoadTexture(texture_path_2, _material))
+					//	LOG("Failed to load texture for model %s", mesh_gameobject->GetName())
+					//else
+					//	LOG("Texture found in the Textures folder");
 
 				}
 			}
@@ -147,6 +151,7 @@ bool ModuleLoader::LoadFBX(std::string path, std::string name)
 				LOG("Error mesh from scene %s, no faces", path);
 		}
 		aiReleaseImport(scene);
+		App->camera->AdjustCameraToAABB(new_model->GetAABB());
 	}
 	else
 		LOG("Error loading scene %s", path);

@@ -21,11 +21,6 @@ void UIScene::Draw()
 	if (ImGui::Begin(name.c_str(), &show_window, window_flags))
 	{
 		ImVec2 size = ImGui::GetWindowSize();
-		if (size.x != previous_size.x || size.y != previous_size.y)
-		{
-			previous_size.x = size.x;
-			previous_size.y = size.y;
-		}
 		ImGui::Image((ImTextureID)App->renderer3D->framebuffer_texture, size, { 1,1 }, { 0,0 });
 	}
 	ImGui::End();

@@ -34,7 +34,7 @@ public:
 	void SetColorMaterial();
 	void SetTexture2D();
 	void SetWireframe();
-	void SetWireframeWhenSelected();
+
 
 	bool GenerateBufferForMesh(ComponentMesh* mesh);
 private:

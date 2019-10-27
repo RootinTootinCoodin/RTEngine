@@ -12,8 +12,8 @@ public:
 	ModuleDebug(Application* app, bool start_enabled = true);
 	~ModuleDebug();
 
-	bool Init(JSON_Object* config);
-	bool CleanUp();
+	bool Init(JSON_Object* config) override;
+	bool CleanUp() override;
 
 	void DrawNormals(ComponentMesh* mesh);
 
@@ -25,7 +25,6 @@ private:
 public:
 
 	void CreatePrimitive(par_shapes_mesh_s* data, char* name);
-	void RenderNormals(par_shapes_mesh_s* data);
 
 private:
 

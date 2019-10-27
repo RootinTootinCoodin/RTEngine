@@ -125,8 +125,6 @@ update_status ModuleInput::PreUpdate(float dt)
 	if(quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
 		return UPDATE_STOP;
 
-	GetHotkeys();
-
 	return UPDATE_CONTINUE;
 }
 
@@ -138,6 +136,3 @@ bool ModuleInput::CleanUp()
 	return true;
 }
 
-void ModuleInput::GetHotkeys()
-{
-}

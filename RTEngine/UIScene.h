@@ -12,7 +12,7 @@ public:
 
 	void Draw();
 
-	math::float2 previous_size;
+
 };
 
 #endif

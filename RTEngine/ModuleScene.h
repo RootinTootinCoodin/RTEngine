@@ -20,8 +20,6 @@ public:
 	bool Init(JSON_Object* config);
 	bool Start();
 	update_status Update(float dt);
-	std::vector<float> vert_array;
-	std::vector<uint> index_array;
 
 	void GenerateCheckerTexture();
 	void DefaultTexture();
@@ -37,19 +35,13 @@ public:
 	float axis_y = 0.0f;
 	float axis_z = 0.0f;
 	int gridsize = 10;
-	uint index_id = 0;
-	uint vertex_id = 0;
 
 	GLubyte checkImage[100][100][4];
 	uint id_image = 0;
 
-	std::vector<model*> models;
-	uint current_model_index = 0;
-
 	std::vector<texture*> textures;
 	uint current_texture_index = 0;
 
-	std::vector<par_shapes_mesh_s*> primitive;
 	int checker_size = 100; 
 
 	GameObject* root = nullptr;

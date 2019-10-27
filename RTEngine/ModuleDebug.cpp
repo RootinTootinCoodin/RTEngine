@@ -127,33 +127,9 @@ void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data, char* name)
 		_primitive->uvs[i] = data->tcoords[i];
 	}
 
-	_primitive->normals = new float[data->npoints * 3];
-	for (int i = 0; i < _primitive->num_vertices; i++) // Fill data
-	{
-		_primitive->normals[i] = data->normals[i];
-	}
-	// Get and render normals
-	//RenderNormals(data);
+
 
 	App->renderer3D->GenerateBufferForMesh(_primitive);
 }
 
-void ModuleDebug::RenderNormals(par_shapes_mesh_s* data)
-{
-	glLineWidth(2.0f);
-	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-	glEnable(GL_COLOR_MATERIAL); App->renderer3D->color_material_enabled = true;
 
-	glBegin(GL_LINES);
-	glColor3f(0.0f, 0.5f, 0.5f);
-
-	for (int i = 0; data->normals[i] != NULL; i = i+3)
-	{
-		glVertex3d(data->points[i], data->points[i + 1], data->points[i + 2]);
-		glVertex3f(data->normals[i], data->normals[i+1], data->normals[i+2]);
-	}
-
-	glEnd();
-	glLineWidth(STANDARD_LINE_SIZE);
-
-}

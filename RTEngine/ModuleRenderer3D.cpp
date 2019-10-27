@@ -296,6 +296,8 @@ void ModuleRenderer3D::SetWireframe()
 	}
 }
 
+
+
 bool ModuleRenderer3D::GenerateBufferForMesh(ComponentMesh * mesh)
 {
 	glGenBuffers(1, (GLuint*)&(mesh->id_index));

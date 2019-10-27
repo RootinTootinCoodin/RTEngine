@@ -5,6 +5,8 @@
 #include "Globals.h"
 #include "glmath.h"
 
+#include "MathGeoLib/Geometry/AABB.h"
+
 #define CAMERA_SPEED 10.0f
 
 class Timer;
@@ -16,9 +18,9 @@ public:
 	ModuleCamera3D(Application* app, bool start_enabled = true);
 	~ModuleCamera3D();
 
-	bool Init(JSON_Object* config);
-	update_status Update(float dt);
-	bool CleanUp();
+	bool Init(JSON_Object* config) override;
+	update_status Update(float dt) override;
+	bool CleanUp() override;
 
 	void Look(const vec3 &Position, const vec3 &Reference);
 	void LookAt(const vec3 &Spot);
@@ -27,7 +29,7 @@ public:
 
 	void Move(const vec3 &Movement);
 	float* GetViewMatrix();
-
+	void AdjustCameraToAABB(AABB& aabb);
 	
 private:
 

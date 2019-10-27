@@ -217,6 +217,12 @@ float* ModuleCamera3D::GetViewMatrix()
 	return &ViewMatrix;
 }
 
+void ModuleCamera3D::AdjustCameraToAABB(AABB& aabb )
+{
+	float3 distance = aabb.Size();
+	cameraPos -= Z * distance.Length();
+}
+
 // -----------------------------------------------------------------
 void ModuleCamera3D::CalculateViewMatrix()
 {
