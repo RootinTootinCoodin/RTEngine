@@ -90,6 +90,13 @@ bool ModuleLoader::LoadFBX(std::string path, std::string name)
 				}
 			}
 
+			if (m->HasNormals())
+			{
+				_mesh->normals = new float[_mesh->num_vertices * 3];
+				memcpy(_mesh->normals, m->mNormals, sizeof(float) * _mesh->num_vertices * 3);
+				LOG("Normals copied");
+			}
+
 			if (aiMaterial* material = scene->mMaterials[m->mMaterialIndex])
 			{
 				aiString texture_name;
@@ -130,7 +137,6 @@ bool ModuleLoader::LoadFBX(std::string path, std::string name)
 						LOG("WARNING, geometry face without 3 indices !");
 				}
 
-				//TODO: UGLY
 				App->renderer3D->GenerateBufferForMesh(_mesh);
 				mesh_gameobject->ParentRecalculateAABB();
 			}

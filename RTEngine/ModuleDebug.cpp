@@ -27,6 +27,74 @@ bool ModuleDebug::CleanUp()
 	return true;
 }
 
+void ModuleDebug::DrawNormals(ComponentMesh * mesh)
+{
+	glLineWidth(2.0f);
+	glColor3f(1, 0, 0);
+
+	glBegin(GL_LINES);
+
+	for (uint i = 0; i < mesh->num_vertices * 3; i += 3)
+	{
+		glVertex3f(mesh->vertices[i] - mesh->normals[i], mesh->vertices[i+1] - mesh->normals[i+1], mesh->vertices[i+2] - mesh->normals[i+2]);
+		glVertex3f(mesh->vertices[i], mesh->vertices[i+1], mesh->vertices[i+2]);
+	}
+	glEnd();
+	glColor3f(1, 1, 1);
+	glLineWidth(STANDARD_LINE_SIZE);
+}
+
+void ModuleDebug::DrawAABB(AABB & aabb) const
+{
+	if (aabb.IsFinite())
+	{
+		glLineWidth(2.0f);
+		glColor3f(0, 1, 0);
+		glBegin(GL_LINES);
+
+		glVertex3f(aabb.CornerPoint(0).x, aabb.CornerPoint(0).y, aabb.CornerPoint(0).z);
+		glVertex3f(aabb.CornerPoint(1).x, aabb.CornerPoint(1).y, aabb.CornerPoint(1).z);
+
+		glVertex3f(aabb.CornerPoint(0).x, aabb.CornerPoint(0).y, aabb.CornerPoint(0).z);
+		glVertex3f(aabb.CornerPoint(2).x, aabb.CornerPoint(2).y, aabb.CornerPoint(2).z);
+
+		glVertex3f(aabb.CornerPoint(0).x, aabb.CornerPoint(0).y, aabb.CornerPoint(0).z);
+		glVertex3f(aabb.CornerPoint(4).x, aabb.CornerPoint(4).y, aabb.CornerPoint(4).z);
+
+		glVertex3f(aabb.CornerPoint(7).x, aabb.CornerPoint(7).y, aabb.CornerPoint(7).z);
+		glVertex3f(aabb.CornerPoint(6).x, aabb.CornerPoint(6).y, aabb.CornerPoint(6).z);
+
+		glVertex3f(aabb.CornerPoint(6).x, aabb.CornerPoint(6).y, aabb.CornerPoint(6).z);
+		glVertex3f(aabb.CornerPoint(2).x, aabb.CornerPoint(2).y, aabb.CornerPoint(2).z);
+
+		glVertex3f(aabb.CornerPoint(7).x, aabb.CornerPoint(7).y, aabb.CornerPoint(7).z);
+		glVertex3f(aabb.CornerPoint(5).x, aabb.CornerPoint(5).y, aabb.CornerPoint(5).z);
+
+		glVertex3f(aabb.CornerPoint(7).x, aabb.CornerPoint(7).y, aabb.CornerPoint(7).z);
+		glVertex3f(aabb.CornerPoint(3).x, aabb.CornerPoint(3).y, aabb.CornerPoint(3).z);
+
+		glVertex3f(aabb.CornerPoint(3).x, aabb.CornerPoint(3).y, aabb.CornerPoint(3).z);
+		glVertex3f(aabb.CornerPoint(1).x, aabb.CornerPoint(1).y, aabb.CornerPoint(1).z);
+
+		glVertex3f(aabb.CornerPoint(1).x, aabb.CornerPoint(1).y, aabb.CornerPoint(1).z);
+		glVertex3f(aabb.CornerPoint(5).x, aabb.CornerPoint(5).y, aabb.CornerPoint(5).z);
+
+		glVertex3f(aabb.CornerPoint(3).x, aabb.CornerPoint(3).y, aabb.CornerPoint(3).z);
+		glVertex3f(aabb.CornerPoint(2).x, aabb.CornerPoint(2).y, aabb.CornerPoint(2).z);
+
+		glVertex3f(aabb.CornerPoint(4).x, aabb.CornerPoint(4).y, aabb.CornerPoint(4).z);
+		glVertex3f(aabb.CornerPoint(5).x, aabb.CornerPoint(5).y, aabb.CornerPoint(5).z);
+
+		glVertex3f(aabb.CornerPoint(6).x, aabb.CornerPoint(6).y, aabb.CornerPoint(6).z);
+		glVertex3f(aabb.CornerPoint(4).x, aabb.CornerPoint(4).y, aabb.CornerPoint(4).z);
+
+		glEnd();
+		glLineWidth(STANDARD_LINE_SIZE);
+		glColor3f(1, 1, 1);
+	}
+}
+
+
 void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data, char* name)
 {
 	GameObject* game_object = App->scene->root->AddChildren(name);
@@ -61,8 +129,6 @@ void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data, char* name)
 
 	// Get and render normals
 	//RenderNormals(data);
-
-	model* new_model = new model;
 
 	App->renderer3D->GenerateBufferForMesh(_primitive);
 }

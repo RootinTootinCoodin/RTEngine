@@ -2,6 +2,7 @@
 #include "ModuleScene.h"
 #include "ModuleLoader.h"
 #include "ModuleImGui.h"
+#include "ModuleDebug.h"
 #include "UIInspector.h"
 #include "GameObject.h"
 #include "Component.h"
@@ -50,7 +51,6 @@ bool ModuleScene::Start()
 
 update_status ModuleScene::Update(float dt)
 {
-	root->RecursiveHierarchyChildren();
 	return UPDATE_CONTINUE;
 }
 
@@ -125,8 +125,14 @@ void ModuleScene::Draw()
 
 	for (auto item = gameObjects.begin(); item != gameObjects.end(); item++)
 	{
+		if(draw_aabb || (*item)->draw_aabb)
+			App->debug->DrawAABB((*item)->GetAABB());
+
 		if (ComponentMesh* mesh = (ComponentMesh*)(*item)->GetComponent(MESH))
 		{
+			if(draw_normals || mesh->draw_normals)
+				App->debug->DrawNormals(mesh);
+
 			glEnableClientState(GL_VERTEX_ARRAY);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
 			glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);

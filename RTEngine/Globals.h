@@ -124,28 +124,6 @@ inline const char* const PATH(const char* folder, const char* file)
 #define MODEL_EXTENSIONS(extension) extension=="fbx"|| extension=="FBX"
 #define TEXTURE_EXTENSIONS(extension) extension=="png"|| extension=="PNG"|| extension=="dds"|| extension=="DDS"
 
-struct mesh
-{
-	std::string mesh_name;
-
-	uint id_index = 0;
-	uint num_indices = 0;
-	uint* indices = nullptr;
-
-	uint num_vertices = 0;
-	float* vertices = nullptr;
-
-	uint id_uvs = 0;
-	uint num_uvs = 0;
-	float* uvs = nullptr;
-	bool has_texture = false;
-};
-
-struct model
-{
-	std::string name;
-	std::vector<mesh*> meshes;
-};
 
 struct texture
 {

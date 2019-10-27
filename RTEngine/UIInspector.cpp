@@ -1,7 +1,11 @@
 #include "UIInspector.h"
 #include "Application.h"
 #include "ModuleScene.h"
-
+#include "GameObject.h"
+#include "Component.h"
+#include "ComponentMesh.h"
+#include "ComponentMaterial.h"
+#include "ComponentTransform.h"
 #include "Globals.h"
 
 
@@ -18,53 +22,71 @@ UIInspector::~UIInspector()
 void UIInspector::Draw()
 {
 	ImGui::Begin(name.c_str(), &show_window);
-	if (ImGui::CollapsingHeader("Models"))
+	if (App->scene->selected_go)
 	{
-		if (App->scene->models.size() > 0)
-		{
-			for (auto item = App->scene->models.begin(); item != App->scene->models.end(); item++)
-			{
-				if (ImGui::TreeNode((*item)->name.c_str()))
-				{
-					if (ImGui::IsItemClicked())
-					{
-						App->scene->current_model_index = std::distance(App->scene->models.begin(), item);
-					}
-					DrawModelInfo((*item));
-					ImGui::TreePop();
-				}
-			}
-			std::string model = "Current model: ";
-			model += App->scene->models[App->scene->current_model_index]->name;
-			ImGui::Text(model.c_str());
-		}
-		else
-			ImGui::Text("No models loaded");
+		DrawGameObjectInfo(App->scene->selected_go);
 	}
 	
 	ImGui::End();
 }
 
-void UIInspector::DrawModelInfo(model * _model)
+void UIInspector::DrawGameObjectInfo(GameObject* gameobject)
 {
-	
-	for (auto item = _model->meshes.begin(); item != _model->meshes.end(); item++)
-	{
-		std::string name = "Mesh: ";
-		name += (*item)->mesh_name.c_str();
-		if (ImGui::TreeNode(name.c_str()))
-		{
-			ImGui::BulletText("Index ID: %u", (*item)->id_index);
-			ImGui::BulletText("Num of indices: %u", (*item)->num_indices);
-			ImGui::Separator();
-			ImGui::BulletText("Num of vertices: %u", (*item)->num_vertices);
-			ImGui::Separator();
-			if ((*item)->id_uvs != 0)
-				ImGui::BulletText("UVs ID: %u", (*item)->id_uvs);
-			else
-				ImGui::BulletText("This mesh does not have coordinate textures");
+	ImGui::Checkbox("Active", &gameobject->active);
+	ImGui::SameLine();
+	ImGui::Checkbox("Draw AABB", &gameobject->draw_aabb);
 
-			ImGui::TreePop();
-		}
+	ImGui::Text(gameobject->GetName().c_str());
+	ImGui::Separator();
+	ImGui::Separator();
+	if (ComponentTransform* transform = (ComponentTransform*)gameobject->GetComponent(TRANSFORM))
+	{
+		DrawTransformInfo(transform);
 	}
+	ImGui::Separator();
+	ImGui::Separator();
+	if (ComponentMesh* mesh = (ComponentMesh*)gameobject->GetComponent(MESH))
+	{
+		DrawMeshInfo(mesh);
+	}
+	ImGui::Separator();
+	ImGui::Separator();
 }
+
+void UIInspector::DrawTransformInfo(ComponentTransform * transform)
+{
+	ImGui::Text("Component Transform");
+	ImGui::Text("UUID: %u", transform->GetUUID());
+	math::float4x4 local = transform->GetLocalTransformMatrix();
+	float3 position = local.TranslatePart();
+	float3 rotation = local.RotatePart().ToEulerXYZ();
+	float3 scale = local.ExtractScale();
+
+	ImGui::DragFloat3("Position", (float*)&position);
+	ImGui::DragFloat3("Rotation", (float*)&rotation);
+	ImGui::DragFloat3("Scale", (float*)&scale);
+}
+
+void UIInspector::DrawMeshInfo(ComponentMesh * mesh)
+{
+	ImGui::Text("Component Mesh");
+
+	ImGui::Text("UUID: %u", mesh->GetUUID());
+
+	ImGui::BulletText("Index ID: %u", mesh->id_index);
+	ImGui::BulletText("Num of indices: %u", mesh->num_indices);
+	ImGui::Separator();
+	ImGui::BulletText("Num of vertices: %u", mesh->num_vertices);
+	ImGui::Separator();
+
+	if (mesh->id_uvs != 0)
+		ImGui::BulletText("UVs ID: %u", mesh->id_uvs);
+	else
+		ImGui::BulletText("This mesh does not have coordinate textures");
+
+	ImGui::Checkbox("Draw Normals", &mesh->draw_normals);
+
+
+}
+
+
