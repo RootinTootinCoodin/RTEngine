@@ -22,7 +22,7 @@
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	name = "Scene";
-	root = new GameObject("Root", nullptr);
+	root = new GameObject("Root", nullptr,0);
 }
 
 
@@ -57,6 +57,10 @@ update_status ModuleScene::Update(float dt)
 void ModuleScene::GenerateCheckerTexture()
 {
 	texture* checker = new texture;
+	checker->name = "Checker Texture";
+	checker->bpp = 1;
+	checker->depth = 1;
+	checker->path = "INTERNAL";
 	checker->width = checker_size;
 	checker->height = checker_size;
 
@@ -86,8 +90,13 @@ void ModuleScene::GenerateCheckerTexture()
 void ModuleScene::DefaultTexture()
 {
 	texture* white = new texture;
+	white->name = "Default Texture";
+	white->bpp = 1;
+	white->depth = 1;
+	white->path = "INTERNAL";
 	white->width = checker_size;
 	white->height = checker_size;
+
 
 	for (int i = 0; i < checker_size; i++) {
 		for (int j = 0; j < checker_size; j++) {
@@ -125,38 +134,41 @@ void ModuleScene::Draw()
 
 	for (auto item = gameObjects.begin(); item != gameObjects.end(); item++)
 	{
-		if(draw_aabb || (*item)->draw_aabb)
-			App->debug->DrawAABB((*item)->GetAABB());
-
-		if (ComponentMesh* mesh = (ComponentMesh*)(*item)->GetComponent(MESH))
+		if ((*item)->active)
 		{
-			if(draw_normals || mesh->draw_normals)
-				App->debug->DrawNormals(mesh);
+			if (draw_aabb || (*item)->draw_aabb)
+				App->debug->DrawAABB((*item)->GetAABB());
 
-			glEnableClientState(GL_VERTEX_ARRAY);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
-			glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);
-
-			ComponentMaterial* material = (ComponentMaterial*)(*item)->GetComponent(MATERIAL);
-			if (material)
+			if (ComponentMesh* mesh = (ComponentMesh*)(*item)->GetComponent(MESH))
 			{
-				glBindTexture(GL_TEXTURE_2D, material->id_texture);
-				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-				glTexCoordPointer(2, GL_FLOAT, 0, &mesh->uvs[0]);
+				if (draw_normals || mesh->draw_normals)
+					App->debug->DrawNormals(mesh);
+
+				glEnableClientState(GL_VERTEX_ARRAY);
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
+				glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);
+
+				ComponentMaterial* material = (ComponentMaterial*)(*item)->GetComponent(MATERIAL);
+				if (material)
+				{
+					glBindTexture(GL_TEXTURE_2D, material->id_texture);
+					glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+					glTexCoordPointer(2, GL_FLOAT, 0, &mesh->uvs[0]);
+				}
+
+				glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
+
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+				if (material)
+				{
+					glBindTexture(GL_TEXTURE_2D, 0);
+					glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+				}
+
+				glDisableClientState(GL_VERTEX_ARRAY);
+
 			}
-
-			glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
-
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-			if (material)
-			{
-				glBindTexture(GL_TEXTURE_2D, 0);
-				glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-			}
-
-			glDisableClientState(GL_VERTEX_ARRAY);
-
 		}
 	}
 
@@ -166,19 +178,22 @@ void ModuleScene::Draw()
 
 	for (auto item = gameObjects.begin(); item != gameObjects.end(); item++)
 	{
-		if (showedges || (*item) == selected_go)
+		if ((*item)->active)
 		{
-			if (ComponentMesh* mesh = (ComponentMesh*)(*item)->GetComponent(MESH))
+			if (showedges || (*item) == selected_go)
 			{
-				glEnableClientState(GL_VERTEX_ARRAY);
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
-				glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);
+				if (ComponentMesh* mesh = (ComponentMesh*)(*item)->GetComponent(MESH))
+				{
+					glEnableClientState(GL_VERTEX_ARRAY);
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
+					glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);
 
-				glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
+					glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
 
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-				glDisableClientState(GL_VERTEX_ARRAY);
+					glDisableClientState(GL_VERTEX_ARRAY);
+				}
 			}
 		}
 	}

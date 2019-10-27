@@ -128,12 +128,12 @@ inline const char* const PATH(const char* folder, const char* file)
 struct texture
 {
 	std::string name;
+	std::string path;
 	uint id_texture;
 	uint width;
 	uint height;
 	uint depth;
 	uint bpp;
-	
 };
 
 #endif

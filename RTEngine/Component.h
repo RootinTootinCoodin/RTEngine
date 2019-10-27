@@ -10,6 +10,8 @@ class Component
 public:
 	Component();
 	Component(componentType type, GameObject* parent);
+	Component(componentType type, GameObject* parent, uint uuid);
+
 	~Component();
 
 	virtual bool UpdateComponent() { return true; };

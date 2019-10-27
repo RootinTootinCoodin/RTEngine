@@ -11,7 +11,7 @@
 
 UITests::UITests(Application* App) : UIElement(App)
 {
-	name = "tests";
+	name = "Tests";
 }
 
 
@@ -25,10 +25,6 @@ void UITests::Draw()
 	seed.seed(pcg_extras::seed_seq_from<std::random_device>()); // if i put this values in the header, i get weir compiler errors
 	if (ImGui::Begin(name.c_str(),&show_window))
 	{
-		if (ImGui::CollapsingHeader("Render Tests"))
-		{
-			
-		}
 		if (ImGui::CollapsingHeader("Random Number Generator"))
 		{
 			ImGui::Text("Generate a float between 0.0 and 1.0");

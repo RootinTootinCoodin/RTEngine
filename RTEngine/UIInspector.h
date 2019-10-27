@@ -7,6 +7,7 @@ struct model;
 class GameObject;
 class ComponentTransform;
 class ComponentMesh;
+class ComponentMaterial;
 
 class UIInspector :
 	public UIElement
@@ -19,6 +20,8 @@ public:
 	void DrawGameObjectInfo(GameObject* gameobject);
 	void DrawTransformInfo(ComponentTransform* transform);
 	void DrawMeshInfo(ComponentMesh* mesh);
+	void DrawMaterialInfo(ComponentMaterial* material);
+
 
 
 };

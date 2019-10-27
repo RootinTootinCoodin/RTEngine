@@ -23,8 +23,9 @@ GameObject::GameObject(std::string _name, GameObject * parent) : parent(parent)
 	bounding_box.SetNegativeInfinity();
 }
 
-GameObject::GameObject(std::string name, GameObject * parent, uint uuid): name(name), parent(parent), uuid(uuid)
+GameObject::GameObject(std::string name, GameObject * parent, uint uuid): name(name), parent(parent)
 {
+	this->uuid = uuid;
 	AddComponent(TRANSFORM);
 	bounding_box.SetNegativeInfinity();
 }
@@ -79,6 +80,27 @@ GameObject * GameObject::AddChildren(std::string name)
 	return ret;
 }
 
+void GameObject::RecursiveSetActive(bool _active)
+{
+	for (auto item = children.begin(); item != children.end(); item++)
+	{
+		(*item).second->RecursiveSetActive(_active);
+	}
+	active = _active;
+}
+
+void GameObject::RecursiveApplyTexture(texture * texture)
+{
+	for (auto item = children.begin(); item != children.end(); item++)
+	{
+		(*item).second->RecursiveApplyTexture(texture);
+	}
+	if (ComponentMaterial* material = (ComponentMaterial*)GetComponent(MATERIAL))
+	{
+		material->CopyTextureToThis(texture);
+	}
+}
+
 void GameObject::RecursiveGetChildren(std::vector<GameObject*>* buffer)
 {
 	for (auto item = children.begin(); item != children.end(); item++)
@@ -97,6 +119,7 @@ void GameObject::RecursiveHierarchyChildren()
 		{
 			node_flags |= ImGuiTreeNodeFlags_Selected;
 		}
+		ImGui::PushID((*item).second->GetUUID());
 		bool open = ImGui::TreeNodeEx((*item).second->name.c_str(), node_flags);
 		if (ImGui::IsItemClicked())
 		{
@@ -107,6 +130,7 @@ void GameObject::RecursiveHierarchyChildren()
 			(*item).second->RecursiveHierarchyChildren();
 			ImGui::TreePop();
 		}
+		ImGui::PopID();
 	}
 
 

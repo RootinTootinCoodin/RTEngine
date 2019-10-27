@@ -26,6 +26,8 @@ public:
 	std::string GetName() const { return name; }; 
 	AABB GetAABB() const { return bounding_box; };
 
+	void RecursiveSetActive(bool active);
+	void RecursiveApplyTexture(texture* texture);
 	void RecursiveGetChildren(std::vector<GameObject*>* buffer);
 	void RecursiveHierarchyChildren();
 	void RecalculateAABB();

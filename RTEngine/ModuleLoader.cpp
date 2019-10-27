@@ -113,6 +113,9 @@ bool ModuleLoader::LoadFBX(std::string path, std::string name)
 					LOG("Texture is not located in the same path as the mesh");
 					if (!LoadTexture(texture_path_2, _material))
 						LOG("Failed to load texture for model %s", mesh_gameobject->GetName())
+					else
+						LOG("Texture found in the Textures folder");
+
 				}
 			}
 			else
@@ -182,16 +185,20 @@ bool ModuleLoader::LoadTexture(std::string path, ComponentMaterial* material)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, il_img_data.Width, il_img_data.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData());
 		glBindTexture(GL_TEXTURE_2D, 0);
 
+		new_texture->path = path;
+		new_texture->width = il_img_data.Width;
+		new_texture->height = il_img_data.Height;
+		new_texture->depth = il_img_data.Depth;
+		new_texture->bpp = il_img_data.Bpp;
+		App->fileSystem->SplitFilePath(path.c_str(), nullptr, &new_texture->name, nullptr);
+
+
 		App->scene->textures.push_back(new_texture);
 
-
-		App->fileSystem->SplitFilePath(path.c_str(), nullptr, &material->name, nullptr);
-
-		material->id_texture = new_texture->id_texture;
-		material->width = il_img_data.Width;
-		material->height = il_img_data.Height;
-		material->depth = il_img_data.Depth;
-		material->bpp = il_img_data.Bpp;
+		if (material)
+			material->CopyTextureToThis(new_texture);
+		else
+			App->scene->root->RecursiveApplyTexture(new_texture);
 
 		ret = true;
 	}

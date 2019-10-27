@@ -15,7 +15,9 @@ public:
 	~ComponentMaterial();
 
 	void CopyTextureToThis(texture* texture);
+
 	std::string name;
+	std::string path;
 	uint id_texture;
 	uint width;
 	uint height;

@@ -32,25 +32,36 @@ void UIInspector::Draw()
 
 void UIInspector::DrawGameObjectInfo(GameObject* gameobject)
 {
-	ImGui::Checkbox("Active", &gameobject->active);
+	if (ImGui::Checkbox("Active", &gameobject->active))
+		gameobject->RecursiveSetActive(gameobject->active);
+
 	ImGui::SameLine();
 	ImGui::Checkbox("Draw AABB", &gameobject->draw_aabb);
 
 	ImGui::Text(gameobject->GetName().c_str());
+	ImGui::Text("UUID: %u", gameobject->GetUUID());
 	ImGui::Separator();
 	ImGui::Separator();
 	if (ComponentTransform* transform = (ComponentTransform*)gameobject->GetComponent(TRANSFORM))
 	{
 		DrawTransformInfo(transform);
+		ImGui::Separator();
+		ImGui::Separator();
 	}
-	ImGui::Separator();
-	ImGui::Separator();
+
 	if (ComponentMesh* mesh = (ComponentMesh*)gameobject->GetComponent(MESH))
 	{
 		DrawMeshInfo(mesh);
+		ImGui::Separator();
+		ImGui::Separator();
 	}
-	ImGui::Separator();
-	ImGui::Separator();
+	if (ComponentMaterial* material = (ComponentMaterial*)gameobject->GetComponent(MATERIAL))
+	{
+		DrawMaterialInfo(material);
+		ImGui::Separator();
+		ImGui::Separator();
+	}
+
 }
 
 void UIInspector::DrawTransformInfo(ComponentTransform * transform)
@@ -85,8 +96,49 @@ void UIInspector::DrawMeshInfo(ComponentMesh * mesh)
 		ImGui::BulletText("This mesh does not have coordinate textures");
 
 	ImGui::Checkbox("Draw Normals", &mesh->draw_normals);
-
-
 }
+
+void UIInspector::DrawMaterialInfo(ComponentMaterial * material)
+{
+	ImGui::Text("Component Material");
+
+	ImGui::Text("UUID: %u", material->GetUUID());
+
+	ImGui::Text("Name: %s", material->name.c_str());
+	ImGui::Text("Full Path: %s", material->path.c_str());
+	ImGui::Text("ID: %u", material->id_texture);
+	ImGui::Image((ImTextureID)material->id_texture, { 300,300 });
+	ImGui::Text("Size: %u x %u", material->width, material->height);
+	ImGui::Text("Bytes per pixel: %u", material->bpp);
+	ImGui::Text("Image Depth: %u", material->depth);
+
+	if (ImGui::Button("Use Checkered Texture"))
+	{
+		material->CopyTextureToThis(App->scene->textures[1]);
+	}
+	if (ImGui::CollapsingHeader("Select another material"))
+	{
+		for (int i = 0; i < App->scene->textures.size(); i++)
+		{
+			texture* tmp = App->scene->textures[i];
+			ImGui::Bullet();
+			ImGui::PushID(i);
+			bool button = ImGui::Button(tmp->name.c_str());
+			if (ImGui::IsItemHovered())
+			{
+				ImGui::BeginTooltip();
+				ImGui::Image((ImTextureID)tmp->id_texture, { 50,50 });
+				ImGui::EndTooltip();
+			}
+
+			if(button)
+			{
+				material->CopyTextureToThis(tmp);
+			}
+			ImGui::PopID();
+		}
+	}
+}
+
 
 

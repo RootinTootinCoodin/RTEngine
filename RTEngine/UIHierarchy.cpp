@@ -36,6 +36,7 @@ void UIHierarchy::Draw()
 			{
 				node_flags |= ImGuiTreeNodeFlags_Selected;
 			}
+			ImGui::PushID((*item)->GetUUID());
 			bool open = ImGui::TreeNodeEx((*item)->GetName().c_str(), node_flags);
 			if (ImGui::IsItemClicked())
 			{
@@ -45,6 +46,7 @@ void UIHierarchy::Draw()
 			{
 				ImGui::TreePop();
 			}
+			ImGui::PopID();
 		}
 	}
 	ImGui::End();

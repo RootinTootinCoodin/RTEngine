@@ -103,7 +103,7 @@ void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data, char* name)
 	_material->CopyTextureToThis(App->scene->textures[0]);
 	// Set vertices
 	_primitive->num_vertices = data->npoints * 3; // Set vertex number
-	_primitive->vertices = new float[_primitive->num_vertices * 3]; // Allocate memory
+	_primitive->vertices = new float[_primitive->num_vertices ]; // Allocate memory
 	for (int i = 0; i < _primitive->num_vertices; i++) // Fill data
 	{
 		_primitive->vertices[i] = data->points[i];
@@ -117,7 +117,7 @@ void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data, char* name)
 	{
 		_primitive->indices[i] = (uint)data->triangles[i];
 	}
-	LOG("%d indices.", _primitive->num_vertices);
+	LOG("%d indices.", _primitive->num_indices);
 
 	// Set UVs
 	_primitive->num_uvs = data->npoints * 2; // Set UV number
@@ -127,6 +127,11 @@ void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data, char* name)
 		_primitive->uvs[i] = data->tcoords[i];
 	}
 
+	_primitive->normals = new float[data->npoints * 3];
+	for (int i = 0; i < _primitive->num_vertices; i++) // Fill data
+	{
+		_primitive->normals[i] = data->normals[i];
+	}
 	// Get and render normals
 	//RenderNormals(data);
 
