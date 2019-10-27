@@ -35,8 +35,8 @@ private:
 
 public:
 	
-	vec3 X, Y, Z;
-	mat4x4 Camera_view;
+vec3 X, Y, Z;
+	mat4x4 CameraView;
 
 	vec3 cameraRef;
 	vec3 cameraPos;
@@ -47,6 +47,8 @@ public:
 	vec3 cameraRight;
 	vec3 cameraUp;
 	vec3 newPos;
+
+	float Sensitivity = 0.4f;
 
 private:
 	mat4x4 ViewMatrix, ViewMatrixInverse;
