@@ -21,7 +21,7 @@ public:
 
 	void Save(JSON_Object* config);
 
-	void SetTitle(std::string title);
+	void SetTitle(std::string& title);
 	void UpdateSize();
 	void UpdateWindowMode();
 	void UpdateBrightness();

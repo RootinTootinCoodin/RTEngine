@@ -107,7 +107,7 @@ void ModuleWindow::Save(JSON_Object * config)
 	json_object_set_string(config, "app_name", title.c_str());
 }
 
-void ModuleWindow::SetTitle(std::string title)
+void ModuleWindow::SetTitle(std::string& title)
 {
 	SDL_SetWindowTitle(window, title.c_str());
 }

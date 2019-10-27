@@ -46,7 +46,7 @@ ModuleLoader::~ModuleLoader()
 	aiDetachAllLogStreams();
 }
 
-bool ModuleLoader::FileReceived(std::string path)
+bool ModuleLoader::FileReceived(std::string& path)
 {
 	std::string extension;
 	std::string name;
@@ -58,7 +58,7 @@ bool ModuleLoader::FileReceived(std::string path)
 	return true;
 }
 
-bool ModuleLoader::LoadFBX(std::string path, std::string name)
+bool ModuleLoader::LoadFBX(std::string& path, std::string& name)
 {
 	const aiScene* scene = aiImportFile(path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
 
@@ -78,7 +78,7 @@ bool ModuleLoader::LoadFBX(std::string path, std::string name)
 	return true;
 }
 
-bool ModuleLoader::LoadTexture(std::string path, ComponentMaterial* material)
+bool ModuleLoader::LoadTexture(std::string& path, ComponentMaterial* material)
 {
 	bool ret = false;
 	ILuint il_img_name = 0;
@@ -160,7 +160,7 @@ void ModuleLoader::LoadNormals(ComponentMesh * _mesh, aiMesh * m)
 	LOG("Normals copied");
 }
 
-void ModuleLoader::LoadMeshTexture(ComponentMaterial * _material, aiMaterial* material, std::string path)
+void ModuleLoader::LoadMeshTexture(ComponentMaterial * _material, aiMaterial* material, std::string& path)
 {
 	aiString texture_name;
 	material->GetTexture(aiTextureType_DIFFUSE, 0, &texture_name);
@@ -193,7 +193,7 @@ void ModuleLoader::LoadMeshFaces(ComponentMesh * _mesh, aiMesh * m)
 	}
 }
 
-void ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiScene* scene, std::string path)
+void ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiScene* scene, std::string& path)
 {
 	GameObject* mesh_gameobject = new_model->AddChildren(m->mName.C_Str());
 
