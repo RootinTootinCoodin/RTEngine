@@ -53,6 +53,9 @@ bool ModuleCamera3D::CleanUp()
 void ModuleCamera3D::Save(JSON_Object * config)
 {
 	json_object_set_number(config, "sensitivity", Sensitivity);
+
+	if (Sensitivity <= 0)
+		Sensitivity = 0.4f;
 }
 
 // -----------------------------------------------------------------
