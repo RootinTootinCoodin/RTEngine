@@ -64,6 +64,12 @@ bool ModuleLoader::LoadFBX(std::string& path, std::string& name)
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
+
+		std::string _path = App->fileSystem->GetWritePath();
+		_path += ASSETS_MODELS_FOLDER;
+		_path += name;
+		_path += ".fbx";
+		App->fileSystem->CopyFromOutsideFS(path.c_str(), _path.c_str());
 		GameObject* new_model = App->scene->root->AddChildren(name);
 		
 		for (int i = 0; i < scene->mNumMeshes; i++)
@@ -87,44 +93,27 @@ bool ModuleLoader::LoadTexture(std::string& path, ComponentMaterial* material)
 
 	if (ilLoadImage(path.c_str()))
 	{
-		texture* new_texture = new texture;
-		ILinfo il_img_data;
-		iluGetImageInfo(&il_img_data);
+
+		ILinfo il_img_info;
+		iluGetImageInfo(&il_img_info);
 
 		if (!ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE))
 			LOG("Error converting image: %s", iluErrorString(ilGetError()));
 		
 		//Fuck different coordinate systems
-		if (il_img_data.Origin == IL_ORIGIN_UPPER_LEFT)
+		if (il_img_info.Origin == IL_ORIGIN_UPPER_LEFT)
 			if (!iluFlipImage())
 				LOG("Error rotating image: %s", iluErrorString(ilGetError()));
 
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glGenTextures(1, &new_texture->id_texture);
-		glBindTexture(GL_TEXTURE_2D, new_texture->id_texture);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		ILubyte* data = ilGetData();
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, il_img_data.Width, il_img_data.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData());
-		glBindTexture(GL_TEXTURE_2D, 0);
+		std::string name;
+		std::string extension;
 
-		new_texture->path = path;
-		new_texture->width = il_img_data.Width;
-		new_texture->height = il_img_data.Height;
-		new_texture->depth = il_img_data.Depth;
-		new_texture->bpp = il_img_data.Bpp;
-		App->fileSystem->SplitFilePath(path.c_str(), nullptr, &new_texture->name, nullptr);
+		App->fileSystem->SplitFilePath(path.c_str(), nullptr, &name, &extension);
 
+		LoadMaterial(il_img_info, path, name, material);
 
-		App->scene->textures.push_back(new_texture);
-
-		if (material)
-			material->CopyTextureToThis(new_texture);
-		else
-			App->scene->root->RecursiveApplyTexture(new_texture);
-
+		SaveTextureAsDDS(name);
+		
 		ret = true;
 	}
 	else
@@ -132,6 +121,36 @@ bool ModuleLoader::LoadTexture(std::string& path, ComponentMaterial* material)
 
 	ilDeleteImage(il_img_name);
 	return ret;
+}
+
+bool ModuleLoader::LoadMaterial(ILinfo& il_img_info,std::string& path, std::string& name, ComponentMaterial* material)
+{
+	texture* new_texture = new texture;
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &new_texture->id_texture);
+	glBindTexture(GL_TEXTURE_2D, new_texture->id_texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, il_img_info.Width, il_img_info.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData());
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	new_texture->path = path;
+	new_texture->width = il_img_info.Width;
+	new_texture->height = il_img_info.Height;
+	new_texture->depth = il_img_info.Depth;
+	new_texture->bpp = il_img_info.Bpp;
+	new_texture->name = name;
+	App->scene->textures.push_back(new_texture);
+
+	if (material)
+		material->CopyTextureToThis(new_texture);
+	else
+		App->scene->root->RecursiveApplyTexture(new_texture);
+
+	return true;
 }
 
 void ModuleLoader::LoadVertices(ComponentMesh * _mesh, aiMesh * m)
@@ -233,6 +252,22 @@ void ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiScene* sc
 	}
 	else
 		LOG("Error mesh from scene %s, no faces", path);
+}
+
+bool ModuleLoader::SaveTextureAsDDS(std::string& name)
+{
+	bool ret;
+	ILuint size;
+	ILubyte* data;
+	ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);// To pick a specific DXT compression use
+	size = ilSaveL(IL_DDS, NULL, 0); // Get the size of the data buffer
+	if (size > 0) {
+		data = new ILubyte[size]; // allocate data buffer
+		if (ilSaveL(IL_DDS, data, size) > 0) // Save to buffer with the ilSaveIL function
+			ret = App->fileSystem->SaveUnique(name, data, size, LIBRARY_TEXTURES_FOLDER, "dds");
+		RELEASE_ARRAY(data);
+	}
+	return ret;
 }
 
 bool ModuleLoader::CleanUp()

@@ -7,9 +7,6 @@
     <Filter Include="Sources\Modules">
       <UniqueIdentifier>{7b418be2-1631-4a31-9ef2-8a8b234a7339}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Tools">
-      <UniqueIdentifier>{7e4dfaf7-022c-4f7d-92aa-f3b3fa9d6248}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\UIElements">
       <UniqueIdentifier>{550fc102-764c-4051-bede-c37c0838e322}</UniqueIdentifier>
     </Filter>
@@ -55,6 +52,9 @@
     <Filter Include="Sources\GameObjects\Components">
       <UniqueIdentifier>{d326b834-a58f-452b-a758-d2b423ec7931}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Modules\Tools">
+      <UniqueIdentifier>{7e4dfaf7-022c-4f7d-92aa-f3b3fa9d6248}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -76,7 +76,7 @@
       <Filter>Sources\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
-      <Filter>Sources\Tools</Filter>
+      <Filter>Sources\Modules\Tools</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imconfig.h">
       <Filter>Sources\External Libraries\ImGui</Filter>
@@ -367,7 +367,7 @@
       <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Timer.cpp">
-      <Filter>Sources\Tools</Filter>
+      <Filter>Sources\Modules\Tools</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Sources</Filter>

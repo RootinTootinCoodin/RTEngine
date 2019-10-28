@@ -10,6 +10,7 @@
 class ComponentMaterial;
 class ComponentMesh;
 class GameObject;
+struct ILinfo;
 
 class ModuleLoader :
 	public Module
@@ -23,6 +24,8 @@ public:
 	bool FileReceived(std::string path);
 	bool LoadFBX(std::string& path, std::string& name);
 	bool LoadTexture(std::string& path, ComponentMaterial* material = nullptr);
+	
+	bool LoadMaterial(ILinfo& il_img_info, std::string& path, std::string& name, ComponentMaterial* material);
 
 	void LoadVertices(ComponentMesh* _mesh, aiMesh* m);
 	void LoadUVS(ComponentMesh* _mesh, aiMesh*m);
@@ -31,6 +34,7 @@ public:
 	void LoadMeshFaces(ComponentMesh* _mesh, aiMesh* m);
 	void LoadMesh(aiMesh* m, GameObject* new_model, const aiScene* scene, std::string& path);
 
+	bool SaveTextureAsDDS(std::string& name);
 private:
 public:
 private:

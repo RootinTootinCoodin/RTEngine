@@ -120,6 +120,13 @@ inline const char* const PATH(const char* folder, const char* file)
 #define SETTINGS_FOLDER "\\Settings\\"
 #define ASSETS_MODELS_FOLDER "\\Assets\\Models\\"
 #define ASSETS_TEXTURES_FOLDER "\\Assets\\Textures\\"
+#define LIBRARY_FOLDER "\\Library\\"
+#define LIBRARY_MODELS_FOLDER "\\Library\\Models\\"
+#define LIBRARY_MESHES_FOLDER "\\Library\\Meshes\\"
+#define LIBRARY_TEXTURES_FOLDER "\\Library\\Textures\\"
+
+
+
 
 #define MODEL_EXTENSIONS(extension) extension=="fbx"|| extension=="FBX"
 #define TEXTURE_EXTENSIONS(extension) extension=="png"|| extension=="PNG"|| extension=="dds"|| extension=="DDS"
