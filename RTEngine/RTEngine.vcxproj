@@ -167,6 +167,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UIAbout.h" />
+    <ClInclude Include="UIAssets.h" />
     <ClInclude Include="UIConfiguration.h" />
     <ClInclude Include="UIConsole.h" />
     <ClInclude Include="UIElement.h" />
@@ -237,6 +238,7 @@
     <ClCompile Include="parson\parson.c" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="UIAbout.cpp" />
+    <ClCompile Include="UIAssets.cpp" />
     <ClCompile Include="UIConfiguration.cpp" />
     <ClCompile Include="UIConsole.cpp" />
     <ClCompile Include="UIHierarchy.cpp" />

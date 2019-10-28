@@ -10,6 +10,7 @@
 #include "UIConfiguration.h"
 #include "UIInspector.h"
 #include "UIHierarchy.h"
+#include "UIAssets.h"
 
 ModuleImGui::ModuleImGui(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -43,6 +44,7 @@ bool ModuleImGui::Init(JSON_Object* config)
 	configuration = new UIConfiguration(App);
 	inspector = new UIInspector(App);
 	hierarchy = new UIHierarchy(App);
+	assets = new UIAssets(App);
 
 	UI.push_back((UIElement*)scene);
 	UI.push_back((UIElement*)tests);
@@ -50,7 +52,8 @@ bool ModuleImGui::Init(JSON_Object* config)
 	UI.push_back((UIElement*)about);
 	UI.push_back((UIElement*)configuration);
 	UI.push_back((UIElement*)inspector);
-	UI.push_back((UIHierarchy*)hierarchy);
+	UI.push_back((UIElement*)hierarchy);
+	UI.push_back((UIElement*)assets);
 	return true;
 }
 
@@ -83,6 +86,8 @@ update_status ModuleImGui::PreUpdate(float dt)
 
 		if (ImGui::BeginMenu("Help"))
 		{
+			ImGui::MenuItem("Show demo", "S", &show_demo_window);
+
 			if (ImGui::MenuItem("Documentation"))
 				App->RequestBrowser("https://github.com/RootinTootinCoodin/RTEngine/wiki");
 

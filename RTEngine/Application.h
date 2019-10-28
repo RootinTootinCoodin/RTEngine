@@ -58,7 +58,7 @@ private:
 	float	avg_fps = 0;
 	std::list<Module*> list_modules;
 	int		arr_iterator = 59;
-	int fps_limit = 60;
+	int		fps_limit = 60;
 
 public:
 

@@ -355,6 +355,9 @@
     <ClInclude Include="ComponentMaterial.h">
       <Filter>Sources\GameObjects\Components</Filter>
     </ClInclude>
+    <ClInclude Include="UIAssets.h">
+      <Filter>Sources\UIElements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -557,6 +560,9 @@
     </ClCompile>
     <ClCompile Include="ComponentMaterial.cpp">
       <Filter>Sources\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UIAssets.cpp">
+      <Filter>Sources\UIElements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -13,6 +13,7 @@ class UIAbout;
 class UIConfiguration;
 class UIInspector;
 class UIHierarchy;
+class UIAssets;
 
 class ModuleImGui :
 	public Module
@@ -39,6 +40,7 @@ public:
 	UIConfiguration* configuration = nullptr;
 	UIInspector* inspector = nullptr;
 	UIHierarchy* hierarchy = nullptr;
+	UIAssets* assets = nullptr;
 
 	std::vector<UIElement*> UI;
 private:
