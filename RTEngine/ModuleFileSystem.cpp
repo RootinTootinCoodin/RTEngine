@@ -35,7 +35,7 @@ ModuleFileSystem::ModuleFileSystem(Application* app, bool start_enabled) : Modul
 
 	// Make sure standard paths exist
 	const char* dirs[] = {
-		SETTINGS_FOLDER, ASSETS_FOLDER, ASSETS_MODELS_FOLDER, ASSETS_TEXTURES_FOLDER
+		SETTINGS_FOLDER, ASSETS_FOLDER, ASSETS_MODELS_FOLDER, ASSETS_TEXTURES_FOLDER,LIBRARY_FOLDER,LIBRARY_MESHES_FOLDER,LIBRARY_MODELS_FOLDER,LIBRARY_TEXTURES_FOLDER
 	};
 
 	for (uint i = 0; i < sizeof(dirs)/sizeof(const char*); ++i)
@@ -259,6 +259,21 @@ void ModuleFileSystem::NormalizePath(std::string & full_path) const
 	}
 }
 
+bool ModuleFileSystem::FileExistsInDirectory(std::string& file, const char* directory)
+{ 
+	//NEEDS POLISH
+	bool ret = true;
+	std::vector<std::string> files;
+	std::vector<std::string> directories;
+	std::string file_2 = file + ".dds";
+	DiscoverFiles(directory, files, directories);
+	if (*(std::find(files.begin(), files.end(), file)) != file || *(std::find(files.begin(), files.end(), file_2)) != file_2)
+	{
+		ret = false;
+	}
+	return ret;
+}
+
 unsigned int ModuleFileSystem::Load(const char * path, const char * file, char ** buffer) const
 {
 	string full_path(path);
@@ -362,19 +377,20 @@ uint ModuleFileSystem::Save(const char* file, const void* buffer, unsigned int s
 	return ret;
 }
 
-//bool ModuleFileSystem::SaveUnique(string& name, const void * buffer, uint size, const char * path, const char * prefix, const char * extension)
-//{
-//	char result[250];
-//
-//	sprintf_s(result, 250, "%s%s_%llu.%s", path, prefix, App->resources->GenerateNewUID(), extension);
-//	NormalizePath(result);
-//	if (Save(result, buffer, size) > 0)
-//	{
-//		name = result;
-//		return true;
-//	}
-//	return false;
-//}
+bool ModuleFileSystem::SaveUnique(string& name, const void * buffer, uint size, const char * path, const char * extension)
+{
+	char result[250];
+
+	sprintf_s(result, 250, "%s%s.%s", path,name.c_str(), extension);
+	//sprintf_s(result, 250, "%s%s_%llu.%s", path, prefix, App->resources->GenerateNewUID(), extension);
+	NormalizePath(result);
+	if (Save(result, buffer, size) > 0)
+	{
+		name = result;
+		return true;
+	}
+	return false;
+}
 
 bool ModuleFileSystem::Remove(const char * file)
 {
