@@ -41,12 +41,14 @@ bool ModuleScene::Init(JSON_Object* config)
 
 bool ModuleScene::Start()
 {
+	DefaultTexture();
+	GenerateCheckerTexture();
+
 	std::string path = App->fileSystem->GetWritePath();
 	path += ASSETS_MODELS_FOLDER;
 	path += "BakerHouse.fbx";
 	App->loader->FileReceived(path);
-	DefaultTexture();
-	GenerateCheckerTexture();
+
 
 	return true;
 }
