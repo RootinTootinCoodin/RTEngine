@@ -52,7 +52,7 @@ public:
 	vec3 cameraUp;
 	vec3 newPos;
 
-	float Sensitivity = 0.4f;
+	float sensitivity = 0.4f;
 
 private:
 	mat4x4 ViewMatrix, ViewMatrixInverse;

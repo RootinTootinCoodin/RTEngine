@@ -71,7 +71,7 @@ void UIConfiguration::Draw()
 
 		if (ImGui::CollapsingHeader("Camera"))
 		{
-			ImGui::SliderFloat("Mouse sensitivity", &App->camera->Sensitivity, 0.0f, 10.0f);
+			ImGui::SliderFloat("Mouse sensitivity", &App->camera->sensitivity, 0.0f, 10.0f);
 		}
 
 		if (ImGui::CollapsingHeader("Render"))

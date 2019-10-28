@@ -20,7 +20,7 @@ public:
 
 	bool CleanUp() override;
 
-	bool FileReceived(std::string& path);
+	bool FileReceived(std::string path);
 	bool LoadFBX(std::string& path, std::string& name);
 	bool LoadTexture(std::string& path, ComponentMaterial* material = nullptr);
 

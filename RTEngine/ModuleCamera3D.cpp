@@ -36,7 +36,9 @@ bool ModuleCamera3D::Init(JSON_Object* config)
 {
 	LOG("Setting up the camera");
 
-	Sensitivity = json_object_get_number(config, "sensitivity");
+	sensitivity = json_object_get_number(config, "sensitivity");
+	if (sensitivity < 0.3)
+		sensitivity = 0.3;
 
 	bool ret = true;
 	return ret;
@@ -52,10 +54,10 @@ bool ModuleCamera3D::CleanUp()
 
 void ModuleCamera3D::Save(JSON_Object * config)
 {
-	json_object_set_number(config, "sensitivity", Sensitivity);
+	json_object_set_number(config, "sensitivity", sensitivity);
 
-	if (Sensitivity <= 0)
-		Sensitivity = 0.4f;
+	if (sensitivity <= 0)
+		sensitivity = 0.4f;
 }
 
 // -----------------------------------------------------------------
@@ -76,8 +78,8 @@ update_status ModuleCamera3D::Update(float dt)
 	int mouse_x = +App->input->GetMouseXMotion();
 	int mouse_y = -App->input->GetMouseYMotion();
 
-	float DeltaX = (float)mouse_x * Sensitivity;
-	float DeltaY = (float)mouse_y * Sensitivity;;
+	float DeltaX = (float)mouse_x * sensitivity;
+	float DeltaY = (float)mouse_y * sensitivity;;
 
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 	{

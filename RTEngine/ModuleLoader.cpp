@@ -46,7 +46,7 @@ ModuleLoader::~ModuleLoader()
 	aiDetachAllLogStreams();
 }
 
-bool ModuleLoader::FileReceived(std::string& path)
+bool ModuleLoader::FileReceived(std::string path)
 {
 	std::string extension;
 	std::string name;
