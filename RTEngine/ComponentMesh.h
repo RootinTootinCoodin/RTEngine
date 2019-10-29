@@ -22,14 +22,14 @@ public:
 	uint* indices = nullptr;
 
 	uint num_vertices = 0;
-	float* vertices = nullptr;
+	float* vertices = nullptr; //num vertices * 3 in size
 
 	float* colors = nullptr;
-	float* normals = nullptr;
+	float* normals = nullptr; //num vertices in size
 
 	uint id_uvs = 0;
 	uint num_uvs = 0;
-	float* uvs = nullptr;
+	float* uvs = nullptr; //num
 
 	ComponentMaterial* material = nullptr;
 
