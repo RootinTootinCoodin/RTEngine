@@ -37,6 +37,7 @@ public:
 
 	bool SaveTextureAsDDS(std::string& name);
 	bool ImportMesh(aiMesh* mesh);
+	bool ExportMesh(ComponentMesh* mesh, char* buffer);
 private:
 public:
 private:

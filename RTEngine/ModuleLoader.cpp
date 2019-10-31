@@ -296,10 +296,15 @@ bool ModuleLoader::ImportMesh(aiMesh* mesh)
 		uint bytes = sizeof(ranges);
 		memcpy(cursor, ranges, bytes);
 
-		//Store Indices
+		//Store Vertices
 		cursor += bytes; //We "move" the cursor a distance equal to the memory copied previously;
-		bytes = sizeof(uint) * mesh->mNumFaces * 3;
+		bytes = sizeof(float) * mesh->mNumVertices * 3;
+		memcpy(cursor, mesh->mVertices, bytes);
 
+		//Store Indices
+
+		cursor += bytes;
+		bytes = sizeof(uint) * mesh->mNumFaces * 3;
 		for (uint k = 0; k < mesh->mNumFaces; ++k)
 		{
 			if (mesh->mFaces[k].mNumIndices == 3)
@@ -339,6 +344,54 @@ bool ModuleLoader::ImportMesh(aiMesh* mesh)
 		LOG("Trying to Import a mesh without faces: %s", mesh->mName.C_Str());
 
 	
+	return false;
+}
+
+bool ModuleLoader::ExportMesh(ComponentMesh* mesh, char* buffer)
+{
+	char* cursor = buffer;
+	uint ranges[5];
+	uint bytes = sizeof(ranges);
+	memcpy(ranges, cursor, bytes);
+
+	mesh->num_vertices = ranges[0];
+	mesh->num_indices = ranges[1];
+	cursor += bytes;
+
+	bytes = sizeof(float) * mesh->num_vertices * 3;
+	mesh->vertices = new float[mesh->num_vertices * 3];
+	memcpy(mesh->vertices, cursor, bytes);
+	cursor += bytes;
+
+	bytes = sizeof(uint) * mesh->num_indices;
+	mesh->indices = new uint[mesh->num_indices];
+	memcpy(mesh->indices, cursor, bytes);
+	cursor += bytes;
+
+
+	if (ranges[2])
+	{
+		bytes = sizeof(float) * mesh->num_vertices * 2;
+		mesh->uvs = new float[mesh->num_vertices * 2];
+		memcpy(mesh->uvs, cursor, bytes);
+		cursor += bytes;
+	}
+	if (ranges[3])
+	{
+		bytes = sizeof(float) * mesh->num_vertices * 3;
+		mesh->vertices = new float[mesh->num_vertices * 3];
+		memcpy(mesh->vertices, cursor, bytes);
+		cursor += bytes;
+	}
+	if (ranges[4])
+	{
+		bytes = sizeof(float) * mesh->num_vertices * 4;
+		mesh->colors = new float[mesh->num_vertices * 4];
+		memcpy(mesh->colors, cursor, bytes);
+		cursor += bytes;
+	}
+
+
 	return false;
 }
 
