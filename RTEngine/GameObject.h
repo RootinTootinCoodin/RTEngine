@@ -27,6 +27,7 @@ public:
 	AABB GetAABB() const { return bounding_box; };
 
 	void RecursiveSetActive(bool active);
+	void RecursiveSetStatic(bool _static);
 	void RecursiveApplyTexture(texture* texture);
 	void RecursiveGetChildren(std::vector<GameObject*>* buffer);
 	void RecursiveHierarchyChildren();
@@ -46,6 +47,7 @@ private:
 
 public:
 	bool active = true;
+	bool is_static = true;
 	bool draw_aabb = false;
 
 

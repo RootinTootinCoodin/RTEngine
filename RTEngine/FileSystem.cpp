@@ -10,14 +10,14 @@
 
 #pragma comment (lib, "Shlwapi.lib")
 
-void FileSystem::ExportBuffer(char * data, int size, const char * file_name, lib_dir lib, const char* extension) {
-
+bool FileSystem::ExportBuffer(char * data, int size, const char * file_name, lib_dir lib, const char* extension) {
 	std::string path = "";
 	FormFullPath(path, file_name, lib, extension);
 	std::ofstream file;
 	file.open(path, std::fstream::out | std::fstream::binary);
 	file.write(data, size);
 	file.close();
+	return true;
 }
 
 char * FileSystem::ImportFile(const char * file_name) {
@@ -130,6 +130,41 @@ void FileSystem::FormFullPath(std::string & path, const char * file_name, lib_di
 	path.append(extension);
 }
 
+void FileSystem::SplitFilePath(std::string & full_path, std::string* path, std::string* name, std::string* extension)
+{
+	std::string full(full_path);
+
+	size_t pos_separator = full.find_last_of("\\/");
+	size_t pos_dot = full.find_last_of(".");
+
+	if (path != nullptr)
+	{
+		if (pos_separator < full.length())
+			*path = full.substr(0, pos_separator + 1);
+		else
+			path->clear();
+	}
+
+	if (name != nullptr)
+	{
+		if (pos_separator < full.length())
+		{
+			*name = full.substr(pos_separator + 1);
+			*name = name->substr(0, name->find_last_of("."));
+		}
+		else
+			*name = full;
+	}
+
+	if (extension != nullptr)
+	{
+		if (pos_dot < full.length())
+			*extension = full.substr(pos_dot + 1);
+		else
+			extension->clear();
+	}
+}
+
 bool FileSystem::copyFileTo(const char * full_path_src, lib_dir dest_lib, const char * extension, std::string file_new_name) {
 
 	if (file_new_name == "") {
@@ -225,6 +260,24 @@ std::string FileSystem::getPathFromLibDir(lib_dir lib_dir) {
 		break;
 	}
 	return ret;
+}
+
+void FileSystem::DiscoverFiles(std::string path, std::vector<std::string>* file_array, std::vector<std::string>* directory_array)
+{
+	const std::experimental::filesystem::directory_iterator end{};
+
+	std::string button_name;
+	for (std::experimental::filesystem::directory_iterator iter{ path }; iter != end; ++iter)
+	{
+		if (std::experimental::filesystem::is_directory(*iter))
+		{
+			directory_array->push_back(iter->path().string());
+		}
+		else if (std::experimental::filesystem::is_regular_file(*iter))
+		{
+			file_array->push_back(iter->path().string());
+		}
+	}
 }
 
 bool FileSystem::removeExtension(std::string& str) {

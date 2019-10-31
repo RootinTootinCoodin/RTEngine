@@ -2,12 +2,13 @@
 #include "ModuleLoader.h"
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
-#include "ModuleFileSystem.h"
 #include "ModuleCamera3D.h"
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
+
+#include "FileSystem.h"
 
 
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
@@ -50,7 +51,7 @@ bool ModuleLoader::FileReceived(std::string path)
 {
 	std::string extension;
 	std::string name;
-	App->fileSystem->SplitFilePath(path.c_str(),nullptr, &name, &extension);
+	FileSystem::SplitFilePath(path,nullptr, &name, &extension);
 	if (MODEL_EXTENSIONS(extension))
 		LoadFBX(path, name);
 	if (TEXTURE_EXTENSIONS(extension))
@@ -64,12 +65,6 @@ bool ModuleLoader::LoadFBX(std::string& path, std::string& name)
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
-
-		std::string _path = App->fileSystem->GetWritePath();
-		_path += ASSETS_MODELS_FOLDER;
-		_path += name;
-		_path += ".fbx";
-		App->fileSystem->CopyFromOutsideFS(path.c_str(), _path.c_str());
 		GameObject* new_model = App->scene->root->AddChildren(name);
 		
 		for (int i = 0; i < scene->mNumMeshes; i++)
@@ -91,7 +86,9 @@ bool ModuleLoader::LoadTexture(std::string& path, ComponentMaterial* material)
 	ilGenImages(1,&il_img_name);
 	ilBindImage(il_img_name);
 
-	if (ilLoadImage(path.c_str()))
+	std::string path2 = ".";
+	path2 += path;
+	if (ilLoadImage(path2.c_str()))
 	{
 
 		ILinfo il_img_info;
@@ -108,7 +105,7 @@ bool ModuleLoader::LoadTexture(std::string& path, ComponentMaterial* material)
 		std::string name;
 		std::string extension;
 
-		App->fileSystem->SplitFilePath(path.c_str(), nullptr, &name, &extension);
+		FileSystem::SplitFilePath(path, nullptr, &name, &extension);
 
 		LoadMaterial(il_img_info, path, name, material);
 
@@ -185,12 +182,11 @@ void ModuleLoader::LoadMeshTexture(ComponentMaterial * _material, aiMaterial* ma
 	material->GetTexture(aiTextureType_DIFFUSE, 0, &texture_name);
 
 	std::string texture_path;
-	App->fileSystem->SplitFilePath(path.c_str(), &texture_path);
+	FileSystem::SplitFilePath(path, &texture_path);
 	texture_path += texture_name.C_Str();
 	if (!LoadTexture(texture_path, _material))
 	{
-		std::string texture_path_2 = App->fileSystem->GetWritePath();
-		texture_path_2 += ASSETS_TEXTURES_FOLDER;
+		std::string texture_path_2 =  ASSETS_TEXTURES_FOLDER;
 		texture_path_2 += texture_name.C_Str();
 		LOG("Texture is not located in the same path as the mesh");
 		if (LoadTexture(texture_path_2, _material))
@@ -264,7 +260,7 @@ bool ModuleLoader::SaveTextureAsDDS(std::string& name)
 	if (size > 0) {
 		data = new ILubyte[size]; // allocate data buffer
 		if (ilSaveL(IL_DDS, data, size) > 0) // Save to buffer with the ilSaveIL function
-			ret = App->fileSystem->SaveUnique(name, data, size, LIBRARY_TEXTURES_FOLDER, "dds");
+			ret = FileSystem::ExportBuffer((char*)data, size, name.c_str(), LIBRARY_TEXTURES, ".dds");
 		RELEASE_ARRAY(data);
 	}
 	return ret;
@@ -320,7 +316,24 @@ bool ModuleLoader::ImportMesh(aiMesh* mesh)
 			{
 				memcpy(&cursor[t], &mesh->mTextureCoords[0][t / 2].x, sizeof(float));
 				memcpy(&cursor[t+1], &mesh->mTextureCoords[0][t / 2].y, sizeof(float));
-			}			cursor += bytes;		}		if (normals)		{			bytes = sizeof(float) * mesh->mNumVertices * 3;			memcpy(cursor, mesh->mNormals, bytes);			cursor += bytes;		}		if (colors)		{			bytes = sizeof(float) * mesh->mNumVertices * 4;			memcpy(cursor, mesh->mColors[0], bytes);		}		
+			}
+			cursor += bytes;
+		}
+
+		if (normals)
+		{
+			bytes = sizeof(float) * mesh->mNumVertices * 3;
+			memcpy(cursor, mesh->mNormals, bytes);
+			cursor += bytes;
+		}
+
+		if (colors)
+		{
+			bytes = sizeof(float) * mesh->mNumVertices * 4;
+			memcpy(cursor, mesh->mColors[0], bytes);
+		}
+
+		
 	}
 	else
 		LOG("Trying to Import a mesh without faces: %s", mesh->mName.C_Str());

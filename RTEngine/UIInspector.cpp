@@ -34,6 +34,10 @@ void UIInspector::DrawGameObjectInfo(GameObject* gameobject)
 {
 	if (ImGui::Checkbox("Active", &gameobject->active))
 		gameobject->RecursiveSetActive(gameobject->active);
+	ImGui::SameLine();
+
+	if (ImGui::Checkbox("Static", &gameobject->is_static))
+		gameobject->RecursiveSetStatic(gameobject->is_static);
 
 	ImGui::SameLine();
 	ImGui::Checkbox("Draw AABB", &gameobject->draw_aabb);

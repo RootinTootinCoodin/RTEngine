@@ -89,6 +89,15 @@ void GameObject::RecursiveSetActive(bool _active)
 	active = _active;
 }
 
+void GameObject::RecursiveSetStatic(bool _static)
+{
+	for (auto item = children.begin(); item != children.end(); item++)
+	{
+		(*item).second->RecursiveSetStatic(_static);
+	}
+	is_static = _static;
+}
+
 void GameObject::RecursiveApplyTexture(texture * texture)
 {
 	for (auto item = children.begin(); item != children.end(); item++)

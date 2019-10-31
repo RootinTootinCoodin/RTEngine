@@ -2,7 +2,6 @@
 #include "ModuleScene.h"
 #include "ModuleLoader.h"
 #include "ModuleImGui.h"
-#include "ModuleFileSystem.h"
 #include "ModuleDebug.h"
 #include "ModuleRenderer3D.h"
 #include "UIInspector.h"
@@ -44,8 +43,8 @@ bool ModuleScene::Start()
 	DefaultTexture();
 	GenerateCheckerTexture();
 
-	std::string path = App->fileSystem->GetWritePath();
-	path += ASSETS_MODELS_FOLDER;
+	std::string path = ".";
+	path +=ASSETS_MODELS_FOLDER;
 	path += "BakerHouse.fbx";
 	App->loader->FileReceived(path);
 

@@ -334,9 +334,6 @@
     <ClInclude Include="ModuleDebug.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleFileSystem.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Sources\GameObjects</Filter>
     </ClInclude>
@@ -544,9 +541,6 @@
       <Filter>Sources\Containers</Filter>
     </ClCompile>
     <ClCompile Include="ModuleDebug.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleFileSystem.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
