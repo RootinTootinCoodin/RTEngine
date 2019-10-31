@@ -90,10 +90,10 @@ void UIInspector::DrawMeshInfo(ComponentMesh * mesh)
 	ImGui::BulletText("Num of vertices: %u", mesh->num_vertices);
 	ImGui::Separator();
 
-	if (mesh->id_uvs != 0)
-		ImGui::BulletText("UVs ID: %u", mesh->id_uvs);
+	if (mesh->uvs != nullptr)
+		ImGui::BulletText("This mesh contains UVs");
 	else
-		ImGui::BulletText("This mesh does not have coordinate textures");
+		ImGui::BulletText("This mesh does not have UVs");
 
 	ImGui::Checkbox("Draw Normals", &mesh->draw_normals);
 }

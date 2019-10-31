@@ -12,6 +12,7 @@ class ComponentMesh;
 class GameObject;
 struct ILinfo;
 
+
 class ModuleLoader :
 	public Module
 {
@@ -35,6 +36,7 @@ public:
 	void LoadMesh(aiMesh* m, GameObject* new_model, const aiScene* scene, std::string& path);
 
 	bool SaveTextureAsDDS(std::string& name);
+	bool ImportMesh(aiMesh* mesh);
 private:
 public:
 private:

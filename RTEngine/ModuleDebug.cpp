@@ -120,9 +120,8 @@ void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data, char* name)
 	LOG("%d indices.", _primitive->num_indices);
 
 	// Set UVs
-	_primitive->num_uvs = data->npoints * 2; // Set UV number
 	_primitive->uvs = new float[data->npoints * 2]; // Allocate memory
-	for (int i = 0; i < _primitive->num_uvs; i++) // Fill data
+	for (int i = 0; i < data->npoints * 2; i++) // Fill data
 	{
 		_primitive->uvs[i] = data->tcoords[i];
 	}

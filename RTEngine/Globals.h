@@ -86,6 +86,8 @@ enum componentType
 #define MAX( a, b ) ( ((a) > (b)) ? (a) : (b) )
 #define TO_BOOL( a )  ( (a != 0) ? true : false )
 
+uint num_of_digits(int number);
+
 typedef unsigned int uint;
 typedef unsigned __int32 uint32;
 typedef unsigned __int64 uint64;

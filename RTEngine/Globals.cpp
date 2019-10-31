@@ -29,6 +29,24 @@ uint Generate_UUID()
 	seed.seed(pcg_extras::seed_seq_from<std::random_device>());
 	std::uniform_int_distribution<uint> uniform_dist(1, (uint)(std::numeric_limits<uint>::max)());
 	uuid = uniform_dist(seed);
+	if (num_of_digits(uuid) < 10)
+	{
+		uuid = Generate_UUID();
+	}
 
 	return uuid;
+}
+
+//Original by https://www.instagram.com/liiiizer/
+uint num_of_digits(int number)
+{
+	uint ret = 0;
+	uint tmp = number;
+	while (tmp > 0)
+	{
+		tmp = floor(tmp / 10);
+		ret += 1;
+	}
+
+	return ret;
 }

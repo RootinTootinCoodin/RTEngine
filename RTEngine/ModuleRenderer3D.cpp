@@ -304,13 +304,6 @@ bool ModuleRenderer3D::GenerateBufferForMesh(ComponentMesh * mesh)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)*mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-
-	glGenBuffers(1, (GLuint*)&(mesh->id_uvs));
-	glBindBuffer(GL_TEXTURE_COORD_ARRAY, mesh->id_uvs);
-	glBufferData(GL_TEXTURE_COORD_ARRAY, sizeof(uint)*mesh->num_uvs, mesh->uvs, GL_STATIC_DRAW);
-	glBindBuffer(GL_TEXTURE_COORD_ARRAY,0);
-
 	
 	return true;
 }

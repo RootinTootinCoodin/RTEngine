@@ -46,8 +46,6 @@ void UITests::Draw()
 			ImGui::DragInt("Value 2", &value2);
 			if (ImGui::Button("Generate Integer"))
 			{
-				
-
 				if (value1 <= value2)
 				{
 					std::uniform_int_distribution<int> uniform_dist(value1, value2);
@@ -60,8 +58,26 @@ void UITests::Draw()
 				}
 
 			}
-
 			ImGui::Text("Integer generated: %i", result2);
+
+			static uint result3 = 0;
+			static uint result4 = 0;
+			if (ImGui::Button("Generate UUID"))
+			{
+				result4 = 0;
+				result3 = Generate_UUID();
+				uint tmp = result3;
+				while (tmp > 0)
+				{
+					tmp = floor(tmp / 10);
+					result4 += 1;
+				}
+			}
+			ImGui::Text("UUID generated: %u", result3);
+			ImGui::Text("UUID Size: %u", result4);
+
+
+		
 		}
 
 	}

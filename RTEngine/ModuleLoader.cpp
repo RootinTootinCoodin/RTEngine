@@ -256,7 +256,7 @@ void ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiScene* sc
 
 bool ModuleLoader::SaveTextureAsDDS(std::string& name)
 {
-	bool ret;
+	bool ret = false;
 	ILuint size;
 	ILubyte* data;
 	ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);// To pick a specific DXT compression use
@@ -268,6 +268,65 @@ bool ModuleLoader::SaveTextureAsDDS(std::string& name)
 		RELEASE_ARRAY(data);
 	}
 	return ret;
+}
+
+bool ModuleLoader::ImportMesh(aiMesh* mesh)
+{
+	if (mesh->HasFaces())
+	{
+		//GOD BLESS C++ 
+		uint uvs = mesh->HasTextureCoords(0);
+		uint normals = mesh->HasNormals();
+		uint colors = mesh->HasVertexColors(0);
+
+		//Header 
+		uint ranges[5] = { mesh->mNumVertices,mesh->mNumFaces * 3 ,uvs,normals,colors};
+		//Calculate the size of the file
+		uint size = sizeof(ranges) + sizeof(uint) * mesh->mNumFaces * 3 + sizeof(float) * mesh->mNumVertices * 3;
+		if (uvs)
+			size += sizeof(float) * mesh->mNumVertices * 2;
+		
+		if (normals)
+			size += sizeof(float) * mesh->mNumVertices * 3;
+
+		if (colors)
+			size += sizeof(float) * mesh->mNumVertices * 4;
+
+		//Data: File, Cursor: Pointer to where we are writing in the file
+		char* data = new char[size];
+		char* cursor = data;
+
+		//Store the ranges first
+		uint bytes = sizeof(ranges);
+		memcpy(cursor, ranges, bytes);
+
+		//Store Indices
+		cursor += bytes; //We "move" the cursor a distance equal to the memory copied previously;
+		bytes = sizeof(uint) * mesh->mNumFaces * 3;
+
+		for (uint k = 0; k < mesh->mNumFaces; ++k)
+		{
+			if (mesh->mFaces[k].mNumIndices == 3)
+				memcpy(&cursor[k * 3], mesh->mFaces[k].mIndices, 3 * sizeof(uint));
+			else
+				LOG("WARNING, geometry face without 3 indices !");
+		}
+
+		cursor += bytes;
+		if (uvs)
+		{
+			bytes = sizeof(float) * mesh->mNumVertices * 2;
+			for (int t = 0; t < mesh->mNumVertices * 2; t += 2)
+			{
+				memcpy(&cursor[t], &mesh->mTextureCoords[0][t / 2].x, sizeof(float));
+				memcpy(&cursor[t+1], &mesh->mTextureCoords[0][t / 2].y, sizeof(float));
+			}			cursor += bytes;		}		if (normals)		{			bytes = sizeof(float) * mesh->mNumVertices * 3;			memcpy(cursor, mesh->mNormals, bytes);			cursor += bytes;		}		if (colors)		{			bytes = sizeof(float) * mesh->mNumVertices * 4;			memcpy(cursor, mesh->mColors[0], bytes);		}		
+	}
+	else
+		LOG("Trying to Import a mesh without faces: %s", mesh->mName.C_Str());
+
+	
+	return false;
 }
 
 bool ModuleLoader::CleanUp()
