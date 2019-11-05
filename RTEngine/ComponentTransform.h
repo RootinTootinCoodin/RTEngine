@@ -13,6 +13,9 @@ public:
 	~ComponentTransform();
 
 	math::float4x4 GetLocalTransformMatrix() const { return local_transform; };
+
+	void setLocalFromPSR(float3& pos, float3& scale, Quat& rotation);
+
 private:
 	math::float4x4 local_transform;
 };

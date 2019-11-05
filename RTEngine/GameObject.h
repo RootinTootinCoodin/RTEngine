@@ -8,20 +8,20 @@
 #include <map>
 
 class Component;
-
+class ComponentTransform;
 
 class GameObject
 {
 public:
 	GameObject();
-	GameObject(std::string name, GameObject* parent);
-	GameObject(std::string name, GameObject* parent, uint uuid);
+	GameObject(std::string name, GameObject* parent, ComponentTransform* transform = nullptr);
+	GameObject(std::string name, GameObject* parent, uint uuid, ComponentTransform* transform = nullptr);
 
 	~GameObject();
 
 
 	Component* AddComponent(componentType type);
-	GameObject* AddChildren(std::string name);
+	GameObject* AddChildren(std::string name); //CANT BE REFERENCE
 	uint GetUUID() const { return uuid; }; 
 	std::string GetName() const { return name; }; 
 	AABB GetAABB() const { return bounding_box; };

@@ -5,6 +5,7 @@
 #include "ModuleCamera3D.h"
 #include "GameObject.h"
 #include "Component.h"
+#include "ComponentTransform.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 
@@ -67,15 +68,40 @@ bool ModuleLoader::LoadFBX(std::string& path, std::string& name)
 	{
 		GameObject* new_model = App->scene->root->AddChildren(name);
 		
-		for (int i = 0; i < scene->mNumMeshes; i++)
+	/*	for (int i = 0; i < scene->mNumMeshes; i++)
 		{
+
 			LoadMesh(scene->mMeshes[i], new_model,scene,path);
-		}
+		}*/
+		LoadAiNodesRecursively(scene->mRootNode, scene, new_model, path);
 		aiReleaseImport(scene);
 		App->camera->AdjustCameraToAABB(new_model->GetAABB());
 	}
 	else
 		LOG("Error loading scene %s", path);
+	return true;
+}
+
+bool ModuleLoader::LoadAiNodesRecursively(aiNode * node, const aiScene* scene,GameObject* parent, std::string& path)
+{
+	GameObject* mesh_gameobject = parent->AddChildren(node->mName.C_Str());
+
+	if (node->mNumMeshes != 0)
+	{
+		LoadTransform(node, mesh_gameobject);
+		for (int i = 0; i < node->mNumMeshes; i++)
+		{
+			LoadMesh(scene->mMeshes[node->mMeshes[i]], parent, scene, path);
+		}
+	}
+	else if (!node->mTransformation.IsIdentity())
+	{
+		LoadTransform(node, mesh_gameobject);
+	}
+	for (int i = 0; i < node->mNumChildren; i++)
+	{
+		LoadAiNodesRecursively(node->mChildren[i], scene, mesh_gameobject, path);
+	}
 	return true;
 }
 
@@ -119,6 +145,22 @@ bool ModuleLoader::LoadTexture(std::string& path, ComponentMaterial* material)
 	ilDeleteImage(il_img_name);
 	return ret;
 }
+
+void ModuleLoader::LoadTransform(aiNode * node, GameObject * game_object)
+{
+
+	aiVector3D translation, scaling; 
+	aiQuaternion rotation;
+	node->mTransformation.Decompose(scaling, rotation, translation);
+	float3 pos(translation.x, translation.y, translation.z); 
+	float3 scale(scaling.x, scaling.y, scaling.z); 
+	Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
+
+	ComponentTransform* transform = (ComponentTransform*)game_object->GetComponent(TRANSFORM);
+	transform->setLocalFromPSR(pos, scale, rot);
+
+}
+
 
 bool ModuleLoader::LoadMaterial(ILinfo& il_img_info,std::string& path, std::string& name, ComponentMaterial* material)
 {
@@ -229,6 +271,7 @@ void ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiScene* sc
 
 	if (aiMaterial* material = scene->mMaterials[m->mMaterialIndex])
 	{
+		
 		LoadMeshTexture(_material, material, path);
 	}
 	else

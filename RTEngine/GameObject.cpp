@@ -12,21 +12,31 @@ GameObject::GameObject()
 {
 }
 
-GameObject::GameObject(std::string _name, GameObject * parent) : parent(parent)
+GameObject::GameObject(std::string _name, GameObject * parent, ComponentTransform* transform) : parent(parent)
 {
 	if (_name.size() > 0)
 		name = _name;
 	else
 		name = "No name";
 	uuid = Generate_UUID();
-	AddComponent(TRANSFORM);
+
+	if(!transform)
+		AddComponent(TRANSFORM);
+	else
+		components.insert({ transform->GetUUID(), transform });
+
 	bounding_box.SetNegativeInfinity();
 }
 
-GameObject::GameObject(std::string name, GameObject * parent, uint uuid): name(name), parent(parent)
+GameObject::GameObject(std::string name, GameObject * parent, uint uuid, ComponentTransform* transform): name(name), parent(parent)
 {
 	this->uuid = uuid;
-	AddComponent(TRANSFORM);
+
+	if (!transform)
+		AddComponent(TRANSFORM);
+	else
+		components.insert({ transform->GetUUID(), transform });
+
 	bounding_box.SetNegativeInfinity();
 }
 

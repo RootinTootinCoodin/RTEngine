@@ -23,7 +23,7 @@
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	name = "Scene";
-	root = new GameObject("Root", nullptr,0);
+	root = new GameObject("Root", nullptr,0,nullptr);
 }
 
 
