@@ -1,4 +1,4 @@
-/* Copyright Jukka Jylï¿½nki
+/* Copyright Jukka Jylänki
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
    limitations under the License. */
 
 /** @file Frustum.h
-	@author Jukka Jylï¿½nki
+	@author Jukka Jylänki
 	@brief The Frustum geometry object. */
 #pragma once
 
@@ -378,6 +378,9 @@ public:
 	bool Contains(const Frustum &frustum) const;
 	bool Contains(const Polyhedron &polyhedron) const;
 
+	//Created by Lorién Portella
+	bool ContainsAABBCustom(const AABB &aabb) const;
+
 	/// Computes the closest point inside this Frustum to the given point.
 	/** If the target point lies inside this Frustum, then that point is returned.
 		@see Distance(), Contains(), Intersects().
@@ -403,6 +406,7 @@ public:
 	bool Intersects(const LineSegment &lineSegment) const;
 	bool Intersects(const AABB &aabb) const;
 	bool Intersects(const OBB &obb) const;
+	bool Intersects(const OBB &obb, float& in, float& out) const;
 	bool Intersects(const Plane &plane) const;
 	bool Intersects(const Triangle &triangle) const;
 	bool Intersects(const Polygon &polygon) const;

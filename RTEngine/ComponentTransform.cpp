@@ -17,8 +17,29 @@ ComponentTransform::~ComponentTransform()
 {
 }
 
-void ComponentTransform::setLocalFromPSR(float3 & pos, float3 & scale, Quat & rotation)
+void ComponentTransform::setLocalFromPSR()
 {
 	local_transform.SetIdentity();
-	local_transform = local_transform.FromTRS(pos, rotation, scale);
+	local_transform = float4x4::FromTRS(pos, rotation, scale);
+}
+
+void ComponentTransform::setPos(float3 & pos)
+{
+	this->pos = pos;
+}
+
+void ComponentTransform::setScale(float3 & scale)
+{
+	//local_transform.sca(pos);
+	this->scale = scale;
+}
+
+void ComponentTransform::setRotation(Quat & rotation)
+{
+	this->rotation = rotation;
+}
+
+void ComponentTransform::setRotation(float3 & rotation)
+{
+	this->rotation = Quat::FromEulerXYZ(rotation.x,rotation.y,rotation.z);
 }

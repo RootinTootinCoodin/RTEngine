@@ -1,4 +1,4 @@
-/* Copyright Jukka Jylï¿½nki
+/* Copyright Jukka Jylänki
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
    limitations under the License. */
 
 /** @file TriangleMesh.cpp
-	@author Jukka Jylï¿½nki
+	@author Jukka Jylänki
 	@brief Implementation for the TriangleMesh geometry object. */
 #include "TriangleMesh.h"
 #include <stdlib.h>

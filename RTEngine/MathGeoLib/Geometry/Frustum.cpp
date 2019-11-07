@@ -1,4 +1,4 @@
-/* Copyright Jukka Jylï¿½nki
+/* Copyright Jukka Jylänki
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
    limitations under the License. */
 
 /** @file Frustum.cpp
-	@author Jukka Jylï¿½nki
+	@author Jukka Jylänki
 	@brief Implementation for the Frustum geometry object. */
 #include "Frustum.h"
 #include "AABB.h"
@@ -344,6 +344,31 @@ bool Frustum::Contains(const Polyhedron &polyhedron) const
 	return true;
 }
 
+bool Frustum::ContainsAABBCustom(const AABB & aabb) const
+{
+	if (aabb.IsFinite())
+	{
+		vec corners[8];
+
+		aabb.GetCornerPoints(corners);
+
+		for (int p = 0; p < 6; p++)
+		{
+			int InCount = 8;
+			for (int i = 0; i < 8; i++)
+			{
+				if (GetPlane(p).IsOnPositiveSide(corners[i]))
+					InCount--;
+			}
+			if (InCount == 0)
+				return false;
+		}
+		return true;
+	}
+	else
+		return true;
+}
+
 float3 Frustum::ClosestPoint(const float3 &point) const
 {
 	return ToPolyhedron().ClosestPointConvex(point);
@@ -622,13 +647,102 @@ bool Frustum::Intersects(const LineSegment &lineSegment) const
 bool Frustum::Intersects(const AABB &aabb) const
 {
 	///@todo This is a naive test. Implement a faster version.
-	return this->ToPolyhedron().Intersects(aabb);
+	//return this->ToPolyhedron().Intersects(aabb);
+
+	float3 points[8];
+	aabb.GetCornerPoints(points);
+
+	Plane planes[6];
+	GetPlanes(planes);
+
+	// Discard boxes with all points outside
+	int out;
+	for (int i = 0; i < 6; ++i)
+	{
+		out = 0;
+		for (int k = 0; k < 8; ++k)
+			out += planes[i].IsOnPositiveSide(points[k]);
+
+		if (out == 8)
+			return false;
+	}
+
+	return true;
 }
 
 bool Frustum::Intersects(const OBB &obb) const
 {
-	///@todo This is a naive test. Implement a faster version.
-	return this->ToPolyhedron().Intersects(obb);
+	float3 points[8];
+	obb.GetCornerPoints(points);
+
+	Plane planes[6];
+	GetPlanes(planes);
+
+	// Discard boxes with all points outside
+	int out;
+	for (int i = 0; i < 6; ++i)
+	{
+		out = 0;
+		for (int k = 0; k < 8; ++k)
+			out += planes[i].IsOnPositiveSide(points[k]);
+
+		if (out == 8)
+			return false;
+	}
+
+	return true;
+
+	// TODO: test this code
+#if 0
+	// Second pass to filter false positives
+	// http://www.iquilezles.org/www/articles/frustumcorrect/frustumcorrect.htm
+	GetCornerPoints(points);
+	out = 0;
+
+	for (int k = 0; k < 8; ++k)
+		out += obb.Contains(points[k]) ? 1 : 0;
+
+	if (out == 8)
+		return false;
+#endif
+
+	return true;
+}
+
+bool Frustum::Intersects(const OBB & obb, float & in, float & out) const
+{
+	float3 points[8];
+	obb.GetCornerPoints(points);
+
+	Plane planes[6];
+	GetPlanes(planes);
+
+	// Discard boxes with all points outside
+	int discard;
+	for (int i = 0; i < 6; ++i)
+	{
+		discard = 0;
+		for (int k = 0; k < 8; ++k)
+			discard += planes[i].IsOnPositiveSide(points[k]);
+
+		if (discard == 8)
+			return false;
+	}
+
+	// Calculate approx distances
+	in = obb.ClosestPoint(pos).DistanceSq(pos);
+
+	/*
+	float3 closest = obb.ClosestPoint(pos);
+	float squared = pos.DistanceSq(closest);
+
+	in = pos.DistanceSq(obb.pos);
+	
+	in = squared / (farPlaneDistance * farPlaneDistance);
+	float radius = obb.MinimalEnclosingSphere().r;
+	out = in + (radius / farPlaneDistance * farPlaneDistance);
+	*/
+	return true;
 }
 
 bool Frustum::Intersects(const Plane &plane) const

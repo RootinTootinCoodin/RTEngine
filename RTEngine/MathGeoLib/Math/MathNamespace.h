@@ -1,4 +1,4 @@
-/* Copyright Jukka Jylï¿½nki
+/* Copyright Jukka Jylänki
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
    limitations under the License. */
 
 /** @file MathNamespace.h
-	@author Jukka Jylï¿½nki
+	@author Jukka Jylänki
 	@brief Defines a C++ namespace for all Math objects (optional). */
 #pragma once
 

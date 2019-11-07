@@ -91,13 +91,14 @@ bool ModuleLoader::LoadAiNodesRecursively(aiNode * node, const aiScene* scene,Ga
 		LoadTransform(node, mesh_gameobject);
 		for (int i = 0; i < node->mNumMeshes; i++)
 		{
-			LoadMesh(scene->mMeshes[node->mMeshes[i]], parent, scene, path);
+			LoadMesh(scene->mMeshes[node->mMeshes[i]], mesh_gameobject, scene, path);
 		}
 	}
 	else if (!node->mTransformation.IsIdentity())
 	{
 		LoadTransform(node, mesh_gameobject);
 	}
+
 	for (int i = 0; i < node->mNumChildren; i++)
 	{
 		LoadAiNodesRecursively(node->mChildren[i], scene, mesh_gameobject, path);
@@ -157,7 +158,10 @@ void ModuleLoader::LoadTransform(aiNode * node, GameObject * game_object)
 	Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
 
 	ComponentTransform* transform = (ComponentTransform*)game_object->GetComponent(TRANSFORM);
-	transform->setLocalFromPSR(pos, scale, rot);
+	transform->setPos(pos);
+	transform->setScale(scale);
+	transform->setRotation(rot);
+	transform->setLocalFromPSR();
 
 }
 

@@ -1,4 +1,4 @@
-/* Copyright Jukka Jylï¿½nki
+/* Copyright Jukka Jylänki
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
    limitations under the License. */
 
 /** @file TriangleMesh_IntersectRay_AVX.inl
-	@author Jukka Jylï¿½nki
+	@author Jukka Jylänki
 	@brief AVX implementation of ray-mesh intersection routines. */
 
 #include "../Math/SSEMath.h"
