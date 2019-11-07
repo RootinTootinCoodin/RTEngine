@@ -77,7 +77,7 @@ void ModuleScene::GenerateCheckerTexture()
 		}
 	}
 
-	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glGenTextures(1, &checker->id_texture);
 	glBindTexture(GL_TEXTURE_2D, checker->id_texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -111,7 +111,7 @@ void ModuleScene::DefaultTexture()
 		}
 	}
 
-	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glGenTextures(1, &white->id_texture);
 	glBindTexture(GL_TEXTURE_2D, white->id_texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
