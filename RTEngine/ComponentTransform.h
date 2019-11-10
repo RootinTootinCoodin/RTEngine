@@ -14,6 +14,10 @@ public:
 	~ComponentTransform();
 
 	math::float4x4 GetLocalTransformMatrix() const { return local_transform; };
+	math::float4x4 GetGlobalTransformMatrix() const { return global_transform; };
+	bool isDirty() const { return dirty; };
+	void setDirty(bool _dirty) { dirty = _dirty };
+
 
 	void setLocalFromPSR();
 	void setPos(float3 & pos);
@@ -28,6 +32,8 @@ private:
 	float3 pos;
 	float3 scale;
 	Quat rotation;
+
+	bool dirty;
 };
 
 #endif // ! __COMPONENT_TRANSFORM_H__
