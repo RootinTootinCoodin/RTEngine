@@ -31,6 +31,8 @@ public:
 	void RecursiveApplyTexture(texture* texture);
 	void RecursiveGetChildren(std::vector<GameObject*>* buffer);
 	void RecursiveHierarchyChildren();
+	void RecursiveSetDirty();
+	void RecursiveRemoveDirtyFlags();
 	void RecalculateAABB();
 	void ParentRecalculateAABB();
 

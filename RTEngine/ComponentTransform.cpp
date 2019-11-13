@@ -1,4 +1,5 @@
 #include "ComponentTransform.h"
+#include "GameObject.h"
 
 
 
@@ -15,6 +16,13 @@ ComponentTransform::ComponentTransform(GameObject * parent) : Component(TRANSFOR
 
 ComponentTransform::~ComponentTransform()
 {
+}
+
+void ComponentTransform::removeDirty()
+{
+	ComponentTransform* parent_transform = (ComponentTransform*)parent->GetComponent(TRANSFORM);
+	global_transform = parent_transform->GetGlobalTransformMatrix()*local_transform;
+	dirty = false;
 }
 
 void ComponentTransform::setLocalFromPSR()

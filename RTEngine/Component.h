@@ -23,7 +23,7 @@ private:
 	virtual bool Enable() { return true; };
 	virtual bool Disable() { return true; };
 public:
-private:
+protected:
 	bool active = true;
 	uint uuid = 0;
 	GameObject* parent = nullptr;

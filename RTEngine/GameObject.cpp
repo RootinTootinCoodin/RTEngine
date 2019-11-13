@@ -155,6 +155,30 @@ void GameObject::RecursiveHierarchyChildren()
 
 }
 
+void GameObject::RecursiveSetDirty()
+{
+	ComponentTransform* transform = (ComponentTransform*)GetComponent(TRANSFORM);
+	transform->setDirty(true);
+	for (auto item = children.begin(); item != children.end(); item++)
+	{
+		(*item).second->RecursiveSetDirty();
+	}
+	
+}
+
+void GameObject::RecursiveRemoveDirtyFlags()
+{
+	ComponentTransform* transform = (ComponentTransform*)GetComponent(TRANSFORM);
+	if (transform->isDirty())
+	{
+		transform->removeDirty();
+	}
+	for (auto item = children.begin(); item != children.end(); item++)
+	{
+		(*item).second->RecursiveSetDirty();
+	}
+}
+
 void GameObject::RecalculateAABB()
 {
 	if (ComponentMesh* mesh = (ComponentMesh*)GetComponent(MESH))

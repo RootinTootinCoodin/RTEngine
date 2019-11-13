@@ -15,9 +15,10 @@ public:
 
 	math::float4x4 GetLocalTransformMatrix() const { return local_transform; };
 	math::float4x4 GetGlobalTransformMatrix() const { return global_transform; };
+
 	bool isDirty() const { return dirty; };
 	void setDirty(bool _dirty) { dirty = _dirty };
-
+	void removeDirty();
 
 	void setLocalFromPSR();
 	void setPos(float3 & pos);
