@@ -11,6 +11,8 @@ public:
 	void Draw();
 
 	std::string text;
+	std::string current_dir;
+	std::string parent_dir;
 
 	std::vector<std::string> file_arr;
 	std::vector<std::string> dir_arr;
