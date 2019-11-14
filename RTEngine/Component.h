@@ -14,6 +14,8 @@ public:
 
 	~Component();
 
+	virtual void ComponentCleanUp() {};
+
 	virtual bool UpdateComponent() { return true; };
 
 	uint GetUUID() { return uuid; };

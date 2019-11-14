@@ -17,7 +17,7 @@ public:
 	math::float4x4 GetGlobalTransformMatrix() const { return global_transform; };
 
 	bool isDirty() const { return dirty; };
-	void setDirty(bool _dirty) { dirty = _dirty };
+	void setDirty(bool _dirty) { dirty = _dirty; };
 	void removeDirty();
 
 	void setLocalFromPSR();
@@ -34,7 +34,7 @@ private:
 	float3 scale;
 	Quat rotation;
 
-	bool dirty;
+	bool dirty = true;
 };
 
 #endif // ! __COMPONENT_TRANSFORM_H__

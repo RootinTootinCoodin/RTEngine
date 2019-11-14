@@ -39,7 +39,10 @@ public:
 
 	bool SaveTextureAsDDS(std::string& name);
 	bool ImportMesh(aiMesh* mesh);
+	bool ImportGameobject(GameObject* game_object);
 	bool ExportMesh(ComponentMesh* mesh, char* buffer);
+	bool ExportGameObject(char* buffer);
+
 
 private:
 public:

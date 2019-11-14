@@ -394,6 +394,52 @@ bool ModuleLoader::ImportMesh(aiMesh* mesh)
 	return false;
 }
 
+bool ModuleLoader::ImportGameobject(GameObject * go)
+{
+	//size order: name, uuid, parent uuid, component uuids, active, static, 
+	uint num_components = go->GetNumComponents();
+	uint size = sizeof(go->GetName()) + sizeof(uint) + sizeof(uint) + sizeof(uint)*num_components + sizeof(bool) * 2;
+	char* data = new char[size];
+	char* cursor = data;
+
+	uint bytes = sizeof(go->GetName());
+	memcpy(cursor, &go->GetName(), bytes);
+
+	//uuid
+	cursor += bytes;
+	bytes = sizeof(uint);
+	uint uuid = go->GetUUID();
+	memcpy(cursor,&uuid, bytes);
+
+	//parent uuid
+	cursor += bytes;
+	bytes = sizeof(uint);
+	uint uuid = go->GetParentUUID();
+	memcpy(cursor, &uuid, bytes);
+
+	//component UUIDS
+	std::map<uint, Component*> components = go->GetComponentList();
+	for (auto item = components.begin(); item != components.end(); item++)
+	{
+		cursor += bytes;
+		bytes = sizeof(uint);
+		uint uuid = (*item).first;
+		memcpy(cursor, &uuid, bytes);
+	}
+
+	//active
+	cursor += bytes;
+	bytes = sizeof(bool);
+	memcpy(cursor, &go->active, bytes);
+
+	cursor += bytes;
+	bytes = sizeof(bool);
+	memcpy(cursor, &go->is_static, bytes);
+
+
+	return false;
+}
+
 bool ModuleLoader::ExportMesh(ComponentMesh* mesh, char* buffer)
 {
 	char* cursor = buffer;
@@ -439,6 +485,11 @@ bool ModuleLoader::ExportMesh(ComponentMesh* mesh, char* buffer)
 	}
 
 
+	return false;
+}
+
+bool ModuleLoader::ExportGameObject(char * buffer)
+{
 	return false;
 }
 

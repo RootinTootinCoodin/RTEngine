@@ -19,7 +19,9 @@ public:
 
 	bool Init(JSON_Object* config);
 	bool Start();
-	update_status Update(float dt);
+	update_status Update(float dt) override;
+	update_status PostUpdate(float dt) override;
+
 
 	void GenerateCheckerTexture();
 	void DefaultTexture();

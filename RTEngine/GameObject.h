@@ -23,8 +23,16 @@ public:
 	Component* AddComponent(componentType type);
 	GameObject* AddChildren(std::string name); //CANT BE REFERENCE
 	uint GetUUID() const { return uuid; }; 
+	uint GetParentUUID() const { return parent->GetUUID(); };
 	std::string GetName() const { return name; }; 
 	AABB GetAABB() const { return bounding_box; };
+
+	uint GetNumComponents()const { return components.size(); };
+	uint GetNumChildren()const { return children.size(); };
+	std::map<uint, Component*> GetComponentList() const { return components; };
+
+	void RemoveComponents();
+	void RecursiveGameObjectCleanUp();
 
 	void RecursiveSetActive(bool active);
 	void RecursiveSetStatic(bool _static);

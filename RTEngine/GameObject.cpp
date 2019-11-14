@@ -90,6 +90,24 @@ GameObject * GameObject::AddChildren(std::string name)
 	return ret;
 }
 
+void GameObject::RemoveComponents()
+{
+	for (auto item = components.begin(); item != components.end(); item++)
+	{
+		(*item).second->ComponentCleanUp();
+		delete (*item).second;
+	}
+}
+
+void GameObject::RecursiveGameObjectCleanUp()
+{
+	for (auto item = children.begin(); item != children.end(); item++)
+	{
+		(*item).second->RecursiveGameObjectCleanUp();
+	}
+	RemoveComponents();
+}
+
 void GameObject::RecursiveSetActive(bool _active)
 {
 	for (auto item = children.begin(); item != children.end(); item++)

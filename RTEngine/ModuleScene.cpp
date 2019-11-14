@@ -9,6 +9,7 @@
 #include "Component.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
+#include "ComponentTransform.h"
 
 
 #include "GL/glew.h"
@@ -43,17 +44,17 @@ bool ModuleScene::Start()
 	DefaultTexture();
 	GenerateCheckerTexture();
 
-	std::string path = ".";
-	path +=ASSETS_MODELS_FOLDER;
-	path += "BakerHouse.fbx";
-	App->loader->FileReceived(path);
-
-
 	return true;
 }
 
 update_status ModuleScene::Update(float dt)
 {
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleScene::PostUpdate(float dt)
+{
+	root->RecursiveRemoveDirtyFlags();
 	return UPDATE_CONTINUE;
 }
 
@@ -141,6 +142,11 @@ void ModuleScene::Draw()
 		{
 			if ((*item)->active)
 			{
+				glPushMatrix();
+				ComponentTransform* transform = (ComponentTransform*)(*item)->GetComponent(TRANSFORM);
+				float4x4 matrix = transform->GetGlobalTransformMatrix().Transposed();
+				glMultMatrixf(matrix.ptr());
+
 				if (draw_aabb || (*item)->draw_aabb)
 					App->debug->DrawAABB((*item)->GetAABB());
 
@@ -161,7 +167,9 @@ void ModuleScene::Draw()
 						glTexCoordPointer(2, GL_FLOAT, 0, &mesh->uvs[0]);
 					}
 
+					
 					glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
+
 
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
@@ -174,6 +182,7 @@ void ModuleScene::Draw()
 					glDisableClientState(GL_VERTEX_ARRAY);
 
 				}
+				glPopMatrix();
 			}
 		}
 	}
@@ -186,6 +195,10 @@ void ModuleScene::Draw()
 	{
 		if ((*item)->active)
 		{
+			glPushMatrix();
+			ComponentTransform* transform = (ComponentTransform*)(*item)->GetComponent(TRANSFORM);
+			glMultMatrixf(transform->GetGlobalTransformMatrix().Transposed().ptr());
+
 			if (draw_aabb || (*item)->draw_aabb)
 				App->debug->DrawAABB((*item)->GetAABB());
 
@@ -203,6 +216,8 @@ void ModuleScene::Draw()
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
 					glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);
 
+					
+
 					glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
 
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -210,6 +225,7 @@ void ModuleScene::Draw()
 					glDisableClientState(GL_VERTEX_ARRAY);
 				}
 			}
+			glPopMatrix();
 		}
 	}
 	glLineWidth(STANDARD_LINE_SIZE);
