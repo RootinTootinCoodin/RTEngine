@@ -28,7 +28,7 @@ public:
 protected:
 	bool active = true;
 	uint uuid = 0;
-	GameObject* parent = nullptr;
+	GameObject* gameObject = nullptr;
 	componentType type = NO_TYPE;
 };
 

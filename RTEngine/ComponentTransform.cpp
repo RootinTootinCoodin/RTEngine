@@ -28,9 +28,9 @@ ComponentTransform::~ComponentTransform()
 
 void ComponentTransform::removeDirty()
 {
-	if (!parent->GetUUID() == 0)
+	if (!gameObject->GetUUID() == 0)
 	{
-		ComponentTransform* parent_transform = (ComponentTransform*)parent->GetComponent(TRANSFORM);
+		ComponentTransform* parent_transform = (ComponentTransform*)gameObject->GetParent()->GetComponent(TRANSFORM);
 		global_transform = parent_transform->GetGlobalTransformMatrix()*local_transform;
 	}
 	else
@@ -42,7 +42,7 @@ void ComponentTransform::setLocalFromPSR()
 {
 	local_transform.SetIdentity();
 	local_transform = float4x4::FromTRS(pos, rotation, scale);
-	parent->RecursiveSetDirty();
+	gameObject->RecursiveSetDirty();
 }
 
 void ComponentTransform::setPos(float3 & pos)

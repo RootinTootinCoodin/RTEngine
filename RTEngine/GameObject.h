@@ -26,6 +26,7 @@ public:
 	uint GetParentUUID() const { return parent->GetUUID(); };
 	std::string GetName() const { return name; }; 
 	AABB GetAABB() const { return bounding_box; };
+	GameObject* GetParent() const { return parent; };
 
 	uint GetNumComponents()const { return components.size(); };
 	uint GetNumChildren()const { return children.size(); };
