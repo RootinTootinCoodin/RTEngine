@@ -26,6 +26,11 @@ public:
 	void setRotation(Quat& rotation);
 	void setRotation(float3& rotation);
 
+	float3 getPos() { return pos; };
+	float3 getScale() { return scale; };
+	float3 getRotation() { return rotation.ToEulerXYZ(); };
+
+
 private:
 	math::float4x4 local_transform;
 	math::float4x4 global_transform;

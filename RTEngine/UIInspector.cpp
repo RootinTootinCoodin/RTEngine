@@ -72,14 +72,17 @@ void UIInspector::DrawTransformInfo(ComponentTransform * transform)
 {
 	ImGui::Text("Component Transform");
 	ImGui::Text("UUID: %u", transform->GetUUID());
-	math::float4x4 local = transform->GetLocalTransformMatrix();
-	float3 position = local.TranslatePart();
-	float3 rotation = local.RotatePart().ToEulerXYZ();
-	float3 scale = local.ExtractScale();
+	float3 position = transform->getPos();
+	float3 rotation = transform->getRotation();
+	float3 scale = transform->getScale();
 
-	ImGui::DragFloat3("Position", (float*)&position);
-	ImGui::DragFloat3("Rotation", (float*)&rotation);
-	ImGui::DragFloat3("Scale", (float*)&scale);
+	if (ImGui::DragFloat3("Position", (float*)&position, 0.1f))
+		transform->setPos(position); 
+	
+	if (ImGui::DragFloat3("Rotation", (float*)&rotation,0.1f));
+		transform->setRotation(rotation); 
+	if (ImGui::DragFloat3("Scale", (float*)&scale, 0.1f))
+		transform->setScale(scale); 
 }
 
 void UIInspector::DrawMeshInfo(ComponentMesh * mesh)

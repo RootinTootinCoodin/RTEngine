@@ -402,6 +402,7 @@ bool ModuleLoader::ImportGameobject(GameObject * go)
 	char* data = new char[size];
 	char* cursor = data;
 
+
 	uint bytes = sizeof(go->GetName());
 	memcpy(cursor, &go->GetName(), bytes);
 
@@ -414,11 +415,19 @@ bool ModuleLoader::ImportGameobject(GameObject * go)
 	//parent uuid
 	cursor += bytes;
 	bytes = sizeof(uint);
-	uint uuid = go->GetParentUUID();
+	uuid = go->GetParentUUID();
 	memcpy(cursor, &uuid, bytes);
+
+
 
 	//component UUIDS
 	std::map<uint, Component*> components = go->GetComponentList();
+
+	uint component_size = components.size();
+	cursor += bytes;
+	bytes = sizeof(uint);
+	memcpy(cursor, &component_size, bytes);
+
 	for (auto item = components.begin(); item != components.end(); item++)
 	{
 		cursor += bytes;

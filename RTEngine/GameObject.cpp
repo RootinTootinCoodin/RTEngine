@@ -193,7 +193,7 @@ void GameObject::RecursiveRemoveDirtyFlags()
 	}
 	for (auto item = children.begin(); item != children.end(); item++)
 	{
-		(*item).second->RecursiveSetDirty();
+		(*item).second->RecursiveRemoveDirtyFlags();
 	}
 }
 

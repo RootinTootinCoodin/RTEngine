@@ -7,13 +7,18 @@ ComponentTransform::ComponentTransform()
 {
 	local_transform.SetIdentity();
 	global_transform.SetIdentity();
-
+	pos = { 0,0,0 };
+	rotation = Quat::identity;
+	scale = { 1,1,1 };
 }
 
 ComponentTransform::ComponentTransform(GameObject * parent) : Component(TRANSFORM,parent)
 {
 	local_transform.SetIdentity();
 	global_transform.SetIdentity();
+	pos = { 0,0,0 };
+	rotation = Quat::identity;
+	scale = { 1,1,1 };
 }
 
 
@@ -23,8 +28,13 @@ ComponentTransform::~ComponentTransform()
 
 void ComponentTransform::removeDirty()
 {
-	ComponentTransform* parent_transform = (ComponentTransform*)parent->GetComponent(TRANSFORM);
-	global_transform = parent_transform->GetGlobalTransformMatrix()*local_transform;
+	if (!parent->GetUUID() == 0)
+	{
+		ComponentTransform* parent_transform = (ComponentTransform*)parent->GetComponent(TRANSFORM);
+		global_transform = parent_transform->GetGlobalTransformMatrix()*local_transform;
+	}
+	else
+		global_transform.SetIdentity();
 	dirty = false;
 }
 
@@ -32,25 +42,30 @@ void ComponentTransform::setLocalFromPSR()
 {
 	local_transform.SetIdentity();
 	local_transform = float4x4::FromTRS(pos, rotation, scale);
+	parent->RecursiveSetDirty();
 }
 
 void ComponentTransform::setPos(float3 & pos)
 {
 	this->pos = pos;
+	setLocalFromPSR();
 }
 
 void ComponentTransform::setScale(float3 & scale)
 {
 	//local_transform.sca(pos);
 	this->scale = scale;
+	setLocalFromPSR();
 }
 
 void ComponentTransform::setRotation(Quat & rotation)
 {
 	this->rotation = rotation;
+	setLocalFromPSR();
 }
 
 void ComponentTransform::setRotation(float3 & rotation)
 {
 	this->rotation = Quat::FromEulerXYZ(rotation.x,rotation.y,rotation.z);
+	setLocalFromPSR();
 }
