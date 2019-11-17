@@ -10,6 +10,7 @@
 
 GameObject::GameObject()
 {
+	bounding_box.SetNegativeInfinity();
 }
 
 GameObject::GameObject(std::string _name, GameObject * parent, ComponentTransform* transform) : parent(parent)

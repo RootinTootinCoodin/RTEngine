@@ -28,6 +28,13 @@ public:
 	AABB GetAABB() const { return bounding_box; };
 	GameObject* GetParent() const { return parent; };
 
+	
+	void SetName(std::string _name) { name = _name; };
+	void SetUUID(uint _uuid) { uuid = _uuid; };
+	//Only to be used by the ModuleLoader, do not touch -Lorién
+	void SetParentUUID(uint _uuid) { parent_uuid = _uuid; }
+
+
 	uint GetNumComponents()const { return components.size(); };
 	uint GetNumChildren()const { return children.size(); };
 	std::map<uint, Component*> GetComponentList() const { return components; };
@@ -51,6 +58,7 @@ private:
 	std::string name = "No name";
 	uint uuid = 0;
 	GameObject* parent;
+	uint parent_uuid = 0;
 	std::map<uint, Component*> components;
 	std::map<uint, GameObject*> children;
 

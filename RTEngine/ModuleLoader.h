@@ -7,6 +7,7 @@
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
+class Component;
 class ComponentMaterial;
 class ComponentMesh;
 class GameObject;
@@ -39,9 +40,12 @@ public:
 
 	bool SaveTextureAsDDS(std::string& name);
 	bool ImportMesh(aiMesh* mesh);
-	bool ImportGameobject(GameObject* game_object);
+	bool ImportGameobject(GameObject* game_object,char* buffer);
+	bool ImportComponent(Component* component, char*buffer);
 	bool ExportMesh(ComponentMesh* mesh, char* buffer);
-	bool ExportGameObject(char* buffer);
+	uint ExportGameObject(char* buffer, std::vector<GameObject*> gameObjects_buffer);
+	uint ExportComponent(uint uuid, GameObject* go,char* buffer);
+	bool ExportScene(char* buffer);
 
 
 private:

@@ -394,7 +394,7 @@ bool ModuleLoader::ImportMesh(aiMesh* mesh)
 	return false;
 }
 
-bool ModuleLoader::ImportGameobject(GameObject * go)
+bool ModuleLoader::ImportGameobject(GameObject * go,char* pre_buffer)
 {
 	//size order: name, uuid, parent uuid, component uuids, active, static, 
 	uint num_components = go->GetNumComponents();
@@ -449,6 +449,11 @@ bool ModuleLoader::ImportGameobject(GameObject * go)
 	return false;
 }
 
+bool ModuleLoader::ImportComponent(Component * component, char * buffer)
+{
+	return false;
+}
+
 bool ModuleLoader::ExportMesh(ComponentMesh* mesh, char* buffer)
 {
 	char* cursor = buffer;
@@ -497,8 +502,70 @@ bool ModuleLoader::ExportMesh(ComponentMesh* mesh, char* buffer)
 	return false;
 }
 
-bool ModuleLoader::ExportGameObject(char * buffer)
+uint ModuleLoader::ExportGameObject(char * buffer, std::vector<GameObject*> gameObjects_buffer)
 {
+	GameObject* new_go = new GameObject();
+
+	char* cursor = buffer;
+
+	uint size_of_name = 0;
+	uint bytes = sizeof(uint);
+	memcpy(&size_of_name, cursor, bytes);
+	cursor += bytes;
+
+	bytes = size_of_name;
+	std::string name(cursor, size_of_name);
+	new_go->SetName(name);
+	cursor += bytes;
+
+	bytes = sizeof(uint);
+	uint uuid = 0;
+	memcpy(&uuid, cursor, bytes);
+	new_go->SetUUID(uuid);
+	cursor += bytes;
+
+	bytes = sizeof(uint);
+	uint puuid = 0;
+	memcpy(&puuid, cursor, bytes);
+	new_go->SetParentUUID(puuid);
+	cursor += bytes;
+
+	bytes = sizeof(uint);
+	uint num_of_components = 0;
+	memcpy(&num_of_components, cursor, bytes);
+	cursor += bytes;
+
+	uint comp_uuid = 0;
+	for (int i = 0; i < num_of_components; i++)
+	{
+		bytes = sizeof(uint);
+		memcpy(&comp_uuid, cursor, bytes);
+		cursor += bytes;
+		ExportComponent(comp_uuid, new_go,cursor);
+	}
+
+
+	return false;
+}
+
+uint ModuleLoader::ExportComponent(uint uuid, GameObject * go, char* buffer)
+{
+	return uint();
+}
+
+bool ModuleLoader::ExportScene(char * buffer)
+{
+	char* cursor = buffer;
+	uint num_game_objects;
+	uint bytes = sizeof(uint);
+	memcpy(&num_game_objects, cursor, bytes);
+	cursor += bytes;
+
+	std::vector<GameObject*> gameObjects_buffer;
+	for (uint i = 0; i < num_game_objects; i++)
+	{
+		cursor += ExportGameObject(cursor, gameObjects_buffer);
+	}
 	return false;
 }
 
