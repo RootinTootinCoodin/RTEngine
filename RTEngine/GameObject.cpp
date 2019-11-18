@@ -5,8 +5,7 @@
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
 #include "ComponentMaterial.h"
-
-
+#include "ComponentCamera.h"
 
 GameObject::GameObject()
 {
@@ -75,6 +74,10 @@ Component* GameObject::AddComponent(componentType type)
 	case MATERIAL:
 
 		ret = new ComponentMaterial(this);
+		break;
+	case CAMERA:
+
+		ret = new ComponentCamera(this);
 		break;
 	default:
 		break;

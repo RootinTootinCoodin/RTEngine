@@ -358,6 +358,9 @@
     <ClInclude Include="FileSystem.h">
       <Filter>Sources\External Libraries</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentCamera.h">
+      <Filter>Sources\GameObjects\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -563,6 +566,9 @@
     </ClCompile>
     <ClCompile Include="FileSystem.cpp">
       <Filter>Sources\External Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp">
+      <Filter>Sources\GameObjects\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -69,9 +69,12 @@ void UIConfiguration::Draw()
 			ImGui::PlotHistogram("", App->ms_arr.data(), display_fps, 0, fpstitle, 4.0f, 120.0f, ImVec2(310, 100));
 		}
 
-		if (ImGui::CollapsingHeader("Camera"))
+		if (ImGui::CollapsingHeader("Editor Camera"))
 		{
 			ImGui::SliderFloat("Mouse sensitivity", &App->camera->sensitivity, 0.0f, 10.0f);
+			ImGui::SliderFloat("Speed", &App->camera->speed, 0.5f, 20.0f);
+			ImGui::SliderFloat("Speed acceleration (shift)", &App->camera->speedmultiplier, 0.5f, 25.0f);
+			ImGui::SliderFloat("Zoom speed", &App->camera->wheel, 0.5f, 150.0f);
 		}
 
 		if (ImGui::CollapsingHeader("Render"))

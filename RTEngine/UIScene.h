@@ -3,6 +3,7 @@
 
 #include "UIElement.h"
 #include "MathGeoLib/Math/float2.h"
+
 class UIScene :
 	public UIElement
 {
@@ -12,7 +13,8 @@ public:
 
 	void Draw();
 
-
+	bool IsMouseHovering();
+	bool hovered;
 };
 
 #endif

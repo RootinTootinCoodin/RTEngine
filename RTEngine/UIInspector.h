@@ -8,6 +8,7 @@ class GameObject;
 class ComponentTransform;
 class ComponentMesh;
 class ComponentMaterial;
+class ComponentCamera;
 
 class UIInspector :
 	public UIElement
@@ -21,7 +22,7 @@ public:
 	void DrawTransformInfo(ComponentTransform* transform);
 	void DrawMeshInfo(ComponentMesh* mesh);
 	void DrawMaterialInfo(ComponentMaterial* material);
-
+	void DrawCameraInfo(ComponentCamera* camera);
 
 
 };

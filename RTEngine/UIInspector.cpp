@@ -6,6 +6,7 @@
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentTransform.h"
+#include "ComponentCamera.h"
 #include "Globals.h"
 
 
@@ -66,6 +67,17 @@ void UIInspector::DrawGameObjectInfo(GameObject* gameobject)
 		ImGui::Separator();
 	}
 
+	if (ComponentCamera* camera = (ComponentCamera*)gameobject->GetComponent(CAMERA))
+	{
+		DrawCameraInfo(camera);
+		ImGui::Separator();
+		ImGui::Separator();
+	}
+	else
+	{
+		if (ImGui::Button("Add camera"))
+			gameobject->AddComponent(CAMERA);
+	}
 }
 
 void UIInspector::DrawTransformInfo(ComponentTransform * transform)
@@ -145,6 +157,15 @@ void UIInspector::DrawMaterialInfo(ComponentMaterial * material)
 			ImGui::PopID();
 		}
 	}
+}
+
+void UIInspector::DrawCameraInfo(ComponentCamera * camera)
+{
+	ImGui::Text("Component Camera");
+
+	ImGui::Text("UUID: %u", camera->GetUUID());
+
+
 }
 
 

@@ -10,7 +10,7 @@
 #define CAMERA_SPEED 10.0f
 
 class Timer;
-
+class ComponentCamera;
 
 class ModuleCamera3D : public Module
 {
@@ -53,6 +53,11 @@ public:
 	vec3 newPos;
 
 	float sensitivity = 0.4f;
+	float speed = 9.0f;
+	float wheel = 100.0f;
+	float speedmultiplier = 16.0f;
+
+	ComponentCamera* editorCamera;
 
 private:
 	mat4x4 ViewMatrix, ViewMatrixInverse;

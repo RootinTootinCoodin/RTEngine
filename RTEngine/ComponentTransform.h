@@ -29,6 +29,7 @@ public:
 	float3 getPos() { return pos; };
 	float3 getScale() { return scale; };
 	float3 getRotation() { return rotation.ToEulerXYZ(); };
+	Quat getRotationQuat() { return rotation; };
 
 
 private:
