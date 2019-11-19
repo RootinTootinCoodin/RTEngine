@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "ModuleScene.h"
 
 ComponentCamera::ComponentCamera()
 {
@@ -10,11 +11,20 @@ ComponentCamera::ComponentCamera()
 
 ComponentCamera::ComponentCamera(GameObject * parent) : Component(CAMERA, parent)
 {
-	ComponentTransform* parent_transf = (ComponentTransform*)parent->GetComponent(TRANSFORM);
-	position = parent_transf->getPos();
-	reference = position;
-	reference.x += 1;
-	reference.Normalize();
+	if (parent == _app->scene->root)
+	{
+		position = vec(-10.0f, 5.0f, 7.0f);
+		reference = vec(0.0f, 0.0f, -1.0f);
+	}
+
+	else
+	{
+		ComponentTransform* parent_transf = (ComponentTransform*)parent->GetComponent(TRANSFORM);
+		position = parent_transf->getPos();
+		reference = position;
+		reference.x += 1;
+		reference.Normalize();
+	}
 
 	near_plane_distance = 0.1f;
 	far_plane_distance = 1000;

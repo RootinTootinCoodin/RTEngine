@@ -6,6 +6,7 @@
 #include "ModuleScene.h"
 #include "ModuleLoader.h"
 #include "ComponentMesh.h"
+#include "ComponentCamera.h"
 #include "GL/glew.h"
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
@@ -133,7 +134,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	glMatrixMode(GL_MODELVIEW);
 
-	glLoadMatrixf(App->camera->GetViewMatrix());
+	glLoadMatrixf(App->camera->editorCamera->GetViewMatrix());
 
 	lights[0].SetPos(App->camera->cameraPos.x, App->camera->cameraPos.y, App->camera->cameraPos.z);
 
