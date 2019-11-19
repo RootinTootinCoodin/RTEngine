@@ -84,17 +84,26 @@ bool ModuleLoader::LoadFBX(std::string& path, std::string& name)
 
 bool ModuleLoader::LoadAiNodesRecursively(aiNode * node, const aiScene* scene,GameObject* parent, std::string& path)
 {
-	GameObject* mesh_gameobject = parent->AddChildren(node->mName.C_Str());
+	GameObject* mesh_gameobject;
+
+	if(node->mName.length != 0)
+		mesh_gameobject = parent->AddChildren(node->mName.C_Str());
+	else
+		mesh_gameobject = parent->AddChildren("No Name");
 
 	if (node->mNumMeshes != 0)
 	{
-		LoadTransform(node, mesh_gameobject);
+		//LOG(node->mName.C_Str());
+		if (node->mName.length == 0)
+		{
+			LOG("STOP");
+		}
 		for (int i = 0; i < node->mNumMeshes; i++)
 		{
 			LoadMesh(scene->mMeshes[node->mMeshes[i]], mesh_gameobject, scene, path);
 		}
 	}
-	else if (!node->mTransformation.IsIdentity())
+	if (!node->mTransformation.IsIdentity())
 	{
 		LoadTransform(node, mesh_gameobject);
 	}
@@ -240,7 +249,7 @@ void ModuleLoader::LoadMeshTexture(ComponentMaterial * _material, aiMaterial* ma
 	}
 }
 
-void ModuleLoader::LoadMeshFaces(ComponentMesh * _mesh, aiMesh * m)
+bool ModuleLoader::LoadMeshFaces(ComponentMesh * _mesh, aiMesh * m)
 {
 	_mesh->num_indices = m->mNumFaces * 3;
 	_mesh->indices = new uint[_mesh->num_indices];
@@ -250,8 +259,9 @@ void ModuleLoader::LoadMeshFaces(ComponentMesh * _mesh, aiMesh * m)
 		if (m->mFaces[k].mNumIndices == 3)
 			memcpy(&_mesh->indices[k * 3], m->mFaces[k].mIndices, 3 * sizeof(uint));
 		else
-			LOG("WARNING, geometry face without 3 indices !");
+			LOG("WARNING, geometry face without 3 indices !"); return false;
 	}
+	return true;
 }
 
 void ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiScene* scene, std::string& path)
@@ -289,9 +299,17 @@ void ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiScene* sc
 
 	if (m->HasFaces())
 	{
-		LoadMeshFaces(_mesh,m);
-		App->renderer3D->GenerateBufferForMesh(_mesh);
-		mesh_gameobject->ParentRecalculateAABB();
+		if (LoadMeshFaces(_mesh, m))
+		{
+			App->renderer3D->GenerateBufferForMesh(_mesh);
+			mesh_gameobject->ParentRecalculateAABB();
+		}
+		else
+		{
+			mesh_gameobject->RemoveComponent(MESH);
+			mesh_gameobject->RemoveComponent(MATERIAL);
+		}
+
 	}
 	else
 		LOG("Error mesh from scene %s, no faces", path);
