@@ -145,9 +145,6 @@ void ModuleScene::Draw()
 				glPushMatrix();
 				ComponentTransform* transform = (ComponentTransform*)(*item)->GetComponent(TRANSFORM);
 				float4x4 matrix = transform->GetGlobalTransformMatrix().Transposed();
-				float3 position = matrix.TranslatePart();
-				float3 rotation = matrix.RotatePart().ToEulerXYZ();
-				float3 scale = matrix.ExtractScale();
 				glMultMatrixf(matrix.ptr());
 
 				if (draw_aabb || (*item)->draw_aabb)
@@ -155,6 +152,7 @@ void ModuleScene::Draw()
 
 				if (ComponentMesh* mesh = (ComponentMesh*)(*item)->GetComponent(MESH))
 				{
+					LOG(mesh->getGameObject()->GetName().c_str());
 					if (draw_normals || mesh->draw_normals)
 						App->debug->DrawNormals(mesh);
 

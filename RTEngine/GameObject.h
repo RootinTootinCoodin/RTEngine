@@ -28,6 +28,7 @@ public:
 	AABB GetAABB() const { return bounding_box; };
 	GameObject* GetParent() const { return parent; };
 
+	void RemoveComponent(componentType type);
 	
 	void SetName(std::string _name) { name = _name; };
 	void SetUUID(uint _uuid) { uuid = _uuid; };

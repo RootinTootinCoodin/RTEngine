@@ -35,7 +35,7 @@ public:
 	void LoadUVS(ComponentMesh* _mesh, aiMesh*m);
 	void LoadNormals(ComponentMesh* _mesh, aiMesh* m);
 	void LoadMeshTexture(ComponentMaterial* _mesh, aiMaterial* material, std::string& path);
-	void LoadMeshFaces(ComponentMesh* _mesh, aiMesh* m);
+	bool LoadMeshFaces(ComponentMesh* _mesh, aiMesh* m);
 	void LoadMesh(aiMesh* m, GameObject* new_model, const aiScene* scene, std::string& path);
 
 	bool SaveTextureAsDDS(std::string& name);

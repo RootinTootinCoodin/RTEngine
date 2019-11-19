@@ -94,6 +94,20 @@ GameObject * GameObject::AddChildren(std::string name)
 	return ret;
 }
 
+void GameObject::RemoveComponent(componentType type)
+{
+	for (auto item = components.begin(); item != components.end(); item++)
+	{
+		if ((*item).second->GetComponentType() == type)
+		{
+			(*item).second->ComponentCleanUp();
+			delete (*item).second;
+			components.erase((*item).first);
+			return;
+		}
+	}
+}
+
 void GameObject::RemoveComponents()
 {
 	for (auto item = components.begin(); item != components.end(); item++)
