@@ -152,7 +152,6 @@ void ModuleScene::Draw()
 
 				if (ComponentMesh* mesh = (ComponentMesh*)(*item)->GetComponent(MESH))
 				{
-					LOG(mesh->getGameObject()->GetName().c_str());
 					if (draw_normals || mesh->draw_normals)
 						App->debug->DrawNormals(mesh);
 

@@ -49,13 +49,15 @@ void UIInspector::DrawGameObjectInfo(GameObject* gameobject)
 	ImGui::Separator();
 	if (ComponentTransform* transform = (ComponentTransform*)gameobject->GetComponent(TRANSFORM))
 	{
-		DrawTransformInfo(transform);
+
 		ImGui::Separator();
 		ImGui::Separator();
 	}
 
 	if (ComponentMesh* mesh = (ComponentMesh*)gameobject->GetComponent(MESH))
 	{
+		ComponentTransform* transform = (ComponentTransform*)gameobject->GetComponent(TRANSFORM);
+		DrawTransformInfo(transform);
 		DrawMeshInfo(mesh);
 		ImGui::Separator();
 		ImGui::Separator();
@@ -86,15 +88,22 @@ void UIInspector::DrawTransformInfo(ComponentTransform * transform)
 	ImGui::Text("UUID: %u", transform->GetUUID());
 	float3 position = transform->getPos();
 	float3 rotation = transform->getRotation();
-	float3 scale = transform->getScale();
+	transform->setRotation(rotation);
 
-	if (ImGui::DragFloat3("Position", (float*)&position, 0.1f))
-		transform->setPos(position); 
+	float3 scale = transform->getScale();
 	
-	if (ImGui::DragFloat3("Rotation", (float*)&rotation,0.1f));
-		transform->setRotation(rotation); 
-	if (ImGui::DragFloat3("Scale", (float*)&scale, 0.1f))
-		transform->setScale(scale); 
+
+	//LOG("Rotation PRE: %f", rotation.x);
+	//if (ImGui::DragFloat3("Position", (float*)&position, 0.1f))
+	//	transform->setPos(position); 
+	//
+	//if (ImGui::DragFloat3("Rotation", (float*)&rotation,0.1f));
+	//	transform->setRotation(rotation); 
+	//if (ImGui::DragFloat3("Scale", (float*)&scale, 0.1f))
+	//	transform->setScale(scale); 
+
+	//LOG("Rotation POST: %f", rotation.x);
+
 }
 
 void UIInspector::DrawMeshInfo(ComponentMesh * mesh)

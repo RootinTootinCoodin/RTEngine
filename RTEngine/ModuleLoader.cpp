@@ -86,7 +86,7 @@ bool ModuleLoader::LoadFBX(std::string& path, std::string& name)
 bool ModuleLoader::LoadAiNodesRecursively(aiNode * node, const aiScene* scene,GameObject* parent, std::string& path, math::float4x4 cumulative_transform)
 {
 	GameObject* go = nullptr;
-
+	
 	aiVector3D translation, scaling;
 	aiQuaternion rotation;
 	node->mTransformation.Decompose(scaling, rotation, translation);
@@ -94,15 +94,18 @@ bool ModuleLoader::LoadAiNodesRecursively(aiNode * node, const aiScene* scene,Ga
 	float3 scale(scaling.x, scaling.y, scaling.z);
 	Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
 
-	math::float4x4 node_transform = float4x4::FromTRS(pos,rot.ToFloat4x4(),scale);
+	math::float4x4 node_transform = float4x4::FromTRS(pos,rot,scale);
 	math::float4x4 transform = cumulative_transform * node_transform;
 
 	if (node->mNumMeshes > 0)
 	{
 		for (int i = 0; i < node->mNumMeshes; i++)
 		{
+			if(node->mName.length >0)
+				go = LoadMesh(scene->mMeshes[node->mMeshes[i]], parent, scene, path,node->mName.C_Str());
+			else
+				go = LoadMesh(scene->mMeshes[node->mMeshes[i]], parent, scene, path,node->mParent->mName.C_Str());
 
-			go = LoadMesh(scene->mMeshes[node->mMeshes[i]], parent, scene, path);
 			ComponentTransform* transform_comp = (ComponentTransform*)go->GetComponent(TRANSFORM);
 			transform_comp->setLocalFromMatrix(transform);
 		}
@@ -271,9 +274,15 @@ bool ModuleLoader::LoadMeshFaces(ComponentMesh * _mesh, aiMesh * m)
 	return true;
 }
 
-GameObject* ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiScene* scene, std::string& path)
+GameObject* ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiScene* scene, std::string& path, std::string optional_name)
 {
-	GameObject* mesh_gameobject = new_model->AddChildren(m->mName.C_Str());
+	GameObject* mesh_gameobject = nullptr;
+
+	if(m->mName.length > 0)
+		mesh_gameobject = new_model->AddChildren(m->mName.C_Str());
+	else
+		mesh_gameobject = new_model->AddChildren(optional_name);
+
 
 	ComponentMesh* _mesh = (ComponentMesh*)mesh_gameobject->AddComponent(MESH);
 	ComponentMaterial* _material = (ComponentMaterial*)mesh_gameobject->AddComponent(MATERIAL);
