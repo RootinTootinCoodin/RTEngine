@@ -38,6 +38,16 @@ void ComponentTransform::removeDirty()
 	dirty = false;
 }
 
+void ComponentTransform::setLocalFromMatrix(math::float4x4 matrix)
+{
+	local_transform = matrix;
+	pos = matrix.TranslatePart();
+	scale = matrix.GetScale();
+	rotation = matrix.RotatePart().ToQuat();
+	gameObject->RecursiveSetDirty();
+
+}
+
 void ComponentTransform::setLocalFromPSR()
 {
 	local_transform.SetIdentity();

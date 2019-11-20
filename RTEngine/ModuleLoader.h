@@ -25,7 +25,7 @@ public:
 
 	bool FileReceived(std::string path);
 	bool LoadFBX(std::string& path, std::string& name);
-	bool LoadAiNodesRecursively(aiNode* node, const aiScene* scene,GameObject* parent, std::string& path);
+	bool LoadAiNodesRecursively(aiNode* node, const aiScene* scene,GameObject* parent, std::string& path, math::float4x4 cumulative_transform);
 	bool LoadTexture(std::string& path, ComponentMaterial* material = nullptr);
 	void LoadTransform(aiNode* node, GameObject* game_object);
 	
@@ -36,7 +36,7 @@ public:
 	void LoadNormals(ComponentMesh* _mesh, aiMesh* m);
 	void LoadMeshTexture(ComponentMaterial* _mesh, aiMaterial* material, std::string& path);
 	bool LoadMeshFaces(ComponentMesh* _mesh, aiMesh* m);
-	void LoadMesh(aiMesh* m, GameObject* new_model, const aiScene* scene, std::string& path);
+	GameObject* LoadMesh(aiMesh* m, GameObject* new_model, const aiScene* scene, std::string& path, std::string optional_name = std::string());
 
 	bool SaveTextureAsDDS(std::string& name);
 	bool ImportMesh(aiMesh* mesh);

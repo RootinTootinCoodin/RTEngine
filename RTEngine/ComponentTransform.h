@@ -20,6 +20,7 @@ public:
 	void setDirty(bool _dirty) { dirty = _dirty; };
 	void removeDirty();
 
+	void setLocalFromMatrix(math::float4x4 matrix);
 	void setLocalFromPSR();
 	void setPos(float3 & pos);
 	void setScale(float3& scale);
