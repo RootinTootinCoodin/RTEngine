@@ -73,7 +73,8 @@ bool ModuleLoader::LoadFBX(std::string& path, std::string& name)
 
 			LoadMesh(scene->mMeshes[i], new_model,scene,path);
 		}*/
-		LoadAiNodesRecursively(scene->mRootNode, scene, new_model, path);
+		ComponentTransform* transform = (ComponentTransform*)new_model->GetComponent(TRANSFORM);
+		LoadAiNodesRecursively(scene->mRootNode, scene, new_model, path,transform->GetLocalTransformMatrix());
 		aiReleaseImport(scene);
 		App->camera->AdjustCameraToAABB(new_model->GetAABB());
 	}
@@ -82,35 +83,38 @@ bool ModuleLoader::LoadFBX(std::string& path, std::string& name)
 	return true;
 }
 
-bool ModuleLoader::LoadAiNodesRecursively(aiNode * node, const aiScene* scene,GameObject* parent, std::string& path)
+bool ModuleLoader::LoadAiNodesRecursively(aiNode * node, const aiScene* scene,GameObject* parent, std::string& path, math::float4x4 cumulative_transform)
 {
-	GameObject* mesh_gameobject;
+	GameObject* go = nullptr;
 
-	if(node->mName.length != 0)
-		mesh_gameobject = parent->AddChildren(node->mName.C_Str());
-	else
-		mesh_gameobject = parent->AddChildren("No Name");
+	aiVector3D translation, scaling;
+	aiQuaternion rotation;
+	node->mTransformation.Decompose(scaling, rotation, translation);
+	float3 pos(translation.x, translation.y, translation.z);
+	float3 scale(scaling.x, scaling.y, scaling.z);
+	Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
 
-	if (node->mNumMeshes != 0)
+	math::float4x4 node_transform = float4x4::FromTRS(pos,rot.ToFloat4x4(),scale);
+	math::float4x4 transform = cumulative_transform * node_transform;
+
+	if (node->mNumMeshes > 0)
 	{
-		//LOG(node->mName.C_Str());
-		if (node->mName.length == 0)
-		{
-			LOG("STOP");
-		}
 		for (int i = 0; i < node->mNumMeshes; i++)
 		{
-			LoadMesh(scene->mMeshes[node->mMeshes[i]], mesh_gameobject, scene, path);
+
+			go = LoadMesh(scene->mMeshes[node->mMeshes[i]], parent, scene, path);
+			ComponentTransform* transform_comp = (ComponentTransform*)go->GetComponent(TRANSFORM);
+			transform_comp->setLocalFromMatrix(transform);
 		}
-	}
-	if (!node->mTransformation.IsIdentity())
-	{
-		LoadTransform(node, mesh_gameobject);
 	}
 
 	for (int i = 0; i < node->mNumChildren; i++)
 	{
-		LoadAiNodesRecursively(node->mChildren[i], scene, mesh_gameobject, path);
+		if(go)
+			LoadAiNodesRecursively(node->mChildren[i], scene, go, path,transform);
+		else
+			LoadAiNodesRecursively(node->mChildren[i], scene, parent, path, transform);
+
 	}
 	return true;
 }
@@ -259,12 +263,15 @@ bool ModuleLoader::LoadMeshFaces(ComponentMesh * _mesh, aiMesh * m)
 		if (m->mFaces[k].mNumIndices == 3)
 			memcpy(&_mesh->indices[k * 3], m->mFaces[k].mIndices, 3 * sizeof(uint));
 		else
-			LOG("WARNING, geometry face without 3 indices !"); return false;
+		{
+			LOG("WARNING, geometry face without 3 indices !");
+			return false;
+		}
 	}
 	return true;
 }
 
-void ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiScene* scene, std::string& path)
+GameObject* ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiScene* scene, std::string& path)
 {
 	GameObject* mesh_gameobject = new_model->AddChildren(m->mName.C_Str());
 
@@ -303,6 +310,7 @@ void ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiScene* sc
 		{
 			App->renderer3D->GenerateBufferForMesh(_mesh);
 			mesh_gameobject->ParentRecalculateAABB();
+
 		}
 		else
 		{
@@ -313,6 +321,8 @@ void ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiScene* sc
 	}
 	else
 		LOG("Error mesh from scene %s, no faces", path);
+
+	return mesh_gameobject;
 }
 
 bool ModuleLoader::SaveTextureAsDDS(std::string& name)
