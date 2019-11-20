@@ -11,6 +11,7 @@
 #include "UIInspector.h"
 #include "UIHierarchy.h"
 #include "UIAssets.h"
+#include "UITime.h"
 
 ModuleImGui::ModuleImGui(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -45,6 +46,7 @@ bool ModuleImGui::Init(JSON_Object* config)
 	inspector = new UIInspector(App);
 	hierarchy = new UIHierarchy(App);
 	assets = new UIAssets(App);
+	time = new UITime(App);
 
 	UI.push_back((UIElement*)scene);
 	UI.push_back((UIElement*)tests);
@@ -54,6 +56,7 @@ bool ModuleImGui::Init(JSON_Object* config)
 	UI.push_back((UIElement*)inspector);
 	UI.push_back((UIElement*)hierarchy);
 	UI.push_back((UIElement*)assets);
+	UI.push_back((UIElement*)time);
 	return true;
 }
 

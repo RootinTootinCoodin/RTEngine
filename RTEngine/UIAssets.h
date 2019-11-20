@@ -19,4 +19,3 @@ public:
 };
 
 #endif // !__UI_ASSETS_H__
-

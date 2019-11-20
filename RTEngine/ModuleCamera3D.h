@@ -52,8 +52,8 @@ public:
 	vec3 cameraUp;
 	vec3 newPos;
 
-	float sensitivity = 0.4f;
-	float speed = 9.0f;
+	float sensitivity = 0.9f;
+	float speed = 0.5f;
 	float wheel = 100.0f;
 	float speedmultiplier = 16.0f;
 

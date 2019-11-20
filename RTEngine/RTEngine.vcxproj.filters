@@ -361,6 +361,10 @@
     <ClInclude Include="ComponentCamera.h">
       <Filter>Sources\GameObjects\Components</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleTime.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="UITime.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -570,6 +574,10 @@
     <ClCompile Include="ComponentCamera.cpp">
       <Filter>Sources\GameObjects\Components</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleTime.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="UITime.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

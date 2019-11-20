@@ -20,6 +20,8 @@ public:
 
 	float* GetProjectionMatrix();
 	float* GetViewMatrix();
+	float4x4 GetGLProjectionMatrix();
+	float4x4 GetGLViewMatrix();
 
 	Frustum camera;
 	vec position, reference;
