@@ -7,6 +7,8 @@
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
+
+#include <map>
 class Component;
 class ComponentMaterial;
 class ComponentMesh;
@@ -50,6 +52,8 @@ public:
 
 	bool ExportComponent(Component* component, JSON_Object* component_json);
 	bool ImportComponent(JSON_Object* json_go, GameObject* go);
+
+	void LinkMeshesWithMaterials(std::map<uint, GameObject*> scene_gameobjects);
 	//TODO: Import functions to binary
 	//bool ImportGameobject(GameObject* game_object,char* buffer);
 	//bool ImportComponent(Component* component, char*buffer);

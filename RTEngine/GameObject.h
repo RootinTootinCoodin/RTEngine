@@ -22,6 +22,7 @@ public:
 
 	Component* AddComponent(componentType type);
 	GameObject* AddChildren(std::string name); //CANT BE REFERENCE
+	void AddChildren(GameObject* go);
 	uint GetUUID() const { return uuid; }; 
 	uint GetParentUUID() const { return parent->GetUUID(); };
 	std::string GetName() const { return name; }; 
@@ -34,7 +35,7 @@ public:
 	void SetUUID(uint _uuid) { uuid = _uuid; };
 	//Only to be used by the ModuleLoader, do not touch -Lorién
 	void SetParentUUID(uint _uuid) { parent_uuid = _uuid; }
-
+	void SetParent(GameObject* _parent) { parent = _parent; };
 
 	uint GetNumComponents()const { return components.size(); };
 	uint GetNumChildren()const { return children.size(); };
@@ -50,6 +51,7 @@ public:
 	void RecursiveHierarchyChildren();
 	void RecursiveSetDirty();
 	void RecursiveRemoveDirtyFlags();
+	void RecursiveDeleteGameobject();
 	void RecalculateAABB();
 	void ParentRecalculateAABB();
 
@@ -59,16 +61,18 @@ private:
 	std::string name = "No name";
 	uint uuid = 0;
 	GameObject* parent;
-	uint parent_uuid = 0;
+
 	std::map<uint, Component*> components;
 	std::map<uint, GameObject*> children;
 
 	AABB bounding_box;
 
 public:
+	bool to_remove = false;
 	bool active = true;
 	bool is_static = true;
 	bool draw_aabb = false;
+	uint parent_uuid = 0;
 
 
 private:

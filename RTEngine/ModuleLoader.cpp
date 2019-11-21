@@ -555,6 +555,7 @@ bool ModuleLoader::ExportScene()
 bool ModuleLoader::ImportScene(std::string& path)
 {
 	bool ret = false;
+	App->scene->root->RecursiveDeleteGameobject();
 	//the path received is just the name with the extension
 	std::string name = path.substr(0, path.find_last_of("."));
 
@@ -563,14 +564,33 @@ bool ModuleLoader::ImportScene(std::string& path)
 	if (file)
 	{
 		ret = true;
-		std::vector<GameObject*> scene_gameobjects;
+		std::map<uint, GameObject*> scene_gameobjects;
 		JSON_Array* json_scene = json_object_get_array(json_object(file), "Scene");
 		for (uint i = 0; i < json_array_get_count(json_scene); i++)
 		{
 			JSON_Object* json_go = json_array_get_object(json_scene, i);
 			if (GameObject* go = ImportGameObject(json_go))
-				scene_gameobjects.push_back(go);
+				scene_gameobjects.insert({ go->GetUUID(), go });
 		}
+
+		for (auto item = scene_gameobjects.begin(); item != scene_gameobjects.end(); item++)
+		{
+			if ((*item).second->GetUUID() != 0)
+			{
+				if ((*item).second->parent_uuid != 0)
+				{
+					(*item).second->SetParent(scene_gameobjects[(*item).second->parent_uuid]);
+					scene_gameobjects[(*item).second->parent_uuid]->AddChildren((*item).second);
+				}
+				else
+				{
+					(*item).second->SetParent(App->scene->root);
+					App->scene->root->AddChildren((*item).second);
+				}
+			}
+		}
+		LinkMeshesWithMaterials(scene_gameobjects);
+
 	}
 	else
 	{
@@ -597,6 +617,8 @@ bool ModuleLoader::ExportGameObject(GameObject * go, JSON_Object * go_json)
 		JSON_Value* component_json = json_value_init_object(); 
 		ret = ExportComponent((*item).second, json_object(component_json));
 		json_array_append_value(json_array(component_array), component_json);
+
+		go->ParentRecalculateAABB();
 	}
 
 	json_object_set_value(go_json, "components", component_array);
@@ -654,6 +676,7 @@ bool ModuleLoader::ExportComponent(Component * component, JSON_Object * componen
 		json_object_set_string(component_json, "component_type", "mesh");
 		ComponentMesh* mesh = (ComponentMesh*)component;
 		ImportMesh(mesh);
+
 		break;
 	}
 	case MATERIAL:
@@ -712,6 +735,7 @@ bool ModuleLoader::ImportComponent(JSON_Object * json_go, GameObject* go)
 		ComponentMesh* component = (ComponentMesh*)go->AddComponent(MESH);
 		component->setUUID(json_object_get_number(json_go, "UUID"));
 		ret = ExportMesh(component, buffer);
+		App->renderer3D->GenerateBufferForMesh(component);
 	}
 	else if (component_type == "material")
 	{
@@ -726,6 +750,20 @@ bool ModuleLoader::ImportComponent(JSON_Object * json_go, GameObject* go)
 		ret = true;
 	}
 	return ret;
+}
+
+void ModuleLoader::LinkMeshesWithMaterials(std::map<uint, GameObject*> scene_gameobjects)
+{
+	for (auto item = scene_gameobjects.begin(); item != scene_gameobjects.end(); item++)
+	{
+		if (ComponentMesh* mesh = (ComponentMesh*)(*item).second->GetComponent(MESH))
+		{
+			if (ComponentMaterial* material = (ComponentMaterial*)(*item).second->GetComponent(MATERIAL))
+			{
+				mesh->material = material;
+			}
+		}
+	}
 }
 
 //uint ModuleLoader::ExportGameObject(char * buffer, std::vector<GameObject*> gameObjects_buffer)
