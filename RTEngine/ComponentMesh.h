@@ -15,6 +15,10 @@ public:
 	ComponentMesh();
 	ComponentMesh(GameObject* parent);
 	~ComponentMesh();
+
+	bool HasTextureCoords() { return uvs != nullptr; };
+	bool HasNormals() { return normals != nullptr; };
+	bool HasVertexColors() { return colors != nullptr; };
 private:
 public:
 	uint id_index = 0;

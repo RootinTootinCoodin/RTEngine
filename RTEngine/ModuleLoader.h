@@ -39,17 +39,17 @@ public:
 	GameObject* LoadMesh(aiMesh* m, GameObject* new_model, const aiScene* scene, std::string& path, std::string optional_name = std::string());
 
 	bool SaveTextureAsDDS(std::string& name);
-	bool ImportMesh(aiMesh* mesh);
+	bool ImportMesh(ComponentMesh* mesh);
 	bool ExportMesh(ComponentMesh* mesh, char* buffer);
 
 	bool ExportScene();
-	bool ImportScene();
-
+	bool ImportScene(std::string& path);
+	 
 	bool ExportGameObject(GameObject* go, JSON_Object* go_json);
-	bool ImportGameObject(); 
+	GameObject* ImportGameObject(JSON_Object* json_go); 
 
 	bool ExportComponent(Component* component, JSON_Object* component_json);
-	bool ImportComponent();
+	bool ImportComponent(JSON_Object* json_go, GameObject* go);
 	//TODO: Import functions to binary
 	//bool ImportGameobject(GameObject* game_object,char* buffer);
 	//bool ImportComponent(Component* component, char*buffer);

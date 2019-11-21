@@ -19,6 +19,7 @@ public:
 	virtual bool UpdateComponent() { return true; };
 
 	uint GetUUID() { return uuid; };
+	void setUUID(uint _uuid) { uuid = _uuid; };
 	GameObject* getGameObject() { return gameObject; };
 	componentType GetComponentType() { return type; };
 private:
