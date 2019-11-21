@@ -43,8 +43,9 @@ public:
 	std::vector<texture*> textures;
 	uint current_texture_index = 0;
 
+	bool save = false;
 	int checker_size = 100; 
-
+	std::string scene_name = "Name";
 	GameObject* root = nullptr;
 	GameObject* selected_go = nullptr;
 };

@@ -55,6 +55,11 @@ update_status ModuleScene::Update(float dt)
 update_status ModuleScene::PostUpdate(float dt)
 {
 	root->RecursiveRemoveDirtyFlags();
+	if (save)
+	{
+		App->loader->ExportScene();
+		save = false;
+	}
 	return UPDATE_CONTINUE;
 }
 

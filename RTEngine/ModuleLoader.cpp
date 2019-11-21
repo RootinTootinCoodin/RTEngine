@@ -431,65 +431,65 @@ bool ModuleLoader::ImportMesh(aiMesh* mesh)
 	return false;
 }
 
-bool ModuleLoader::ImportGameobject(GameObject * go,char* pre_buffer)
-{
-	//size order: name, uuid, parent uuid, component uuids, active, static, 
-	uint num_components = go->GetNumComponents();
-	uint size = sizeof(go->GetName()) + sizeof(uint) + sizeof(uint) + sizeof(uint)*num_components + sizeof(bool) * 2;
-	char* data = new char[size];
-	char* cursor = data;
-
-
-	uint bytes = sizeof(go->GetName());
-	memcpy(cursor, &go->GetName(), bytes);
-
-	//uuid
-	cursor += bytes;
-	bytes = sizeof(uint);
-	uint uuid = go->GetUUID();
-	memcpy(cursor,&uuid, bytes);
-
-	//parent uuid
-	cursor += bytes;
-	bytes = sizeof(uint);
-	uuid = go->GetParentUUID();
-	memcpy(cursor, &uuid, bytes);
-
-
-
-	//component UUIDS
-	std::map<uint, Component*> components = go->GetComponentList();
-
-	uint component_size = components.size();
-	cursor += bytes;
-	bytes = sizeof(uint);
-	memcpy(cursor, &component_size, bytes);
-
-	for (auto item = components.begin(); item != components.end(); item++)
-	{
-		cursor += bytes;
-		bytes = sizeof(uint);
-		uint uuid = (*item).first;
-		memcpy(cursor, &uuid, bytes);
-	}
-
-	//active
-	cursor += bytes;
-	bytes = sizeof(bool);
-	memcpy(cursor, &go->active, bytes);
-
-	cursor += bytes;
-	bytes = sizeof(bool);
-	memcpy(cursor, &go->is_static, bytes);
-
-
-	return false;
-}
-
-bool ModuleLoader::ImportComponent(Component * component, char * buffer)
-{
-	return false;
-}
+//bool ModuleLoader::ImportGameobject(GameObject * go,char* pre_buffer)
+//{
+//	//size order: name, uuid, parent uuid, component uuids, active, static, 
+//	uint num_components = go->GetNumComponents();
+//	uint size = sizeof(go->GetName()) + sizeof(uint) + sizeof(uint) + sizeof(uint)*num_components + sizeof(bool) * 2;
+//	char* data = new char[size];
+//	char* cursor = data;
+//
+//
+//	uint bytes = sizeof(go->GetName());
+//	memcpy(cursor, &go->GetName(), bytes);
+//
+//	//uuid
+//	cursor += bytes;
+//	bytes = sizeof(uint);
+//	uint uuid = go->GetUUID();
+//	memcpy(cursor,&uuid, bytes);
+//
+//	//parent uuid
+//	cursor += bytes;
+//	bytes = sizeof(uint);
+//	uuid = go->GetParentUUID();
+//	memcpy(cursor, &uuid, bytes);
+//
+//
+//
+//	//component UUIDS
+//	std::map<uint, Component*> components = go->GetComponentList();
+//
+//	uint component_size = components.size();
+//	cursor += bytes;
+//	bytes = sizeof(uint);
+//	memcpy(cursor, &component_size, bytes);
+//
+//	for (auto item = components.begin(); item != components.end(); item++)
+//	{
+//		cursor += bytes;
+//		bytes = sizeof(uint);
+//		uint uuid = (*item).first;
+//		memcpy(cursor, &uuid, bytes);
+//	}
+//
+//	//active
+//	cursor += bytes;
+//	bytes = sizeof(bool);
+//	memcpy(cursor, &go->active, bytes);
+//
+//	cursor += bytes;
+//	bytes = sizeof(bool);
+//	memcpy(cursor, &go->is_static, bytes);
+//
+//
+//	return false;
+//}
+//
+//bool ModuleLoader::ImportComponent(Component * component, char * buffer)
+//{
+//	return false;
+//}
 
 bool ModuleLoader::ExportMesh(ComponentMesh* mesh, char* buffer)
 {
@@ -539,72 +539,163 @@ bool ModuleLoader::ExportMesh(ComponentMesh* mesh, char* buffer)
 	return false;
 }
 
-uint ModuleLoader::ExportGameObject(char * buffer, std::vector<GameObject*> gameObjects_buffer)
+bool ModuleLoader::ExportScene()
 {
-	GameObject* new_go = new GameObject();
+	bool ret = false;
+	JSON_Value* file = json_value_init_object();	
+	JSON_Value* objects_array = json_value_init_array();	
+	json_object_set_value(json_object(file), "Scene", objects_array);
 
-	char* cursor = buffer;
+	std::vector<GameObject*> gameObjects;
+	App->scene->root->RecursiveGetChildren(&gameObjects);
 
-	uint size_of_name = 0;
-	uint bytes = sizeof(uint);
-	memcpy(&size_of_name, cursor, bytes);
-	cursor += bytes;
-
-	bytes = size_of_name;
-	std::string name(cursor, size_of_name);
-	new_go->SetName(name);
-	cursor += bytes;
-
-	bytes = sizeof(uint);
-	uint uuid = 0;
-	memcpy(&uuid, cursor, bytes);
-	new_go->SetUUID(uuid);
-	cursor += bytes;
-
-	bytes = sizeof(uint);
-	uint puuid = 0;
-	memcpy(&puuid, cursor, bytes);
-	new_go->SetParentUUID(puuid);
-	cursor += bytes;
-
-	bytes = sizeof(uint);
-	uint num_of_components = 0;
-	memcpy(&num_of_components, cursor, bytes);
-	cursor += bytes;
-
-	uint comp_uuid = 0;
-	for (int i = 0; i < num_of_components; i++)
+	for (auto item = gameObjects.begin(); item != gameObjects.end(); item++)
 	{
-		bytes = sizeof(uint);
-		memcpy(&comp_uuid, cursor, bytes);
-		cursor += bytes;
-		ExportComponent(comp_uuid, new_go,cursor);
+		JSON_Value* json_go = json_value_init_object();	
+		ret = ExportGameObject((*item), json_object(json_go));
+		json_array_append_value(json_array(objects_array), json_go);
+
+	}
+	if (ret)
+	{
+		std::string path_buffer;
+		FileSystem::FormFullPath(path_buffer, App->scene->name.c_str(), LIBRARY_TEXTURES,".westscene");
+		json_serialize_to_file(file, path_buffer.c_str());
+	}
+	else
+		LOG("Unable to save the scene");
+
+	return ret;
+}
+
+bool ModuleLoader::ExportGameObject(GameObject * go, JSON_Object * go_json)
+{
+	bool ret = true;
+	json_object_set_string(go_json, "name", go->GetName().c_str());
+	json_object_set_number(go_json, "UUID", go->GetUUID());
+	if(go->GetParent()) //Root does not have parent
+		json_object_set_number(go_json, "parent", go->GetParentUUID());
+
+	JSON_Value* component_array = json_value_init_array(); 
+
+	std::map<uint, Component*> components = go->GetComponentList();
+	for (auto item = components.begin(); item != components.end(); item++) {
+		JSON_Value* component_json = json_value_init_object(); 
+		ret = ExportComponent((*item).second, json_object(component_json));
+		json_array_append_value(json_array(component_array), component_json);
 	}
 
-
-	return false;
+	json_object_set_value(go_json, "components", component_array);
+	json_object_set_boolean(go_json, "static", go->is_static);
+	json_object_set_boolean(go_json, "active", go->active);
+	return ret;
 }
 
-uint ModuleLoader::ExportComponent(uint uuid, GameObject * go, char* buffer)
+bool ModuleLoader::ExportComponent(Component * component, JSON_Object * component_json)
 {
-	return uint();
-}
-
-bool ModuleLoader::ExportScene(char * buffer)
-{
-	char* cursor = buffer;
-	uint num_game_objects;
-	uint bytes = sizeof(uint);
-	memcpy(&num_game_objects, cursor, bytes);
-	cursor += bytes;
-
-	std::vector<GameObject*> gameObjects_buffer;
-	for (uint i = 0; i < num_game_objects; i++)
+	switch (component->GetComponentType())
 	{
-		cursor += ExportGameObject(cursor, gameObjects_buffer);
+	case TRANSFORM:
+		ComponentTransform* transform = (ComponentTransform*)component;
+		json_object_set_string(component_json, "component_type", "transform");
+
+		float3 position = transform->getPos();
+		json_object_set_number(component_json, "position_x", position.x);
+		json_object_set_number(component_json, "position_y", position.y);
+		json_object_set_number(component_json, "position_z", position.z);
+
+		Quat rotation = transform->getRotationQuat();
+		json_object_set_number(component_json, "quaternion_x", rotation.x);
+		json_object_set_number(component_json, "quaternion_y", rotation.y);
+		json_object_set_number(component_json, "quaternion_z", rotation.z);
+		json_object_set_number(component_json, "quaternion_w", rotation.w);
+
+		float3 scale = transform->getScale();
+		json_object_set_number(component_json, "scale_x", scale.x);
+		json_object_set_number(component_json, "scale_y", scale.y);
+		json_object_set_number(component_json, "scale_z", scale.z);
+
+		break;
+	case MESH:
+		json_object_set_string(component_json, "component_type", "mesh");
+		break;
+	case MATERIAL:
+		json_object_set_string(component_json, "component_type", "material");
+		break;
+	case CAMERA:
+		json_object_set_string(component_json, "component_type", "camera");
+		break;
 	}
-	return false;
+	json_object_set_number(component_json, "UUID", component->GetUUID());
+	return true;
 }
+
+//uint ModuleLoader::ExportGameObject(char * buffer, std::vector<GameObject*> gameObjects_buffer)
+//{
+//	GameObject* new_go = new GameObject();
+//
+//	char* cursor = buffer;
+//
+//	uint size_of_name = 0;
+//	uint bytes = sizeof(uint);
+//	memcpy(&size_of_name, cursor, bytes);
+//	cursor += bytes;
+//
+//	bytes = size_of_name;
+//	std::string name(cursor, size_of_name);
+//	new_go->SetName(name);
+//	cursor += bytes;
+//
+//	bytes = sizeof(uint);
+//	uint uuid = 0;
+//	memcpy(&uuid, cursor, bytes);
+//	new_go->SetUUID(uuid);
+//	cursor += bytes;
+//
+//	bytes = sizeof(uint);
+//	uint puuid = 0;
+//	memcpy(&puuid, cursor, bytes);
+//	new_go->SetParentUUID(puuid);
+//	cursor += bytes;
+//
+//	bytes = sizeof(uint);
+//	uint num_of_components = 0;
+//	memcpy(&num_of_components, cursor, bytes);
+//	cursor += bytes;
+//
+//	uint comp_uuid = 0;
+//	for (int i = 0; i < num_of_components; i++)
+//	{
+//		bytes = sizeof(uint);
+//		memcpy(&comp_uuid, cursor, bytes);
+//		cursor += bytes;
+//		ExportComponent(comp_uuid, new_go,cursor);
+//	}
+//
+//
+//	return false;
+//}
+//
+//uint ModuleLoader::ExportComponent(uint uuid, GameObject * go, char* buffer)
+//{
+//	return uint();
+//}
+//
+//bool ModuleLoader::ExportScene(char * buffer)
+//{
+//	char* cursor = buffer;
+//	uint num_game_objects;
+//	uint bytes = sizeof(uint);
+//	memcpy(&num_game_objects, cursor, bytes);
+//	cursor += bytes;
+//
+//	std::vector<GameObject*> gameObjects_buffer;
+//	for (uint i = 0; i < num_game_objects; i++)
+//	{
+//		cursor += ExportGameObject(cursor, gameObjects_buffer);
+//	}
+//	return false;
+//}
 
 bool ModuleLoader::CleanUp()
 {

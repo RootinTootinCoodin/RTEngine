@@ -40,12 +40,24 @@ public:
 
 	bool SaveTextureAsDDS(std::string& name);
 	bool ImportMesh(aiMesh* mesh);
-	bool ImportGameobject(GameObject* game_object,char* buffer);
-	bool ImportComponent(Component* component, char*buffer);
 	bool ExportMesh(ComponentMesh* mesh, char* buffer);
-	uint ExportGameObject(char* buffer, std::vector<GameObject*> gameObjects_buffer);
-	uint ExportComponent(uint uuid, GameObject* go,char* buffer);
-	bool ExportScene(char* buffer);
+
+	bool ExportScene();
+	bool ImportScene();
+
+	bool ExportGameObject(GameObject* go, JSON_Object* go_json);
+	bool ImportGameObject(); 
+
+	bool ExportComponent(Component* component, JSON_Object* component_json);
+	bool ImportComponent();
+	//TODO: Import functions to binary
+	//bool ImportGameobject(GameObject* game_object,char* buffer);
+	//bool ImportComponent(Component* component, char*buffer);
+
+	//TODO: Export functions to binary
+	//uint ExportGameObject(char* buffer, std::vector<GameObject*> gameObjects_buffer);
+	//uint ExportComponent(uint uuid, GameObject* go,char* buffer);
+	//bool ExportScene(char* buffer);
 
 
 private:
