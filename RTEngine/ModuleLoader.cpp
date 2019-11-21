@@ -129,7 +129,7 @@ bool ModuleLoader::LoadTexture(std::string& path, ComponentMaterial* material)
 	ilGenImages(1,&il_img_name);
 	ilBindImage(il_img_name);
 
-	std::string path2 = ".";
+	std::string path2 = ".\\";
 	path2 += path;
 	if (ilLoadImage(path2.c_str()))
 	{
@@ -682,6 +682,11 @@ bool ModuleLoader::ExportComponent(Component * component, JSON_Object * componen
 	case MATERIAL:
 	{
 		json_object_set_string(component_json, "component_type", "material");
+		ComponentMaterial* material = (ComponentMaterial*)component;
+
+		json_object_set_string(component_json, "name", material->name.c_str());
+
+
 		break;
 	}
 	case CAMERA:
@@ -740,10 +745,10 @@ bool ModuleLoader::ImportComponent(JSON_Object * json_go, GameObject* go)
 	else if (component_type == "material")
 	{
 		std::string texture_file;
-		FileSystem::FormFullPath(texture_file, std::to_string(json_object_get_number(json_go, "UUID")).c_str(), LIBRARY_TEXTURES, ".texmex");
+		FileSystem::FormFullPath(texture_file,json_object_get_string(json_go,"name"), LIBRARY_TEXTURES, ".dds");
 		ComponentMaterial* component = (ComponentMaterial*)go->AddComponent(MATERIAL);
 		component->setUUID(json_object_get_number(json_go, "UUID"));
-		LoadTexture(texture_file);
+		LoadTexture(texture_file,component);
 	}
 	else if (component_type == "camera")
 	{

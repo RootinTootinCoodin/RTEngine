@@ -13,41 +13,26 @@
 bool FileSystem::ExportBuffer(char * data, int size, const char * file_name, lib_dir lib, const char* extension) {
 	std::string path = "";
 	FormFullPath(path, file_name, lib, extension);
-	//std::ofstream file;
-	//file.open(path, std::fstream::out | std::fstream::binary);
-	//file.write(data, size);
-	//file.close();
-	FILE* fp = fopen(path.c_str(), "wb");
-	if (fp)
-	{
-		fwrite(data, sizeof(char), size, fp);
-		fclose(fp);
-	}
+	std::ofstream file;
+	file.open(path, std::fstream::out | std::fstream::binary);
+	file.write(data, size);
+	file.close();
+
 	return true;
 }
 
 char * FileSystem::ImportFile(const char * file_name) {
-	//std::ifstream file;
-	//file.open(file_name, std::fstream::out | std::fstream::binary);
-	//// get length of file:
-	//file.seekg(0, file.end);
-	//int size = file.tellg();
-	//file.seekg(0, file.beg);
+	std::ifstream file;
+	file.open(file_name, std::fstream::out | std::fstream::binary);
+	// get length of file:
+	file.seekg(0, file.end);
+	int size = file.tellg();
+	file.seekg(0, file.beg);
 
-	//char* ret = new char[size];
-	//file.read(ret, size);
-	FILE* fp = fopen(file_name, "rb");
-	char* buffer;
-	if (fp != NULL)
-	{
-		fseek(fp, 0, SEEK_END);
-		uint size = ftell(fp);
-		rewind(fp);
-		buffer = new char[size];
-		fread(buffer, 1, size, fp);
-	}
-	fclose(fp);
-	return buffer;
+	char* ret = new char[size];
+	file.read(ret, size);
+
+	return ret;
 }
 
 std::string  FileSystem::GetFileString(const char * file_name) {
