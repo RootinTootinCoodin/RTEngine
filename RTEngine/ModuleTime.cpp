@@ -13,7 +13,7 @@ ModuleTime::~ModuleTime()
 
 bool ModuleTime::Init(JSON_Object * config)
 {
-	return false;
+	return true;
 }
 
 bool ModuleTime::CleanUp()

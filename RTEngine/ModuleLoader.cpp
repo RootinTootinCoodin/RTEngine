@@ -596,6 +596,7 @@ bool ModuleLoader::ExportComponent(Component * component, JSON_Object * componen
 	switch (component->GetComponentType())
 	{
 	case TRANSFORM:
+	{
 		ComponentTransform* transform = (ComponentTransform*)component;
 		json_object_set_string(component_json, "component_type", "transform");
 
@@ -616,15 +617,22 @@ bool ModuleLoader::ExportComponent(Component * component, JSON_Object * componen
 		json_object_set_number(component_json, "scale_z", scale.z);
 
 		break;
+	}
 	case MESH:
+	{
 		json_object_set_string(component_json, "component_type", "mesh");
 		break;
+	}
 	case MATERIAL:
+	{
 		json_object_set_string(component_json, "component_type", "material");
 		break;
+	}
 	case CAMERA:
+	{
 		json_object_set_string(component_json, "component_type", "camera");
 		break;
+	}
 	}
 	json_object_set_number(component_json, "UUID", component->GetUUID());
 	return true;
