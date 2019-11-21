@@ -14,6 +14,7 @@ class UIConfiguration;
 class UIInspector;
 class UIHierarchy;
 class UIAssets;
+class UITime;
 
 class ModuleImGui :
 	public Module
@@ -41,6 +42,7 @@ public:
 	UIInspector* inspector = nullptr;
 	UIHierarchy* hierarchy = nullptr;
 	UIAssets* assets = nullptr;
+	UITime* time = nullptr;
 
 	std::vector<UIElement*> UI;
 private:

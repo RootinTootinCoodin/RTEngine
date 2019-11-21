@@ -238,7 +238,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 		editorCamera->Move(newPos);
 
-		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
+		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 		{
 			float dx = (float)App->input->GetMouseXMotion()*sensitivity*dt*-1;
 			float dy = (float)App->input->GetMouseYMotion()*sensitivity*dt*-1;
@@ -271,6 +271,9 @@ update_status ModuleCamera3D::Update(float dt)
 		}
 
 	}
+
+	// Debug frustum
+	
 	
 	return UPDATE_CONTINUE;
 }

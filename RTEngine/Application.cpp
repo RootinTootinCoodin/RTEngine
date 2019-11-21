@@ -9,7 +9,7 @@
 #include "ModuleScene.h"
 #include "ModuleLoader.h"
 #include "ModuleDebug.h"
-
+#include "ModuleTime.h"
 
 Application::Application()
 {
@@ -23,6 +23,7 @@ Application::Application()
 	scene = new ModuleScene(this);
 	loader = new ModuleLoader(this);
 	debug = new ModuleDebug(this);
+	time = new ModuleTime(this);
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -34,12 +35,11 @@ Application::Application()
 	AddModule(camera);
 	AddModule(scene);
 	AddModule(debug);
+	AddModule(time);
+	AddModule(loader);
 	// Renderer last!
 	AddModule(ImGui);
 	AddModule(renderer3D);
-	//Fuck you i won't do what you tell me
-	//Guess you should
-
 }
 
 Application::~Application()

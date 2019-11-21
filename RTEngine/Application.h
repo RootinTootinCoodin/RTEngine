@@ -26,6 +26,7 @@ class ModuleCamera3D;
 class ModuleScene;
 class ModuleLoader;
 class ModuleDebug;
+class ModuleTime;
 
 
 class Application
@@ -39,6 +40,7 @@ public:
 	ModuleScene* scene;
 	ModuleLoader* loader;
 	ModuleDebug* debug;
+	ModuleTime* time;
 
 	std::vector<float> fps_arr;
 	std::vector<float> ms_arr;

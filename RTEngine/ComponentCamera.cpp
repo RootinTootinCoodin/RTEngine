@@ -101,3 +101,5 @@ float * ComponentCamera::GetViewMatrix()
 	matrix.Transpose();
 	return  (float*)matrix.v;
 }
+
+
