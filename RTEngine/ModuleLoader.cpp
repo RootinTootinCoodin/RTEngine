@@ -129,7 +129,7 @@ bool ModuleLoader::LoadTexture(std::string& path, ComponentMaterial* material)
 	ilGenImages(1,&il_img_name);
 	ilBindImage(il_img_name);
 
-	std::string path2 = ".";
+	std::string path2 = ".\\";
 	path2 += path;
 	if (ilLoadImage(path2.c_str()))
 	{
@@ -350,27 +350,25 @@ bool ModuleLoader::SaveTextureAsDDS(std::string& name)
 	return ret;
 }
 
-bool ModuleLoader::ImportMesh(aiMesh* mesh)
+bool ModuleLoader::ImportMesh(ComponentMesh* mesh)
 {
-	if (mesh->HasFaces())
-	{
 		//GOD BLESS C++ 
-		uint uvs = mesh->HasTextureCoords(0);
+		uint uvs = mesh->HasTextureCoords();
 		uint normals = mesh->HasNormals();
-		uint colors = mesh->HasVertexColors(0);
+		uint colors = mesh->HasVertexColors();
 
 		//Header 
-		uint ranges[5] = { mesh->mNumVertices,mesh->mNumFaces * 3 ,uvs,normals,colors};
+		uint ranges[5] = { mesh->num_vertices,mesh->num_indices ,uvs,normals,colors};
 		//Calculate the size of the file
-		uint size = sizeof(ranges) + sizeof(uint) * mesh->mNumFaces * 3 + sizeof(float) * mesh->mNumVertices * 3;
+		uint size = sizeof(ranges) + sizeof(uint) * mesh->num_indices + sizeof(float) * mesh->num_vertices * 3;
 		if (uvs)
-			size += sizeof(float) * mesh->mNumVertices * 2;
+			size += sizeof(float) * mesh->num_vertices * 2;
 		
 		if (normals)
-			size += sizeof(float) * mesh->mNumVertices * 3;
+			size += sizeof(float) * mesh->num_vertices * 3;
 
 		if (colors)
-			size += sizeof(float) * mesh->mNumVertices * 4;
+			size += sizeof(float) * mesh->num_vertices * 4;
 
 		//Data: File, Cursor: Pointer to where we are writing in the file
 		char* data = new char[size];
@@ -382,53 +380,39 @@ bool ModuleLoader::ImportMesh(aiMesh* mesh)
 
 		//Store Vertices
 		cursor += bytes; //We "move" the cursor a distance equal to the memory copied previously;
-		bytes = sizeof(float) * mesh->mNumVertices * 3;
-		memcpy(cursor, mesh->mVertices, bytes);
+		bytes = sizeof(float) * mesh->num_vertices * 3;
+		memcpy(cursor, mesh->vertices, bytes);
 
 		//Store Indices
 
 		cursor += bytes;
-		bytes = sizeof(uint) * mesh->mNumFaces * 3;
-		for (uint k = 0; k < mesh->mNumFaces; ++k)
-		{
-			if (mesh->mFaces[k].mNumIndices == 3)
-				memcpy(&cursor[k * 3], mesh->mFaces[k].mIndices, 3 * sizeof(uint));
-			else
-				LOG("WARNING, geometry face without 3 indices !");
-		}
-
+		bytes = sizeof(uint) * mesh->num_indices;
+		memcpy(cursor, mesh->indices, bytes);
 		cursor += bytes;
+
 		if (uvs)
 		{
-			bytes = sizeof(float) * mesh->mNumVertices * 2;
-			for (int t = 0; t < mesh->mNumVertices * 2; t += 2)
-			{
-				memcpy(&cursor[t], &mesh->mTextureCoords[0][t / 2].x, sizeof(float));
-				memcpy(&cursor[t+1], &mesh->mTextureCoords[0][t / 2].y, sizeof(float));
-			}
+			bytes = sizeof(uint) * mesh->num_vertices * 2;
+			memcpy(cursor, mesh->uvs, bytes);
 			cursor += bytes;
 		}
 
+
+
 		if (normals)
 		{
-			bytes = sizeof(float) * mesh->mNumVertices * 3;
-			memcpy(cursor, mesh->mNormals, bytes);
+			bytes = sizeof(float) * mesh->num_vertices * 3;
+			memcpy(cursor, mesh->normals, bytes);
 			cursor += bytes;
 		}
 
 		if (colors)
 		{
-			bytes = sizeof(float) * mesh->mNumVertices * 4;
-			memcpy(cursor, mesh->mColors[0], bytes);
+			bytes = sizeof(float) * mesh->num_vertices * 4;
+			memcpy(cursor, mesh->colors, bytes);
 		}
 
-		
-	}
-	else
-		LOG("Trying to Import a mesh without faces: %s", mesh->mName.C_Str());
-
-	
-	return false;
+		return FileSystem::ExportBuffer(data, size, std::to_string(mesh->GetUUID()).c_str(), LIBRARY_MESHES, ".meshprtnr");
 }
 
 //bool ModuleLoader::ImportGameobject(GameObject * go,char* pre_buffer)
@@ -536,7 +520,7 @@ bool ModuleLoader::ExportMesh(ComponentMesh* mesh, char* buffer)
 	}
 
 
-	return false;
+	return true;
 }
 
 bool ModuleLoader::ExportScene()
@@ -559,11 +543,59 @@ bool ModuleLoader::ExportScene()
 	if (ret)
 	{
 		std::string path_buffer;
-		FileSystem::FormFullPath(path_buffer, App->scene->name.c_str(), LIBRARY_TEXTURES,".westscene");
+		FileSystem::FormFullPath(path_buffer, App->scene->name.c_str(), ASSETS_SCENES,".westscene");
 		json_serialize_to_file(file, path_buffer.c_str());
 	}
 	else
 		LOG("Unable to save the scene");
+
+	return ret;
+}
+
+bool ModuleLoader::ImportScene(std::string& path)
+{
+	bool ret = false;
+	App->scene->root->RecursiveDeleteGameobject();
+	//the path received is just the name with the extension
+	std::string name = path.substr(0, path.find_last_of("."));
+
+	FileSystem::FormFullPath(path, name.c_str(), ASSETS_SCENES, ".westscene");
+	JSON_Value* file = json_parse_file(path.c_str());
+	if (file)
+	{
+		ret = true;
+		std::map<uint, GameObject*> scene_gameobjects;
+		JSON_Array* json_scene = json_object_get_array(json_object(file), "Scene");
+		for (uint i = 0; i < json_array_get_count(json_scene); i++)
+		{
+			JSON_Object* json_go = json_array_get_object(json_scene, i);
+			if (GameObject* go = ImportGameObject(json_go))
+				scene_gameobjects.insert({ go->GetUUID(), go });
+		}
+
+		for (auto item = scene_gameobjects.begin(); item != scene_gameobjects.end(); item++)
+		{
+			if ((*item).second->GetUUID() != 0)
+			{
+				if ((*item).second->parent_uuid != 0)
+				{
+					(*item).second->SetParent(scene_gameobjects[(*item).second->parent_uuid]);
+					scene_gameobjects[(*item).second->parent_uuid]->AddChildren((*item).second);
+				}
+				else
+				{
+					(*item).second->SetParent(App->scene->root);
+					App->scene->root->AddChildren((*item).second);
+				}
+			}
+		}
+		LinkMeshesWithMaterials(scene_gameobjects);
+
+	}
+	else
+	{
+		LOG("Could not open scene %s", path.c_str());
+	}
 
 	return ret;
 }
@@ -575,6 +607,8 @@ bool ModuleLoader::ExportGameObject(GameObject * go, JSON_Object * go_json)
 	json_object_set_number(go_json, "UUID", go->GetUUID());
 	if(go->GetParent()) //Root does not have parent
 		json_object_set_number(go_json, "parent", go->GetParentUUID());
+	else
+		json_object_set_number(go_json, "parent", 1);
 
 	JSON_Value* component_array = json_value_init_array(); 
 
@@ -583,12 +617,31 @@ bool ModuleLoader::ExportGameObject(GameObject * go, JSON_Object * go_json)
 		JSON_Value* component_json = json_value_init_object(); 
 		ret = ExportComponent((*item).second, json_object(component_json));
 		json_array_append_value(json_array(component_array), component_json);
+
+		go->ParentRecalculateAABB();
 	}
 
 	json_object_set_value(go_json, "components", component_array);
 	json_object_set_boolean(go_json, "static", go->is_static);
 	json_object_set_boolean(go_json, "active", go->active);
 	return ret;
+}
+
+GameObject* ModuleLoader::ImportGameObject(JSON_Object * json_go)
+{
+	bool ret = false;
+	GameObject* go = new GameObject();
+	go->SetName(json_object_get_string(json_go, "name"));
+	go->SetUUID(json_object_get_number(json_go, "UUID"));
+	go->SetParentUUID(json_object_get_number(json_go, "parent"));
+
+	JSON_Array* component_array = json_object_get_array(json_go, "components");
+	for (uint i = 0; i < json_array_get_count(component_array); i++)
+	{
+		ImportComponent(json_array_get_object(component_array, i),go);
+	}
+
+	return go;
 }
 
 bool ModuleLoader::ExportComponent(Component * component, JSON_Object * component_json)
@@ -621,11 +674,19 @@ bool ModuleLoader::ExportComponent(Component * component, JSON_Object * componen
 	case MESH:
 	{
 		json_object_set_string(component_json, "component_type", "mesh");
+		ComponentMesh* mesh = (ComponentMesh*)component;
+		ImportMesh(mesh);
+
 		break;
 	}
 	case MATERIAL:
 	{
 		json_object_set_string(component_json, "component_type", "material");
+		ComponentMaterial* material = (ComponentMaterial*)component;
+
+		json_object_set_string(component_json, "name", material->name.c_str());
+
+
 		break;
 	}
 	case CAMERA:
@@ -636,6 +697,78 @@ bool ModuleLoader::ExportComponent(Component * component, JSON_Object * componen
 	}
 	json_object_set_number(component_json, "UUID", component->GetUUID());
 	return true;
+}
+
+bool ModuleLoader::ImportComponent(JSON_Object * json_go, GameObject* go)
+{
+	bool ret = false;
+	
+	std::string component_type = json_object_get_string(json_go, "component_type");
+	if (component_type == "transform")
+	{
+		ret = true;
+		ComponentTransform* component = (ComponentTransform*)go->AddComponent(TRANSFORM);
+		component->setUUID(json_object_get_number(json_go, "UUID"));
+
+		float3 position;
+		position.x = json_object_get_number(json_go, "position_x");
+		position.y = json_object_get_number(json_go, "position_y");
+		position.z = json_object_get_number(json_go, "position_z");
+		component->setPos(position);
+
+		Quat rotation;
+		rotation.x = json_object_get_number(json_go, "quaternion_x");
+		rotation.y = json_object_get_number(json_go, "quaternion_y");
+		rotation.z = json_object_get_number(json_go, "quaternion_z");
+		rotation.w = json_object_get_number(json_go, "quaternion_w");
+		component->setRotation(rotation);
+
+		float3 scale;
+		scale.x = json_object_get_number(json_go, "scale_x");
+		scale.y = json_object_get_number(json_go, "scale_y");
+		scale.z = json_object_get_number(json_go, "scale_z");
+		component->setScale(scale);
+	}
+	else if (component_type == "mesh")
+	{
+		std::string mesh_file;
+		//THIS IS SO FUCKING UGLY
+		std::string uuid = std::to_string(json_object_get_number(json_go, "UUID"));
+		uuid = uuid.substr(0, uuid.find_last_of("."));
+		FileSystem::FormFullPath(mesh_file, uuid.c_str(), LIBRARY_MESHES, ".meshprtnr");
+		char* buffer = FileSystem::ImportFile(mesh_file.c_str());
+		ComponentMesh* component = (ComponentMesh*)go->AddComponent(MESH);
+		component->setUUID(json_object_get_number(json_go, "UUID"));
+		ret = ExportMesh(component, buffer);
+		App->renderer3D->GenerateBufferForMesh(component);
+	}
+	else if (component_type == "material")
+	{
+		std::string texture_file;
+		FileSystem::FormFullPath(texture_file,json_object_get_string(json_go,"name"), LIBRARY_TEXTURES, ".dds");
+		ComponentMaterial* component = (ComponentMaterial*)go->AddComponent(MATERIAL);
+		component->setUUID(json_object_get_number(json_go, "UUID"));
+		LoadTexture(texture_file,component);
+	}
+	else if (component_type == "camera")
+	{
+		ret = true;
+	}
+	return ret;
+}
+
+void ModuleLoader::LinkMeshesWithMaterials(std::map<uint, GameObject*> scene_gameobjects)
+{
+	for (auto item = scene_gameobjects.begin(); item != scene_gameobjects.end(); item++)
+	{
+		if (ComponentMesh* mesh = (ComponentMesh*)(*item).second->GetComponent(MESH))
+		{
+			if (ComponentMaterial* material = (ComponentMaterial*)(*item).second->GetComponent(MATERIAL))
+			{
+				mesh->material = material;
+			}
+		}
+	}
 }
 
 //uint ModuleLoader::ExportGameObject(char * buffer, std::vector<GameObject*> gameObjects_buffer)

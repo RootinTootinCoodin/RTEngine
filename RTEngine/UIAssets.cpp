@@ -1,6 +1,7 @@
 #include "UIAssets.h"
 #include "Application.h"
 #include "FileSystem.h"
+#include "ModuleLoader.h"
 
 
 UIAssets::UIAssets(Application * app) : UIElement(app)
@@ -61,7 +62,10 @@ void UIAssets::Draw()
 		{
 			std::size_t found = file_arr[i].find_last_of("/\\");
 			std::string filename = file_arr[i].substr(found + 1);
-			ImGui::Text(filename.data());
+			if (ImGui::Button(filename.data()))
+			{
+				_app->loader->ImportScene(filename);
+			}
 		}
 	}
 	ImGui::End();

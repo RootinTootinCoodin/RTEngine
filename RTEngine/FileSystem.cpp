@@ -17,6 +17,7 @@ bool FileSystem::ExportBuffer(char * data, int size, const char * file_name, lib
 	file.open(path, std::fstream::out | std::fstream::binary);
 	file.write(data, size);
 	file.close();
+
 	return true;
 }
 

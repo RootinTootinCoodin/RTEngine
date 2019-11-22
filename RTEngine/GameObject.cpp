@@ -94,6 +94,11 @@ GameObject * GameObject::AddChildren(std::string name)
 	return ret;
 }
 
+void GameObject::AddChildren(GameObject * go)
+{
+	children.insert({ go->GetUUID(),go });
+}
+
 void GameObject::RemoveComponent(componentType type)
 {
 	for (auto item = components.begin(); item != components.end(); item++)
@@ -212,6 +217,34 @@ void GameObject::RecursiveRemoveDirtyFlags()
 	for (auto item = children.begin(); item != children.end(); item++)
 	{
 		(*item).second->RecursiveRemoveDirtyFlags();
+	}
+}
+
+void GameObject::RecursiveDeleteGameobject()
+{
+	if (uuid != 0)
+	{
+		for (auto item = components.begin(); item != components.end(); item++)
+		{
+			(*item).second->ComponentCleanUp();
+		}
+	}
+	if (children.size() > 1)
+	{
+		for (auto item = children.begin(); item != children.end() && children.size() == 1; item++)
+		{
+			(*item).second->RecursiveDeleteGameobject();
+		}
+	}
+	if(children.size() == 1)
+		(*children.begin()).second->RecursiveDeleteGameobject();
+	if (uuid != 0)
+	{
+		if (parent->children.size() > 1)
+			parent->children.erase(uuid);
+		else
+			parent->children.clear();
+		delete this;
 	}
 }
 
