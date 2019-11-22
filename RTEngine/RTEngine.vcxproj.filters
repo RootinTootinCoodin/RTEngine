@@ -365,6 +365,9 @@
       <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="UITime.h" />
+    <ClInclude Include="Tree.h">
+      <Filter>Sources\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -578,6 +581,9 @@
       <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="UITime.cpp" />
+    <ClCompile Include="Tree.cpp">
+      <Filter>Sources\Containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

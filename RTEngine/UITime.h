@@ -2,6 +2,9 @@
 #define __UI_TIME_H__
 
 #include "UIElement.h"
+
+enum GAME_STATE;
+
 class UITime : public UIElement
 {
 public:
