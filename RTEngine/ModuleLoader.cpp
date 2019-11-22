@@ -507,8 +507,8 @@ bool ModuleLoader::ExportMesh(ComponentMesh* mesh, char* buffer)
 	if (ranges[3])
 	{
 		bytes = sizeof(float) * mesh->num_vertices * 3;
-		mesh->vertices = new float[mesh->num_vertices * 3];
-		memcpy(mesh->vertices, cursor, bytes);
+		mesh->normals = new float[mesh->num_vertices * 3];
+		memcpy(mesh->normals, cursor, bytes);
 		cursor += bytes;
 	}
 	if (ranges[4])
@@ -543,7 +543,7 @@ bool ModuleLoader::ExportScene()
 	if (ret)
 	{
 		std::string path_buffer;
-		FileSystem::FormFullPath(path_buffer, App->scene->name.c_str(), ASSETS_SCENES,".westscene");
+		FileSystem::FormFullPath(path_buffer, App->scene->scene_name.c_str(), ASSETS_SCENES,".westscene");
 		json_serialize_to_file(file, path_buffer.c_str());
 	}
 	else
