@@ -507,8 +507,8 @@ bool ModuleLoader::ExportMesh(ComponentMesh* mesh, char* buffer)
 	if (ranges[3])
 	{
 		bytes = sizeof(float) * mesh->num_vertices * 3;
-		mesh->vertices = new float[mesh->num_vertices * 3];
-		memcpy(mesh->vertices, cursor, bytes);
+		mesh->normals = new float[mesh->num_vertices * 3];
+		memcpy(mesh->normals, cursor, bytes);
 		cursor += bytes;
 	}
 	if (ranges[4])

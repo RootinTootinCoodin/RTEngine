@@ -31,9 +31,9 @@ void Tree::Intersect(std::vector<const GameObject*>& group, const AABB & area)
 {
 }
 
-Tree::Node::Node()
-{
-}
+//Tree::Node::Node()
+//{
+//}
 
 Tree::Node::Node(AABB area, const Tree * tree)
 {
