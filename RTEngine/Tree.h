@@ -12,18 +12,19 @@ class Tree
 	{
 	public:
 		Node() {};
-		Node(AABB area, const Tree* tree);
+		Node(AABB area, const Tree* tree, const Node* parent) : nodeArea(area), tree(tree), parent(parent) {};
 		~Node() {};
 
 		void Draw();
 		void Split();
 
 		void Clear();
+		void Intersect(std::vector<const GameObject*>& group, const AABB & area);
 
 		AABB nodeArea;
 		const Tree* tree = nullptr;
 		std::vector<const GameObject*> containedGameobj;
-		Node* parent;
+		const Node* parent;
 		std::vector<Node*> children;
 
 	};
@@ -32,10 +33,12 @@ public:
 	Tree(AABB aabb);
 	~Tree();
 
-	void Create(const AABB& limits);
+	void Create(const AABB& limits); // Re-creates a new tree from an existing one
 	void Clear();
+
 	void Insert(GameObject* newItem);
 	void Remove(GameObject* itemToRemove);
+
 	void Intersect(std::vector<const GameObject*>& group, const AABB& area);
 
 	Node* root;

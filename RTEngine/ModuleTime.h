@@ -31,7 +31,15 @@ public:
 
 	void SetState(GAME_STATE state);
 	GAME_STATE GetState();
-	void Tick();
+	void Tick(float dt);
+
+	void SaveStartState();
+	void SetToStart();
+
+	bool stop = true;
+
+	float game_dt;
+	float gameSpeed = 1;
 
 private:
 

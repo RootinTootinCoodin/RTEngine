@@ -13,6 +13,8 @@ public:
 	ComponentTransform(GameObject* parent);
 	~ComponentTransform();
 
+	bool UpdateComponent(float dt);
+
 	math::float4x4 GetLocalTransformMatrix() const { return local_transform; };
 	math::float4x4 GetGlobalTransformMatrix() const { return global_transform; };
 

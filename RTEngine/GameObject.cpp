@@ -49,7 +49,7 @@ void GameObject::Update()
 {
 	for (auto item = components.begin(); item != components.end(); item++)
 	{
-		(*item).second->UpdateComponent();
+		//(*item).second->UpdateComponent();
 	}
 }
 

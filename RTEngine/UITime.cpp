@@ -59,8 +59,9 @@ void UITime::Draw()
 
 		if (ImGui::Button("Tick"))
 		{
-			App->time->Tick();
+			App->time->Tick(App->dt);
 		}
+		ImGui::SameLine();
 
 		switch (App->time->GetState())
 		{
@@ -74,7 +75,10 @@ void UITime::Draw()
 			ImGui::Text("Stopped");
 			break;
 		}
-		
+
+		ImGui::SliderFloat("Game speed", &App->time->gameSpeed, 0.01f, 15.0f);
+
+		ImGui::Text("Current app dt: %f", App->dt);
 	}
 
 	ImGui::End();
