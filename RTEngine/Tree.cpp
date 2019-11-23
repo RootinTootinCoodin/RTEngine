@@ -1,5 +1,7 @@
 #include "Tree.h"
 #include "GameObject.h"
+#include "Component.h"
+#include "ComponentMesh.h"
 
 #include "SDL/include/SDL_assert.h"
 #include "SDL/include/SDL_opengl.h"
@@ -26,20 +28,27 @@ void Tree::Clear()
 
 void Tree::Insert(GameObject * newItem)
 {
-	if (root->nodeArea.Contains(newItem->GetAABB()))
+	if (newItem->GetComponent(MESH) != nullptr && newItem->active && newItem->is_static)
 	{
-		containedGameobj.push_back(newItem);
-		root->containedGameobj.push_back(newItem);
+		for (int i = 0; i < treeObjects.size(); i++)
+			if (treeObjects[i] == newItem)
+				return;
+
+		if (root->Insert(newItem))
+		{
+			treeObjects.push_back(newItem);
+		}
 	}
+	
 }
 
 void Tree::Remove(GameObject * itemToRemove)
 {
 }
 
-void Tree::Intersect(std::vector<const GameObject*>& group, const AABB & area)
+void Tree::CollectIntersections(std::vector<const GameObject*>& collector, const AABB & area)
 {
-	root->Intersect(group, area);
+	root->CollectIntersections(collector, area);
 }
 
 void Tree::Node::Draw()
@@ -129,35 +138,6 @@ void Tree::Node::Split4()
 	}
 }
 
-void Tree::Node::CheckAndSplit()
-{
-	if (containedGameobj.size() > tree->bucket)
-	{
-		// First, split the current node in 4
-		Split4();
-
-		// Iterate the new node children and add each gameobject from this node to the correspondent child/children
-		for (int i = 0; i < containedGameobj.size(); i++)
-		{
-			for (int j = 0; j < children.size(); j++)
-			{
-				if (children[j]->nodeArea.Intersects(containedGameobj[i]->GetAABB()))
-				{
-					children[j]->containedGameobj.push_back(containedGameobj[i]);
-					break;
-				}
-			}
-			
-		}
-		for (int i = 0; i < children.size(); i++)
-		{
-			children[i]->CheckAndSplit();
-		}
-		
-		containedGameobj.clear();
-	}
-}
-
 void Tree::Node::Clear()
 {
 	// Clear all children
@@ -170,14 +150,70 @@ void Tree::Node::Clear()
 	}
 
 	// Clear gameobject list
-	if (!containedGameobj.empty())
-		containedGameobj.clear();
+	if (!nodeObjects.empty())
+		nodeObjects.clear();
 }
 
-void Tree::Node::Intersect(std::vector<const GameObject*>& group, const AABB & area)
+void Tree::Node::CollectIntersections(std::vector<const GameObject*>& collector, const AABB & area)
 {
-	//if (nodeArea.Intersects(area)) {
-	//	for (int i = 0; i < containedGameobj.size(); i++)
-	//		group.push_back(containedGameobj[i]);
-	//}
+	if (area.Intersects(nodeArea))
+	{
+		for (int i = 0; i < nodeObjects.size(); i++)
+			collector.push_back(nodeObjects[i]);
+
+		if (!children.empty())
+			for (int i = 0; i < children.size(); i++)
+				children[i]->CollectIntersections(collector, area);
+	}
+}
+
+bool Tree::Node::Insert(const GameObject * newItem)
+{
+	bool ret = false;
+
+	if (nodeArea.Contains(newItem->GetAABB().CenterPoint()))
+
+		// If the node has children
+		if (!children.empty())
+		{
+			// Try to insert in one of the children
+			for (int i = 0; i < children.size(); i++)
+				if (children[i]->Insert(newItem))
+				{
+					ret = true;
+					break;
+				}
+
+			if (!ret)
+			{
+				nodeObjects.push_back(newItem);
+				ret = true;
+			}
+		}
+		else
+		{
+			nodeObjects.push_back(newItem);
+			ret = true;
+
+			if (nodeObjects.size() > tree->bucket && tree->currentSubdivisions < 50)
+			{
+				Split4();
+				tree->currentSubdivisions++;
+
+				std::vector<const GameObject*> left;
+
+				for (int i = 0; i < nodeObjects.size(); i++)
+				{
+					for (int j = 0; j < children.size(); j++)
+					{
+						if (children[j]->Insert(nodeObjects[i]))
+						{
+							break;
+						}
+					}
+				}
+			}
+		}
+
+	return ret;
 }

@@ -78,8 +78,7 @@ bool ModuleLoader::LoadFBX(std::string& path, std::string& name)
 		LoadAiNodesRecursively(scene->mRootNode, scene, new_model, path,transform->GetLocalTransformMatrix());
 		aiReleaseImport(scene);
 		App->camera->AdjustCameraToAABB(new_model->GetAABB());
-		App->scene->CreateTree();
-		App->scene->quadtree->root->CheckAndSplit();
+		App->scene->quadtree->Insert(new_model);
 	}
 	else
 		LOG("Error loading scene %s", path);
@@ -287,6 +286,7 @@ GameObject* ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiSc
 		mesh_gameobject = new_model->AddChildren(optional_name);
 
 
+
 	ComponentMesh* _mesh = (ComponentMesh*)mesh_gameobject->AddComponent(MESH);
 	ComponentMaterial* _material = (ComponentMaterial*)mesh_gameobject->AddComponent(MATERIAL);
 
@@ -333,6 +333,8 @@ GameObject* ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiSc
 	}
 	else
 		LOG("Error mesh from scene %s, no faces", path);
+
+	App->scene->quadtree->Insert(mesh_gameobject);
 
 	return mesh_gameobject;
 }

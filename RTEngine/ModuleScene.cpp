@@ -67,7 +67,7 @@ update_status ModuleScene::PostUpdate(float dt)
 
 void ModuleScene::CreateTree()
 {
-	if (!quadtree->containedGameobj.empty())
+	if (!quadtree->treeObjects.empty())
 		quadtree->Clear();
 
 	std::vector<GameObject*> gameObjects;
