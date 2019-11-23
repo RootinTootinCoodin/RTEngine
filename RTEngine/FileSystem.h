@@ -5,18 +5,10 @@
 #include <string>
 #include <vector>
 
-#define OWN_MESH_EXTENSION ".kr"
-#define JSON_EXTENSION ".json"
-#define DDS_EXTENSION ".dds"
-#define META_EXTENSION ".meta"
-#define SCENE_EXTENSION ".scene"
-#define PREFAB_EXTENSION ".prefab"
-
 #define LIBRARY_FOLDER "Library\\"
 #define MESHES_FOLDER "Library\\Meshes\\"
 #define TEXTURES_FOLDER "Library\\Textures\\"
-#define OBJECTS_FOLDER "Library\\3dObjects\\"
-#define SCRIPTS_FOLDER "Library\\Scripts\\"
+
 
 
 #define PREFABS_FOLDER "Library\\Prefabs\\"
@@ -30,10 +22,8 @@
 enum lib_dir {
 	LIBRARY_MESHES,
 	LIBRARY_TEXTURES,
-	LIBRARY_3DOBJECTS,
 	LIBRARY_PREFABS,
 	LIBRARY_SCENES,
-	LIBRARY_SCRIPTS,
 	SETTINGS,
 	ASSETS,
 	ASSETS_SCENES,

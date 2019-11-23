@@ -98,13 +98,6 @@ void FileSystem::FormFullPath(std::string & path, const char * file_name, lib_di
 		break;
 	case LIBRARY_TEXTURES:
 		path = TEXTURES_FOLDER;
-		break;
-	case LIBRARY_SCRIPTS:
-		path = SCRIPTS_FOLDER;
-		break;
-	case LIBRARY_3DOBJECTS:
-		path = OBJECTS_FOLDER;
-		break;
 	case LIBRARY_PREFABS:
 		path = PREFABS_FOLDER;
 		break;
@@ -240,12 +233,6 @@ std::string FileSystem::getPathFromLibDir(lib_dir lib_dir) {
 		break;
 	case LIBRARY_SCENES:
 		ret = SCENES_FOLDER;
-		break;
-	case LIBRARY_3DOBJECTS:
-		ret = OBJECTS_FOLDER;
-		break;
-	case LIBRARY_SCRIPTS:
-		ret = SCRIPTS_FOLDER;
 		break;
 	case SETTINGS:
 		ret = SETTINGS_FOLDER;
