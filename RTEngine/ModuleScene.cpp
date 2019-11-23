@@ -10,7 +10,7 @@
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentTransform.h"
-
+#include "Tree.h"
 
 #include "GL/glew.h"
 #include "SDL\include\SDL_opengl.h"
@@ -25,6 +25,8 @@ ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, sta
 {
 	name = "Scene";
 	root = new GameObject("Root", nullptr,0,nullptr);
+	treeArea.SetFromCenterAndSize({ 0.0f, 0.0f, 0.0f }, treeSize);
+	quadtree = new Tree(treeArea);
 }
 
 
@@ -61,6 +63,23 @@ update_status ModuleScene::PostUpdate(float dt)
 		save = false;
 	}
 	return UPDATE_CONTINUE;
+}
+
+void ModuleScene::CreateTree()
+{
+	if (!quadtree->containedGameobj.empty())
+		quadtree->Clear();
+
+	std::vector<GameObject*> gameObjects;
+	App->scene->root->RecursiveGetChildren(&gameObjects);
+
+	for (auto item = gameObjects.begin(); item != gameObjects.end(); item++)
+	{
+		if ((*item)->active && (*item)->GetAABB().Intersects(treeArea) && (*item)->is_static)
+		{
+			quadtree->Insert((*item));
+		}
+	}
 }
 
 void ModuleScene::GenerateCheckerTexture()

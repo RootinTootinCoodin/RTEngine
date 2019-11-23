@@ -20,6 +20,7 @@ void Tree::Create(const AABB& limits)
 
 void Tree::Clear()
 {
+	root->Clear();
 }
 
 void Tree::Insert(GameObject * newItem)
@@ -119,6 +120,11 @@ void Tree::Node::Split()
 	{
 		children.push_back(new Node(newNodesAABB[i], tree, this));
 	}
+}
+
+void Tree::Node::IterateSplitting()
+{
+
 }
 
 void Tree::Node::Clear()

@@ -77,6 +77,7 @@ bool ModuleLoader::LoadFBX(std::string& path, std::string& name)
 		LoadAiNodesRecursively(scene->mRootNode, scene, new_model, path,transform->GetLocalTransformMatrix());
 		aiReleaseImport(scene);
 		App->camera->AdjustCameraToAABB(new_model->GetAABB());
+		App->scene->CreateTree();
 	}
 	else
 		LOG("Error loading scene %s", path);

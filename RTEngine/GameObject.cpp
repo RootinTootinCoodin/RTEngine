@@ -138,6 +138,8 @@ void GameObject::RecursiveSetActive(bool _active)
 		(*item).second->RecursiveSetActive(_active);
 	}
 	active = _active;
+
+	_app->scene->CreateTree();
 }
 
 void GameObject::RecursiveSetStatic(bool _static)
@@ -147,6 +149,8 @@ void GameObject::RecursiveSetStatic(bool _static)
 		(*item).second->RecursiveSetStatic(_static);
 	}
 	is_static = _static;
+
+	_app->scene->CreateTree();
 }
 
 void GameObject::RecursiveApplyTexture(texture * texture)

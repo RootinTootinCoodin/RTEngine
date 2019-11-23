@@ -17,23 +17,27 @@ class Tree
 
 		void Draw();
 		void Split();
+		void IterateSplitting();
 
 		void Clear();
 		void Intersect(std::vector<const GameObject*>& group, const AABB & area);
+
+		bool IsLeaf() { return containedGameobj.empty(); }
+		bool IsBranch() { return (!containedGameobj.empty() && parent != nullptr); }
+		bool IsRoot() { return (parent == nullptr); }
 
 		AABB nodeArea;
 		const Tree* tree = nullptr;
 		std::vector<const GameObject*> containedGameobj;
 		const Node* parent;
 		std::vector<Node*> children;
-
 	};
 
 public:
 	Tree(AABB aabb);
 	~Tree();
 
-	void Create(const AABB& limits); // Re-creates a new tree from an existing one
+	void Create(const AABB& limits); // Clears and recreates the tree
 	void Clear();
 
 	void Insert(GameObject* newItem);
