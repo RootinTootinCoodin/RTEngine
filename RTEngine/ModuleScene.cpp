@@ -75,7 +75,7 @@ void ModuleScene::CreateTree()
 
 	for (auto item = gameObjects.begin(); item != gameObjects.end(); item++)
 	{
-		if ((*item)->active && (*item)->GetAABB().Intersects(treeArea) && (*item)->is_static)
+		if ((*item)->active && (*item)->GetAABB().Intersects(treeArea) && (*item)->is_static && (*item)->GetComponent(MESH) != nullptr)
 		{
 			quadtree->Insert((*item));
 		}

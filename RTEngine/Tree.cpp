@@ -137,18 +137,23 @@ void Tree::Node::CheckAndSplit()
 		Split4();
 
 		// Iterate the new node children and add each gameobject from this node to the correspondent child/children
-		for (int i = 0; i < children.size(); i++)
+		for (int i = 0; i < containedGameobj.size(); i++)
 		{
-			for (int j = 0; j < containedGameobj.size(); j++)
+			for (int j = 0; j < children.size(); j++)
 			{
-				if (children[i]->nodeArea.Contains(containedGameobj[j]->GetAABB()))
+				if (children[j]->nodeArea.Intersects(containedGameobj[i]->GetAABB()))
 				{
-					children[i]->containedGameobj.push_back(containedGameobj[j]);
+					children[j]->containedGameobj.push_back(containedGameobj[i]);
+					break;
 				}
 			}
+			
+		}
+		for (int i = 0; i < children.size(); i++)
+		{
 			children[i]->CheckAndSplit();
 		}
-
+		
 		containedGameobj.clear();
 	}
 }
