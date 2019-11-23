@@ -157,6 +157,9 @@ void ModuleScene::Draw()
 
 	DrawGrid(gridsize);
 
+	if (debugQuad)
+		quadtree->root->Draw();
+
 	std::vector<GameObject*> gameObjects;
 	root->RecursiveGetChildren(&gameObjects);
 

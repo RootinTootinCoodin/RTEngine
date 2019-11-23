@@ -52,7 +52,7 @@ public:
 	GameObject* selected_go = nullptr;
 	Tree* quadtree = nullptr;
 	AABB treeArea;
-	float3 treeSize = { 50.0f, 50.0f, 50.0f };
+	float3 treeSize = { 150.0f, 50.0f, 150.0f };
 	bool debugQuad = false;
 	int bucket = 1;
 };

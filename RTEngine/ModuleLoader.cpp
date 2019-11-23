@@ -8,6 +8,7 @@
 #include "ComponentTransform.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
+#include "Tree.h"
 
 #include "FileSystem.h"
 
@@ -78,6 +79,7 @@ bool ModuleLoader::LoadFBX(std::string& path, std::string& name)
 		aiReleaseImport(scene);
 		App->camera->AdjustCameraToAABB(new_model->GetAABB());
 		App->scene->CreateTree();
+		App->scene->quadtree->root->CheckAndSplit();
 	}
 	else
 		LOG("Error loading scene %s", path);

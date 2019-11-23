@@ -16,8 +16,8 @@ class Tree
 		~Node() {};
 
 		void Draw();
-		void Split();
-		void IterateSplitting();
+		void Split4();
+		void CheckAndSplit();
 
 		void Clear();
 		void Intersect(std::vector<const GameObject*>& group, const AABB & area);
@@ -47,6 +47,7 @@ public:
 
 	Node* root;
 	std::vector<const GameObject*> containedGameobj;
+	int bucket = 1;
 
 };
 

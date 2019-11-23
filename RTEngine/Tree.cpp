@@ -1,4 +1,5 @@
 #include "Tree.h"
+#include "GameObject.h"
 
 #include "SDL/include/SDL_assert.h"
 #include "SDL/include/SDL_opengl.h"
@@ -25,6 +26,11 @@ void Tree::Clear()
 
 void Tree::Insert(GameObject * newItem)
 {
+	if (root->nodeArea.Contains(newItem->GetAABB()))
+	{
+		containedGameobj.push_back(newItem);
+		root->containedGameobj.push_back(newItem);
+	}
 }
 
 void Tree::Remove(GameObject * itemToRemove)
@@ -79,6 +85,7 @@ void Tree::Node::Draw()
 	glVertex3f(nodeArea.MaxX(), nodeArea.MinY(), nodeArea.MaxZ());
 	glVertex3f(nodeArea.MinX(), nodeArea.MinY(), nodeArea.MaxZ());
 
+	glColor3f(1, 1, 1);
 	glEnd();
 
 	// Draw children
@@ -87,7 +94,7 @@ void Tree::Node::Draw()
 			children[i]->Draw();
 }
 
-void Tree::Node::Split()
+void Tree::Node::Split4()
 {
 	AABB newNodesAABB[4];
 	float3 minP, maxP;
@@ -122,9 +129,28 @@ void Tree::Node::Split()
 	}
 }
 
-void Tree::Node::IterateSplitting()
+void Tree::Node::CheckAndSplit()
 {
+	if (containedGameobj.size() > tree->bucket)
+	{
+		// First, split the current node in 4
+		Split4();
 
+		// Iterate the new node children and add each gameobject from this node to the correspondent child/children
+		for (int i = 0; i < children.size(); i++)
+		{
+			for (int j = 0; j < containedGameobj.size(); j++)
+			{
+				if (children[i]->nodeArea.Contains(containedGameobj[j]->GetAABB()))
+				{
+					children[i]->containedGameobj.push_back(containedGameobj[j]);
+				}
+			}
+			children[i]->CheckAndSplit();
+		}
+
+		containedGameobj.clear();
+	}
 }
 
 void Tree::Node::Clear()
@@ -145,4 +171,8 @@ void Tree::Node::Clear()
 
 void Tree::Node::Intersect(std::vector<const GameObject*>& group, const AABB & area)
 {
+	//if (nodeArea.Intersects(area)) {
+	//	for (int i = 0; i < containedGameobj.size(); i++)
+	//		group.push_back(containedGameobj[i]);
+	//}
 }

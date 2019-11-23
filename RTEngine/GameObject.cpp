@@ -6,6 +6,7 @@
 #include "ComponentTransform.h"
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
+#include "Tree.h"
 
 GameObject::GameObject()
 {
@@ -140,6 +141,7 @@ void GameObject::RecursiveSetActive(bool _active)
 	active = _active;
 
 	_app->scene->CreateTree();
+	_app->scene->quadtree->root->CheckAndSplit();
 }
 
 void GameObject::RecursiveSetStatic(bool _static)
@@ -151,6 +153,7 @@ void GameObject::RecursiveSetStatic(bool _static)
 	is_static = _static;
 
 	_app->scene->CreateTree();
+	_app->scene->quadtree->root->CheckAndSplit();
 }
 
 void GameObject::RecursiveApplyTexture(texture * texture)
