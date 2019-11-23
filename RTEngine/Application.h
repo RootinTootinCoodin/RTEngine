@@ -48,12 +48,12 @@ public:
 	std::string organization = "Akatsuki";
 	ImGuiTextBuffer logs;
 	bool update_console = true;
+	float	dt;
 
 private:
 
 	Timer	ms_timer;
 	Timer	cap_timer;
-	float	dt;
 	float	current_fps;
 	float	current_ms;
 	float	avg_fps = 0;

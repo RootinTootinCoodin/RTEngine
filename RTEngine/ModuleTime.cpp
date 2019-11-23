@@ -24,24 +24,10 @@ bool ModuleTime::Init(JSON_Object * config)
 update_status ModuleTime::Update(float dt)
 {
 	if (gameState == STATE_RUNNING)
-	{
-		std::vector<GameObject*> gameObjects;
-		App->scene->root->RecursiveGetChildren(&gameObjects);
+		Tick(dt * gameSpeed);
 
-		for (auto item = gameObjects.begin(); item != gameObjects.end(); item++)
-		{
-			if ((*item)->active)
-			{
-				std::map<uint, Component*> components = (*item)->GetComponentList();
-
-				for (auto comp = components.begin(); comp != components.end(); comp++)
-				{
-					//(*comp)->UpdateComponent();
-				}
-			}
-		}
-	}
-
+	if (gameState == STATE_PAUSED || gameState == STATE_STOPPED)
+		Tick(0.0f);
 
 	return UPDATE_CONTINUE;
 }
@@ -64,13 +50,18 @@ void ModuleTime::SetState(GAME_STATE state)
 	switch (state)
 	{
 	case STATE_RUNNING:
+		if (stop)
+			SaveStartState();
 		gameState = STATE_RUNNING;
+		stop = false;
 		break;
 	case STATE_PAUSED:
 		gameState = STATE_PAUSED;
 		break;
 	case STATE_STOPPED:
+		SetToStart();
 		gameState = STATE_STOPPED;
+		stop = true;
 		break;
 	}
 }
@@ -80,7 +71,30 @@ GAME_STATE ModuleTime::GetState()
 	return gameState;
 }
 
-void ModuleTime::Tick()
+void ModuleTime::Tick(float dt)
+{
+	std::vector<GameObject*> gameObjects;
+	App->scene->root->RecursiveGetChildren(&gameObjects);
+
+	for (auto item = gameObjects.begin(); item != gameObjects.end(); item++)
+	{
+		if ((*item)->active)
+		{
+			std::map<uint, Component*> components = (*item)->GetComponentList();
+
+			for (auto comp = components.begin(); comp != components.end(); comp++)
+			{
+				(*comp).second->UpdateComponent(dt);
+			}
+		}
+	}
+}
+
+void ModuleTime::SaveStartState()
+{
+}
+
+void ModuleTime::SetToStart()
 {
 }
 

@@ -26,6 +26,15 @@ ComponentTransform::~ComponentTransform()
 {
 }
 
+bool ComponentTransform::UpdateComponent(float dt)
+{
+	float3 mov = { 1, 1, 1 };
+
+	pos += mov * dt;
+
+	return true;
+}
+
 void ComponentTransform::removeDirty()
 {
 	if (!gameObject->GetUUID() == 0)

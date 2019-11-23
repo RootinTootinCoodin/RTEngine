@@ -364,9 +364,11 @@
     <ClInclude Include="ModuleTime.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="UITime.h" />
     <ClInclude Include="Tree.h">
       <Filter>Sources\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="UITime.h">
+      <Filter>Sources\UIElements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -580,9 +582,11 @@
     <ClCompile Include="ModuleTime.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="UITime.cpp" />
     <ClCompile Include="Tree.cpp">
       <Filter>Sources\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="UITime.cpp">
+      <Filter>Sources\UIElements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

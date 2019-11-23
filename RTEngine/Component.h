@@ -16,7 +16,7 @@ public:
 
 	virtual void ComponentCleanUp() {};
 
-	virtual bool UpdateComponent() { return true; };
+	virtual bool UpdateComponent(float dt) { return true; };
 
 	uint GetUUID() { return uuid; };
 	void setUUID(uint _uuid) { uuid = _uuid; };
