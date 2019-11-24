@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
-#include "ImGui/ImGuizmo/ImGuizmo.h"
+//#include "ImGui/ImGuizmo/ImGuizmo.h"
 
 #include "UIScene.h"
 #include "UITests.h"
@@ -68,7 +68,7 @@ update_status ModuleImGui::PreUpdate(float dt)
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
-	ImGuizmo::BeginFrame();
+	//ImGuizmo::BeginFrame();
 
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
