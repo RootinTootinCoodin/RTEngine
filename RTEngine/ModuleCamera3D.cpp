@@ -3,12 +3,17 @@
 #include "ModuleCamera3D.h"
 #include "ModuleInput.h"
 #include "ModuleScene.h"
+#include "ModuleResource.h"
 #include "Timer.h"
 #include "ComponentCamera.h"
+#include "ComponentTransform.h"
 #include "ModuleImGui.h"
+#include "ComponentMesh.h"
+
 #include "UIScene.h"
 
 #include "GameObject.h"
+#include "ResourceMesh.h"
 
 #include "MathGeoLib/Math/float2.h"
 
@@ -167,12 +172,12 @@ update_status ModuleCamera3D::Update(float dt)
 
 			editorCamera->LookAt(editorCamera->reference);
 		}
-
+		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+			MousePicking();
 	}
 
 	// Debug frustum
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
-		MousePicking();
+
 	
 	return UPDATE_CONTINUE;
 }
@@ -217,18 +222,45 @@ void ModuleCamera3D::MousePicking()
 	mouse_pos.x = ((App->input->GetMouseX() - scene_pos_global.x) / (scene_size.x / 2)) - 1;
 	mouse_pos.y = ((App->input->GetMouseY() - scene_pos_global.y) / (scene_size.y / 2)) - 1;
 
-	LineSegment raycast = editorCamera->camera.UnProjectLineSegment(mouse_pos.x, -mouse_pos.y);
+	LineSegment raycast = editorCamera->camera.UnProjectLineSegment(-mouse_pos.x, -mouse_pos.y);
 
 	std::vector<GameObject*> gameobjects;
 	App->scene->root->RecursiveGetChildren(&gameobjects);
-	for (int i = 0; i < gameobjects.size(); i++)
-	{
-		if (raycast.Intersects(gameobjects[i]->GetAABB()))
-		{
 
+	GameObject* winner = nullptr;
+	float curr_smallest_distance= editorCamera->far_plane_distance;
+	for (int j = 0; j < gameobjects.size(); j++)
+	{
+		ComponentMesh* comp_mesh = (ComponentMesh*)gameobjects[j]->GetComponent(MESH);
+		ComponentTransform* comp_trans = (ComponentTransform*)gameobjects[j]->GetComponent(TRANSFORM);
+		LineSegment local_ray = raycast;
+		local_ray.Transform(comp_trans->GetGlobalTransformMatrix().Inverted());
+		if (comp_mesh)
+		{
+			if (ResourceMesh* mesh = (ResourceMesh*)App->resource->getResource(comp_mesh->getResourceUUID()))
+			{
+				Triangle tri;
+				for (int i = 0; i < mesh->num_indices; i += 3)
+				{
+					tri.a = { mesh->vertices[mesh->indices[i] * 3],	  mesh->vertices[mesh->indices[i] * 3 + 1],	  mesh->vertices[mesh->indices[i] * 3 + 2] };
+					tri.b = { mesh->vertices[mesh->indices[i + 1] * 3], mesh->vertices[mesh->indices[i + 1] * 3 + 1], mesh->vertices[mesh->indices[i + 1] * 3 + 2] };
+					tri.c = { mesh->vertices[mesh->indices[i + 2] * 3], mesh->vertices[mesh->indices[i + 2] * 3 + 1], mesh->vertices[mesh->indices[i + 2] * 3 + 2] };
+					float distance;
+					bool hit = local_ray.Intersects(tri, &distance, nullptr);
+					if (distance > 0 && distance < curr_smallest_distance)
+					{
+						curr_smallest_distance = distance;
+						winner = gameobjects[j];
+					}
+
+				}
+			}
 		}
 	}
-
+	if (winner)
+	{
+		App->scene->selected_go = winner;
+	}
 }
 
 // -----------------------------------------------------------------
