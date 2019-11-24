@@ -219,7 +219,7 @@ void ModuleScene::Draw()
 
 								ComponentMaterial* _material = (ComponentMaterial*)(*item)->GetComponent(MATERIAL);
 								ResourceMaterial* material = (ResourceMaterial*)App->resource->getResource(_material->getResourceUUID());
-								if (material)
+								if (material && mesh->has_uvs)
 								{
 									glBindTexture(GL_TEXTURE_2D, material->id_texture);
 									glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -232,7 +232,7 @@ void ModuleScene::Draw()
 
 								glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-								if (material)
+								if (material && mesh->has_uvs)
 								{
 									glBindTexture(GL_TEXTURE_2D, 0);
 									glDisableClientState(GL_TEXTURE_COORD_ARRAY);
