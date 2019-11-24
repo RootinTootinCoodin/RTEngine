@@ -735,8 +735,12 @@ bool ModuleLoader::ExportComponent(Component * component, JSON_Object * componen
 	{
 		json_object_set_string(component_json, "component_type", "material");
 		ComponentMaterial* _material = (ComponentMaterial*)component;
-		ResourceMaterial* material = (ResourceMaterial*)App->resource->getResource(_material->getResourceUUID());
-		json_object_set_string(component_json, "name", std::to_string(material->GetUUID()).c_str());
+		
+		if(ResourceMaterial* material = (ResourceMaterial*)App->resource->getResource(_material->getResourceUUID()))
+			json_object_set_string(component_json, "name", std::to_string(material->GetUUID()).c_str());
+		else
+			json_object_set_string(component_json, "name", "2121212121");
+
 
 
 		break;
