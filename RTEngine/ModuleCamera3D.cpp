@@ -150,7 +150,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 				if (new_up.y > 0.0f)
 				{
-					editorCamera->camera.up = new_up;
+					editorCamera->camera.up = new_up.Normalized();
 					editorCamera->camera.front = rotationY.Mul(editorCamera->camera.front).Normalized();
 				}
 			}

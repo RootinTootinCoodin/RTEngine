@@ -26,7 +26,7 @@ protected:
 	std::string imported_file = "";
 
 	ResourceType type;
-	uint amount_loaded = 0;
+	uint amount_loaded = 1;
 };
 #endif // !__RES_H__
 

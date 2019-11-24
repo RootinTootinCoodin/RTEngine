@@ -125,52 +125,77 @@ bool ModuleLoader::LoadAiNodesRecursively(aiNode * node, const aiScene* scene,Ga
 	return true;
 }
 
-bool ModuleLoader::LoadTexture(std::string& path, ComponentMaterial* material)
+bool ModuleLoader::LoadTexture(std::string& path, ComponentMaterial* material_comp)
 {
 	bool ret = false;
 	ILuint il_img_name = 0;
 	ilGenImages(1,&il_img_name);
 	ilBindImage(il_img_name);
 
+	std::string name = path;
+	FileSystem::removePath(name);
 	std::string path2 = ".\\";
 	path2 += path;
-	if (ilLoadImage(path2.c_str()))
+	if (!CheckIfUUIDIsInternal(material_comp->getResourceUUID()) && name != "")
 	{
+		if (ilLoadImage(path2.c_str()))
+		{
+			std::string name;
+			std::string extension;
 
-		ILinfo il_img_info;
-		iluGetImageInfo(&il_img_info);
+			FileSystem::SplitFilePath(path, nullptr, &name, &extension);
 
-		if (!ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE))
-			LOG("Error converting image: %s", iluErrorString(ilGetError()));
-		
-		//Fuck different coordinate systems
-		if (il_img_info.Origin == IL_ORIGIN_UPPER_LEFT)
-			if (!iluFlipImage())
-				LOG("Error rotating image: %s", iluErrorString(ilGetError()));
+			ILinfo il_img_info;
+			iluGetImageInfo(&il_img_info);
 
-		std::string name;
-		std::string extension;
+			if (!ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE))
+				LOG("Error converting image: %s", iluErrorString(ilGetError()));
 
-		FileSystem::SplitFilePath(path, nullptr, &name, &extension);
 
-		LoadMaterial(il_img_info, path, name, material);
+			//Fuck different coordinate systems
+			if (il_img_info.Origin == IL_ORIGIN_UPPER_LEFT && extension != ".dds")
+				if (!iluFlipImage())
+					LOG("Error rotating image: %s", iluErrorString(ilGetError()));
 
-		ResourceMaterial* res_material = (ResourceMaterial*)App->resource->getResource(material->getResourceUUID());
-		uint file_loaded = App->resource->CheckIfFileIsLoaded(res_material->GetOriginalFile());
-		if (file_loaded == res_material->GetUUID())
-			SaveTextureAsDDS(std::to_string(material->getResourceUUID()));
+
+			if (material_comp)
+			{
+				if (material_comp->getResourceUUID() != 0)
+				{
+					if (!App->resource->getResource(material_comp->getResourceUUID()))
+					{
+						ResourceMaterial* material = (ResourceMaterial*)App->resource->createNewResource(RES_TEXTURE, material_comp->getResourceUUID());
+						LoadMaterial(il_img_info, path, name, material);
+						if (extension != ".dds")
+							SaveTextureAsDDS(std::to_string(material_comp->getResourceUUID()));
+
+					}
+				}
+				else
+				{
+					ResourceMaterial* material = (ResourceMaterial*)App->resource->createNewResource(RES_TEXTURE);
+					material_comp->AssignResourceUUID(material->GetUUID());
+					LoadMaterial(il_img_info, path, name, material);
+					if (extension != ".dds")
+						SaveTextureAsDDS(std::to_string(material_comp->getResourceUUID()));
+				}
+			}
+			else
+			{
+				ResourceMaterial* res = (ResourceMaterial*)App->resource->createNewResource(RES_TEXTURE);
+				LoadMaterial(il_img_info, path, name, res);
+			}
+
+			ret = true;
+		}
 		else
-			material->AssignResourceUUID(file_loaded);
+			LOG("Error loading texture: %s", path.c_str());
 
-		//SaveTextureAsDDS(name);
-
-		
-		ret = true;
 	}
-	else
-		LOG("Error loading texture: %s", path.c_str());
-
+	else if (name == "")
+		material_comp->AssignResourceUUID(2121212121);
 	ilDeleteImage(il_img_name);
+
 	return ret;
 }
 
@@ -193,9 +218,8 @@ void ModuleLoader::LoadTransform(aiNode * node, GameObject * game_object)
 }
 
 
-bool ModuleLoader::LoadMaterial(ILinfo& il_img_info,std::string& path, std::string& name, ComponentMaterial* material)
+bool ModuleLoader::LoadMaterial(ILinfo& il_img_info,std::string& path, std::string& name, ResourceMaterial* new_texture)
 {
-	ResourceMaterial* new_texture = (ResourceMaterial*)App->resource->createNewResource(RES_TEXTURE);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glGenTextures(1, &new_texture->id_texture);
 	glBindTexture(GL_TEXTURE_2D, new_texture->id_texture);
@@ -214,11 +238,6 @@ bool ModuleLoader::LoadMaterial(ILinfo& il_img_info,std::string& path, std::stri
 	new_texture->depth = il_img_info.Depth;
 	new_texture->bpp = il_img_info.Bpp;
 	new_texture->name = name;
-
-
-	
-	material->AssignResourceUUID(new_texture->GetUUID());
-
 
 	return true;
 }
@@ -333,7 +352,7 @@ GameObject* ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiSc
 			LoadMeshTexture(_material, material, path);
 		}
 		else
-			_material->AssignResourceUUID(1212121212);
+			_material->AssignResourceUUID(2121212121);
 
 		if (m->HasVertexColors(0))
 		{
@@ -385,7 +404,7 @@ bool ModuleLoader::SaveTextureAsDDS(std::string& name)
 	return ret;
 }
 
-bool ModuleLoader::ImportMesh(ResourceMesh* mesh)
+bool ModuleLoader::ExportMesh(ResourceMesh* mesh)
 {
 		//GOD BLESS C++ 
 		uint uvs = mesh->HasTextureCoords();
@@ -510,7 +529,7 @@ bool ModuleLoader::ImportMesh(ResourceMesh* mesh)
 //	return false;
 //}
 
-bool ModuleLoader::ExportMesh(ResourceMesh* mesh, char* buffer)
+bool ModuleLoader::ImportMesh(ResourceMesh* mesh, char* buffer)
 {
 	char* cursor = buffer;
 	uint ranges[5];
@@ -539,6 +558,8 @@ bool ModuleLoader::ExportMesh(ResourceMesh* mesh, char* buffer)
 		memcpy(mesh->uvs, cursor, bytes);
 		cursor += bytes;
 	}
+	else
+		mesh->has_uvs = false;
 	if (ranges[3])
 	{
 		bytes = sizeof(float) * mesh->num_vertices * 3;
@@ -690,6 +711,7 @@ GameObject* ModuleLoader::ImportGameObject(JSON_Object * json_go)
 	{
 		ImportComponent(json_array_get_object(component_array, i),go);
 	}
+	App->scene->quadtree->Insert(go);
 	return go;
 }
 
@@ -726,7 +748,7 @@ bool ModuleLoader::ExportComponent(Component * component, JSON_Object * componen
 		ComponentMesh* comp_mesh = (ComponentMesh*)component;
 		json_object_set_number(component_json, "resource_UUID", comp_mesh->getResourceUUID());
 		if(ResourceMesh* mesh = (ResourceMesh*)App->resource->getResource(comp_mesh->getResourceUUID()))
-			ImportMesh(mesh);
+			ExportMesh(mesh);
 
 		break;
 	}
@@ -736,9 +758,9 @@ bool ModuleLoader::ExportComponent(Component * component, JSON_Object * componen
 		ComponentMaterial* _material = (ComponentMaterial*)component;
 		
 		if(ResourceMaterial* material = (ResourceMaterial*)App->resource->getResource(_material->getResourceUUID()))
-			json_object_set_string(component_json, "name", std::to_string(material->GetUUID()).c_str());
+			json_object_set_number(component_json, "resource_UUID", material->GetUUID());
 		else
-			json_object_set_string(component_json, "name", "2121212121");
+			json_object_set_number(component_json, "resource_UUID", 2121212121);
 
 
 
@@ -798,7 +820,7 @@ bool ModuleLoader::ImportComponent(JSON_Object * json_go, GameObject* go)
 		if (!mesh)
 		{
 			mesh = (ResourceMesh*)App->resource->createNewResource(RES_MESH, resource_uuid);
-			ret = ExportMesh(mesh, buffer);
+			ret = ImportMesh(mesh, buffer);
 			App->renderer3D->GenerateBufferForMesh(mesh);
 		}
 
@@ -809,11 +831,16 @@ bool ModuleLoader::ImportComponent(JSON_Object * json_go, GameObject* go)
 	}
 	else if (component_type == "material")
 	{
+		uint resource_uuid = json_object_get_number(json_go, "resource_UUID");
 		std::string texture_file;
-		FileSystem::FormFullPath(texture_file,json_object_get_string(json_go,"name"), LIBRARY_TEXTURES, ".dds");
+		FileSystem::FormFullPath(texture_file,std::to_string(resource_uuid).c_str(), LIBRARY_TEXTURES, ".dds");
 		ComponentMaterial* component = (ComponentMaterial*)go->AddComponent(MATERIAL);
+		component->GhostAssignResourceUUID(resource_uuid);
+		LoadTexture(texture_file, component);
+
 		component->setUUID(json_object_get_number(json_go, "UUID"));
-		LoadTexture(texture_file,component);
+		component->AssignResourceUUID(resource_uuid);
+
 	}
 	else if (component_type == "camera")
 	{
@@ -829,7 +856,6 @@ void ModuleLoader::LinkMeshesWithMaterials(std::map<uint, GameObject*> scene_gam
 		if (ComponentMesh* mesh = (ComponentMesh*)(*item).second->GetComponent(MESH))
 		{
 			(*item).second->ParentRecalculateAABB();
-			App->scene->quadtree->Insert((*item).second);
 			if (ComponentMaterial* material = (ComponentMaterial*)(*item).second->GetComponent(MATERIAL))
 			{
 				mesh->material = material;
@@ -852,6 +878,11 @@ void ModuleLoader::ResetUUIDS(std::map<uint, GameObject*> scene_gameobjects)
 			parent->ChangeAChildrenUUID(new_uuid, old_uuid);
 		}
 	}
+}
+
+bool ModuleLoader::CheckIfUUIDIsInternal(uint uuid)
+{
+	return uuid == 1111111111 || uuid == 2222222222 || uuid == 3333333333 || uuid == 4444444444 || uuid == 5555555555 || uuid == 6666666666 || uuid == 7777777777 || uuid == 8888888888 || uuid == 9999999999 || uuid == 1212121212 || uuid == 2121212121;
 }
 
 //uint ModuleLoader::ExportGameObject(char * buffer, std::vector<GameObject*> gameObjects_buffer)

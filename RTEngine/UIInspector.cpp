@@ -159,7 +159,7 @@ void UIInspector::DrawMaterialInfo(ComponentMaterial * _material)
 
 	}
 	else
-		ImGui::Text("Resource not loaded");
+		ImGui::Text("Resource not loaded: %u",_material->getResourceUUID());
 
 
 	if (ImGui::Button("Use Checkered Texture"))

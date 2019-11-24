@@ -13,6 +13,7 @@ class Component;
 class ComponentMaterial;
 class ComponentMesh;
 class ResourceMesh;
+class ResourceMaterial;
 class GameObject;
 struct ILinfo;
 
@@ -29,10 +30,10 @@ public:
 	bool FileReceived(std::string path);
 	bool LoadFBX(std::string& path, std::string& name);
 	bool LoadAiNodesRecursively(aiNode* node, const aiScene* scene,GameObject* parent, std::string& path, math::float4x4 cumulative_transform);
-	bool LoadTexture(std::string& path, ComponentMaterial* material = nullptr);
+	bool LoadTexture(std::string& path, ComponentMaterial* material_comp = nullptr);
 	void LoadTransform(aiNode* node, GameObject* game_object);
 	
-	bool LoadMaterial(ILinfo& il_img_info, std::string& path, std::string& name, ComponentMaterial* material);
+	bool LoadMaterial(ILinfo& il_img_info, std::string& path, std::string& name, ResourceMaterial* material);
 
 	void LoadVertices(ResourceMesh* _mesh, aiMesh* m);
 	void LoadUVS(ResourceMesh* _mesh, aiMesh*m);
@@ -41,10 +42,9 @@ public:
 	bool LoadMeshFaces(ResourceMesh* _mesh, aiMesh* m);
 	GameObject* LoadMesh(aiMesh* m, GameObject* new_model, const aiScene* scene, std::string& path, std::string optional_name = std::string());
 
-	bool ExportTexture(std::string path);
 	bool SaveTextureAsDDS(std::string& name);
-	bool ImportMesh(ResourceMesh* mesh);
-	bool ExportMesh(ResourceMesh* mesh, char* buffer);
+	bool ExportMesh(ResourceMesh* mesh);
+	bool ImportMesh(ResourceMesh* mesh, char* buffer);
 
 	bool ExportSceneOrModel(GameObject* gameobject);
 	bool ImportSceneOrModel(std::string& path, bool is_scene);
@@ -57,6 +57,8 @@ public:
 
 	void LinkMeshesWithMaterials(std::map<uint, GameObject*> scene_gameobjects);
 	void ResetUUIDS(std::map<uint, GameObject*> scene_gameobjects);
+
+	bool CheckIfUUIDIsInternal(uint uuid);
 	//TODO: Import functions to binary
 	//bool ImportGameobject(GameObject* game_object,char* buffer);
 	//bool ImportComponent(Component* component, char*buffer);

@@ -14,6 +14,7 @@ public:
 	~ComponentMaterial();
 
 	void AssignResourceUUID(uint uuid);
+	void GhostAssignResourceUUID(uint uuid) { resource_uuid = uuid; }; //So edgy
 	uint getResourceUUID()const { return resource_uuid; };
 
 private:

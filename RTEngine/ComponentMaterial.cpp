@@ -20,10 +20,9 @@ ComponentMaterial::~ComponentMaterial()
 void ComponentMaterial::AssignResourceUUID(uint uuid)
 {
 	resource_uuid = uuid;
-	if (ResourceMaterial* res = (ResourceMaterial*)_app->resource->getResource(uuid))
-		res->increaseAmountLoaded();
-	else
-		LOG("Trying to assign an unexisting resource");
+	ResourceMaterial* res = (ResourceMaterial*)_app->resource->getResource(uuid);
+	res->increaseAmountLoaded();
+
 
 }
 
