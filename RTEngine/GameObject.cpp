@@ -162,18 +162,6 @@ void GameObject::RecursiveSetStatic(bool _static)
 
 }
 
-void GameObject::RecursiveApplyTexture(texture * texture)
-{
-	for (auto item = children.begin(); item != children.end(); item++)
-	{
-		(*item).second->RecursiveApplyTexture(texture);
-	}
-	if (ComponentMaterial* material = (ComponentMaterial*)GetComponent(MATERIAL))
-	{
-		material->CopyTextureToThis(texture);
-	}
-}
-
 void GameObject::RecursiveGetChildren(std::vector<GameObject*>* buffer)
 {
 	for (auto item = children.begin(); item != children.end(); item++)

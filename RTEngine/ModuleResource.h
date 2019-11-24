@@ -4,6 +4,7 @@
 #include "Module.h"
 #include <map>
 class Res;
+class ResourceMaterial;
 enum  ResourceType {
 	RES_MESH,
 	RES_TEXTURE
@@ -19,6 +20,11 @@ public:
 
 	Res* createNewResource(ResourceType type, uint uuid = 0);
 	Res* getResource(uint uuid);
+
+	uint CheckIfFileIsLoaded(std::string path);
+
+	std::vector<ResourceMaterial*> getMaterials();
+
 private:
 	std::map<uint, Res*> resource_map;
 };

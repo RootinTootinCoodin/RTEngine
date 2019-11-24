@@ -1,5 +1,7 @@
 #include "ComponentMaterial.h"
-
+#include "ResourceMaterial.h"
+#include "ModuleResource.h"
+#include "Application.h"
 
 
 ComponentMaterial::ComponentMaterial()
@@ -15,13 +17,13 @@ ComponentMaterial::~ComponentMaterial()
 {
 }
 
-void ComponentMaterial::CopyTextureToThis(texture * texture)
+void ComponentMaterial::AssignResourceUUID(uint uuid)
 {
-	name = texture->name;
-	path = texture->path;
-	id_texture = texture->id_texture;
-	width = texture->width;
-	height = texture->height;
-	depth = texture->depth;
-	bpp = texture->bpp;
+	resource_uuid = uuid;
+	if (ResourceMaterial* res = (ResourceMaterial*)_app->resource->getResource(uuid))
+		res->increaseAmountLoaded();
+	else
+		LOG("Trying to assign an unexisting resource");
+
 }
+

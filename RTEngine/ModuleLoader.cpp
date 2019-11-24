@@ -12,6 +12,7 @@
 #include "Tree.h"
 
 #include "ResourceMesh.h"
+#include "ResourceMaterial.h"
 #include "FileSystem.h"
 
 
@@ -154,8 +155,14 @@ bool ModuleLoader::LoadTexture(std::string& path, ComponentMaterial* material)
 
 		LoadMaterial(il_img_info, path, name, material);
 
-	//	SaveTextureAsDDS(std::to_string(material->GetUUID()));
-		SaveTextureAsDDS(name);
+		ResourceMaterial* res_material = (ResourceMaterial*)App->resource->getResource(material->getResourceUUID());
+		uint file_loaded = App->resource->CheckIfFileIsLoaded(res_material->GetOriginalFile());
+		if (file_loaded == res_material->GetUUID())
+			SaveTextureAsDDS(std::to_string(material->getResourceUUID()));
+		else
+			material->AssignResourceUUID(file_loaded);
+
+		//SaveTextureAsDDS(name);
 
 		
 		ret = true;
@@ -188,7 +195,7 @@ void ModuleLoader::LoadTransform(aiNode * node, GameObject * game_object)
 
 bool ModuleLoader::LoadMaterial(ILinfo& il_img_info,std::string& path, std::string& name, ComponentMaterial* material)
 {
-	texture* new_texture = new texture;
+	ResourceMaterial* new_texture = (ResourceMaterial*)App->resource->createNewResource(RES_TEXTURE);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glGenTextures(1, &new_texture->id_texture);
 	glBindTexture(GL_TEXTURE_2D, new_texture->id_texture);
@@ -201,17 +208,17 @@ bool ModuleLoader::LoadMaterial(ILinfo& il_img_info,std::string& path, std::stri
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	new_texture->path = path;
+	new_texture->SetOriginalFile(path);
 	new_texture->width = il_img_info.Width;
 	new_texture->height = il_img_info.Height;
 	new_texture->depth = il_img_info.Depth;
 	new_texture->bpp = il_img_info.Bpp;
 	new_texture->name = name;
-	App->scene->textures.push_back(new_texture);
 
-	if (material)
-		material->CopyTextureToThis(new_texture);
-	else
-		App->scene->root->RecursiveApplyTexture(new_texture);
+
+	
+	material->AssignResourceUUID(new_texture->GetUUID());
+
 
 	return true;
 }
@@ -255,9 +262,22 @@ void ModuleLoader::LoadMeshTexture(ComponentMaterial * _material, aiMaterial* ma
 		std::string texture_path_2 =  ASSETS_TEXTURES_FOLDER;
 		texture_path_2 += texture_name.C_Str();
 		LOG("Texture is not located in the same path as the mesh");
-		if (LoadTexture(texture_path_2, _material))
-			LOG("Texture found in the Textures folder");
+		uint loaded_res = App->resource->CheckIfFileIsLoaded(texture_path_2);
+		if (loaded_res == 0)
+		{
+			if (LoadTexture(texture_path_2, _material))
+				LOG("Texture found in the Textures folder");
+		}
+		else
+			_material->AssignResourceUUID(loaded_res);
 	}
+	else
+	{
+		std::string extension = texture_path;
+		FileSystem::getExtension(extension);
+		FileSystem::copyFileTo(texture_path.c_str(), ASSETS_TEXTURES, extension.c_str());
+	}
+
 }
 
 bool ModuleLoader::LoadMeshFaces(ResourceMesh * _mesh, aiMesh * m)
@@ -313,7 +333,7 @@ GameObject* ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiSc
 			LoadMeshTexture(_material, material, path);
 		}
 		else
-			_material->CopyTextureToThis(App->scene->textures[0]);
+			_material->AssignResourceUUID(1212121212);
 
 		if (m->HasVertexColors(0))
 		{
@@ -336,9 +356,13 @@ GameObject* ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiSc
 			}
 
 		}
+		else
+			LOG("Error mesh from scene %s, no faces", path);
 	}
-	else
-		LOG("Error mesh from scene %s, no faces", path);
+
+
+
+	
 
 	return mesh_gameobject;
 }
@@ -710,9 +734,9 @@ bool ModuleLoader::ExportComponent(Component * component, JSON_Object * componen
 	case MATERIAL:
 	{
 		json_object_set_string(component_json, "component_type", "material");
-		ComponentMaterial* material = (ComponentMaterial*)component;
-
-		json_object_set_string(component_json, "name", material->name.c_str());
+		ComponentMaterial* _material = (ComponentMaterial*)component;
+		ResourceMaterial* material = (ResourceMaterial*)App->resource->getResource(_material->getResourceUUID());
+		json_object_set_string(component_json, "name", std::to_string(material->GetUUID()).c_str());
 
 
 		break;

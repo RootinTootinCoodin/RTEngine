@@ -160,7 +160,7 @@ void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data, char* name,primitive
 	}
 	
 	ComponentMaterial* _material = (ComponentMaterial*)game_object->AddComponent(MATERIAL);
-	_material->CopyTextureToThis(App->scene->textures[0]);
+	_material->AssignResourceUUID(1212121212);
 
 	if (_primitive)
 	{

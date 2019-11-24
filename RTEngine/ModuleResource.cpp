@@ -1,6 +1,7 @@
 #include "ModuleResource.h"
 #include "Res.h"
 #include "ResourceMesh.h"
+#include "ResourceMaterial.h"
 
 ModuleResourceManager::ModuleResourceManager(Application * app, bool start_enabled) : Module(app,start_enabled)
 {
@@ -34,7 +35,7 @@ Res * ModuleResourceManager::createNewResource(ResourceType type, uint _uuid)
 			ret = new ResourceMesh(uuid);
 			break;
 		case RES_TEXTURE:
-
+			ret = new ResourceMaterial(uuid);
 			break;
 		}
 		resource_map[uuid] = ret;
@@ -54,5 +55,30 @@ Res * ModuleResourceManager::getResource(uint uuid)
 	if (item != resource_map.end())
 		ret = (*item).second;
 		
+	return ret;
+}
+
+uint ModuleResourceManager::CheckIfFileIsLoaded(std::string path)
+{
+	for (auto item = resource_map.begin(); item != resource_map.end(); item++)
+	{
+		if ((*item).second->GetOriginalFile() == path)
+			return (*item).second->GetUUID();
+	}
+	return 0;
+}
+
+std::vector<ResourceMaterial*> ModuleResourceManager::getMaterials()
+{
+	std::vector<ResourceMaterial*> ret;
+
+	for (auto item = resource_map.begin(); item != resource_map.end(); item++)
+	{
+		if ((*item).second->getType() == RES_TEXTURE)
+		{
+			ret.push_back((ResourceMaterial*)(*item).second);
+		}
+	}
+
 	return ret;
 }

@@ -169,6 +169,7 @@
     <ClInclude Include="PCG\include\pcg_uint128.hpp" />
     <ClInclude Include="Res.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="ResourceMaterial.h" />
     <ClInclude Include="ResourceMesh.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Tree.h" />
@@ -247,6 +248,7 @@
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="parson\parson.c" />
     <ClCompile Include="Res.cpp" />
+    <ClCompile Include="ResourceMaterial.cpp" />
     <ClCompile Include="ResourceMesh.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Tree.cpp" />

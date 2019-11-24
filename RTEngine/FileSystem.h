@@ -29,6 +29,7 @@ enum lib_dir {
 	ASSETS,
 	ASSETS_SCENES,
 	ASSETS_MODELS,
+	ASSETS_TEXTURES,
 	NO_LIB
 };
 

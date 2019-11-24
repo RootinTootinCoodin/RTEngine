@@ -3,7 +3,6 @@
 
 #include "Component.h"
 
-class texture;
 
 class ComponentMaterial :
 	public Component
@@ -14,15 +13,13 @@ public:
 
 	~ComponentMaterial();
 
-	void CopyTextureToThis(texture* texture);
+	void AssignResourceUUID(uint uuid);
+	uint getResourceUUID()const { return resource_uuid; };
 
-	std::string name;
-	std::string path;
-	uint id_texture;
-	uint width;
-	uint height;
-	uint depth;
-	uint bpp;
+private:
+	uint resource_uuid = 0;
+
+
 };
 
 #endif // !__COMPONENT_MATERIAL_H__

@@ -48,7 +48,6 @@ public:
 
 	void RecursiveSetActive(bool active);
 	void RecursiveSetStatic(bool _static);
-	void RecursiveApplyTexture(texture* texture);
 	void RecursiveGetChildren(std::vector<GameObject*>* buffer);
 	void RecursiveHierarchyChildren();
 	void RecursiveSetDirty();
