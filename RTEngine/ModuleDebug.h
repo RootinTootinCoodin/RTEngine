@@ -5,6 +5,17 @@
 
 struct par_shapes_mesh_s;
 class ComponentMesh;
+enum primitiveType
+{
+	PLANE,
+	CUBE,
+	SPHERE,
+	HEMISPHERE,
+	CYLINDER,
+	CONE,
+	KLEIN,
+	TREFOIL
+};
 
 class ModuleDebug : public Module
 {
@@ -24,7 +35,7 @@ private:
 
 public:
 
-	void CreatePrimitive(par_shapes_mesh_s* data, char* name);
+	void CreatePrimitive(par_shapes_mesh_s* data, char* name, primitiveType type);
 
 private:
 

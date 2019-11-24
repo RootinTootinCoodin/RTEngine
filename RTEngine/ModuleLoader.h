@@ -12,6 +12,7 @@
 class Component;
 class ComponentMaterial;
 class ComponentMesh;
+class ResourceMesh;
 class GameObject;
 struct ILinfo;
 
@@ -33,19 +34,20 @@ public:
 	
 	bool LoadMaterial(ILinfo& il_img_info, std::string& path, std::string& name, ComponentMaterial* material);
 
-	void LoadVertices(ComponentMesh* _mesh, aiMesh* m);
-	void LoadUVS(ComponentMesh* _mesh, aiMesh*m);
-	void LoadNormals(ComponentMesh* _mesh, aiMesh* m);
+	void LoadVertices(ResourceMesh* _mesh, aiMesh* m);
+	void LoadUVS(ResourceMesh* _mesh, aiMesh*m);
+	void LoadNormals(ResourceMesh* _mesh, aiMesh* m);
 	void LoadMeshTexture(ComponentMaterial* _mesh, aiMaterial* material, std::string& path);
-	bool LoadMeshFaces(ComponentMesh* _mesh, aiMesh* m);
+	bool LoadMeshFaces(ResourceMesh* _mesh, aiMesh* m);
 	GameObject* LoadMesh(aiMesh* m, GameObject* new_model, const aiScene* scene, std::string& path, std::string optional_name = std::string());
 
+	bool ExportTexture(std::string path);
 	bool SaveTextureAsDDS(std::string& name);
-	bool ImportMesh(ComponentMesh* mesh);
-	bool ExportMesh(ComponentMesh* mesh, char* buffer);
+	bool ImportMesh(ResourceMesh* mesh);
+	bool ExportMesh(ResourceMesh* mesh, char* buffer);
 
-	bool ExportScene();
-	bool ImportScene(std::string& path);
+	bool ExportSceneOrModel(GameObject* gameobject);
+	bool ImportSceneOrModel(std::string& path, bool is_scene);
 	 
 	bool ExportGameObject(GameObject* go, JSON_Object* go_json);
 	GameObject* ImportGameObject(JSON_Object* json_go); 
@@ -54,6 +56,7 @@ public:
 	bool ImportComponent(JSON_Object* json_go, GameObject* go);
 
 	void LinkMeshesWithMaterials(std::map<uint, GameObject*> scene_gameobjects);
+	void ResetUUIDS(std::map<uint, GameObject*> scene_gameobjects);
 	//TODO: Import functions to binary
 	//bool ImportGameobject(GameObject* game_object,char* buffer);
 	//bool ImportComponent(Component* component, char*buffer);

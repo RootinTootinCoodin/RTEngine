@@ -9,25 +9,26 @@
 #define MESHES_FOLDER "Library\\Meshes\\"
 #define TEXTURES_FOLDER "Library\\Textures\\"
 
+#define MESH_EXTENSION ".meshprtnr"
+#define SCENE_EXTENSION ".westscene"
+#define MODEL_EXTENSION ".westmodel"
 
+#define MODELS_FOLDER "Library\\Models\\"
+#define EXTERNAL_MODELS_FOLDER "Assets\\Models\\"
 
-#define PREFABS_FOLDER "Library\\Prefabs\\"
-#define SCENES_FOLDER "Library\\Scenes"
 
 #define SETTINGS_FOLDER "Settings\\"
-#define USER_PREFABS_FOLDER "Assets\\Prefabs\\"
 #define USER_SCENES_FOLDER "Assets\\Scenes\\"
 #define ASSETS_FOLDER "Assets\\"
 
 enum lib_dir {
 	LIBRARY_MESHES,
 	LIBRARY_TEXTURES,
-	LIBRARY_PREFABS,
-	LIBRARY_SCENES,
+	LIBRARY_MODELS,
 	SETTINGS,
 	ASSETS,
 	ASSETS_SCENES,
-	ASSETS_PREFABS,
+	ASSETS_MODELS,
 	NO_LIB
 };
 
@@ -53,6 +54,7 @@ public:
 
 	static void DiscoverFiles(std::string path, std::vector<std::string>* file_array, std::vector<std::string>* directory_array);
 
+	static bool CheckIfModelExistsInLibrary(std::string path);
 
 	static void getFileNameFromPath(std::string& str);
 	static bool getPath(std::string & str);

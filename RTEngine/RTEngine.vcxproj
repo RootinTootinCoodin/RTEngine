@@ -156,6 +156,7 @@
     <ClInclude Include="ModuleImGui.h" />
     <ClInclude Include="ModuleLoader.h" />
     <ClInclude Include="ModuleRenderer3D.h" />
+    <ClInclude Include="ModuleResource.h" />
     <ClInclude Include="ModuleScene.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleInput.h" />
@@ -166,7 +167,9 @@
     <ClInclude Include="PCG\include\pcg_extras.hpp" />
     <ClInclude Include="PCG\include\pcg_random.hpp" />
     <ClInclude Include="PCG\include\pcg_uint128.hpp" />
+    <ClInclude Include="Res.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="ResourceMesh.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Tree.h" />
     <ClInclude Include="UIAbout.h" />
@@ -238,10 +241,13 @@
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleLoader.cpp" />
     <ClCompile Include="ModuleRenderer3D.cpp" />
+    <ClCompile Include="ModuleResource.cpp" />
     <ClCompile Include="ModuleScene.cpp" />
     <ClCompile Include="ModuleTime.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="parson\parson.c" />
+    <ClCompile Include="Res.cpp" />
+    <ClCompile Include="ResourceMesh.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Tree.cpp" />
     <ClCompile Include="UIAbout.cpp" />

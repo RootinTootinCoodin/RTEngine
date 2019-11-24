@@ -10,6 +10,9 @@
 #include "pcg/include/pcg_extras.hpp"
 #include "pcg/include/pcg_uint128.hpp"
 
+
+
+
 // Warning disabled ---
 #pragma warning( disable : 4577 ) // Warning that exceptions are disabled
 #pragma warning( disable : 4530 )
@@ -124,15 +127,15 @@ inline const char* const PATH(const char* folder, const char* file)
 #define ASSETS_MODELS_FOLDER "\\Assets\\Models\\"
 #define ASSETS_TEXTURES_FOLDER "\\Assets\\Textures\\"
 #define LIBRARY_FOLDER "\\Library\\"
-#define LIBRARY_MODELS_FOLDER "\\Library\\Models\\"
+#define LIBRARY_MODELS_FOLDER "Library\\Models\\"
 #define LIBRARY_MESHES_FOLDER "\\Library\\Meshes\\"
 #define LIBRARY_TEXTURES_FOLDER "\\Library\\Textures\\"
 
 
 
 
-#define MODEL_EXTENSIONS(extension) extension=="fbx"|| extension=="FBX"
-#define TEXTURE_EXTENSIONS(extension) extension=="png"|| extension=="PNG"|| extension=="dds"|| extension=="DDS"
+#define MODEL_EXTENSIONS(extension) extension==".fbx"|| extension==".FBX"
+#define TEXTURE_EXTENSIONS(extension) extension==".png"|| extension==".PNG"|| extension==".dds"|| extension==".DDS"
 
 
 struct texture

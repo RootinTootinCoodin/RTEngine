@@ -316,32 +316,32 @@ void UIConfiguration::Draw()
 			{
 				if (ImGui::Button("Create plane"))
 				{
-					App->debug->CreatePrimitive(par_shapes_create_plane(slices, stacks), "Plane");
+					App->debug->CreatePrimitive(par_shapes_create_plane(slices, stacks), "Plane",PLANE);
 				}
 
 				if (ImGui::Button("Create cube"))
 				{
-					App->debug->CreatePrimitive(par_shapes_create_3d_cube(), "Cube");
+					App->debug->CreatePrimitive(par_shapes_create_3d_cube(), "Cube",CUBE);
 				}
 
 				if (ImGui::Button("Create sphere"))
 				{
-					App->debug->CreatePrimitive(par_shapes_create_parametric_sphere(slices, stacks), "Par_Sphere");
+					App->debug->CreatePrimitive(par_shapes_create_parametric_sphere(slices, stacks), "Sphere",SPHERE);
 				}
 
 				if (ImGui::Button("Create hemisphere"))
 				{
-					App->debug->CreatePrimitive(par_shapes_create_hemisphere(slices, stacks), "Hemisphere");
+					App->debug->CreatePrimitive(par_shapes_create_hemisphere(slices, stacks), "Hemisphere",HEMISPHERE);
 				}
 
 				if (ImGui::Button("Create tube"))
 				{
-					App->debug->CreatePrimitive(par_shapes_create_cylinder(slices, stacks), "Cylinder");
+					App->debug->CreatePrimitive(par_shapes_create_cylinder(slices, stacks), "Cylinder",CYLINDER);
 				}
 
 				if (ImGui::Button("Create cone"))
 				{
-					App->debug->CreatePrimitive(par_shapes_create_cone(slices, stacks), "Cone");
+					App->debug->CreatePrimitive(par_shapes_create_cone(slices, stacks), "Cone",CONE);
 				}
 
 				ImGui::TreePop();
@@ -353,12 +353,12 @@ void UIConfiguration::Draw()
 			{
 				if (ImGui::Button("Create Klein bottle"))
 				{
-					App->debug->CreatePrimitive(par_shapes_create_klein_bottle(slices, stacks), "Klein bottle");
+					App->debug->CreatePrimitive(par_shapes_create_klein_bottle(slices, stacks), "Klein bottle",KLEIN);
 				}
 
 				if (ImGui::Button("Create trefoil knot"))
 				{
-					App->debug->CreatePrimitive(par_shapes_create_trefoil_knot(slices, stacks, 1), "Trefoil");
+					App->debug->CreatePrimitive(par_shapes_create_trefoil_knot(slices, stacks, 1), "Trefoil",TREFOIL);
 				}
 				ImGui::TreePop();
 			}

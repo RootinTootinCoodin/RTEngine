@@ -55,6 +55,9 @@
     <Filter Include="Sources\Modules\Tools">
       <UniqueIdentifier>{7e4dfaf7-022c-4f7d-92aa-f3b3fa9d6248}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\GameObjects\Resources">
+      <UniqueIdentifier>{8c4000a7-b5df-4a99-b230-9600b1b93c6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -370,6 +373,11 @@
     <ClInclude Include="UITime.h">
       <Filter>Sources\UIElements</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleResource.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Res.h" />
+    <ClInclude Include="ResourceMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -588,6 +596,11 @@
     <ClCompile Include="UITime.cpp">
       <Filter>Sources\UIElements</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleResource.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Res.cpp" />
+    <ClCompile Include="ResourceMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

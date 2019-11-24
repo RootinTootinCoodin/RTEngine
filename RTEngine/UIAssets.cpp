@@ -64,7 +64,32 @@ void UIAssets::Draw()
 			std::string filename = file_arr[i].substr(found + 1);
 			if (ImGui::Button(filename.data()))
 			{
-				_app->loader->ImportScene(filename);
+				std::string extension = filename;
+				FileSystem::getExtension(extension);
+				if (extension == SCENE_EXTENSION)
+				{
+					_app->loader->ImportSceneOrModel(filename, true);
+				}
+				else if (MODEL_EXTENSIONS(extension))
+				{
+					std::string path;
+					std::string library_model = filename;
+					FileSystem::removeExtension(library_model);
+					library_model += MODEL_EXTENSION;
+					if(FileSystem::FindInDirectory(LIBRARY_MODELS_FOLDER, library_model.c_str(), path))
+						_app->loader->ImportSceneOrModel(filename, false);
+					else
+					{
+						std::string path =current_dir +"\\"+ filename;
+						std::string name = filename;
+						FileSystem::removeExtension(name);
+						if (_app->loader->LoadFBX(path, name))
+						{
+							_app->loader->ImportSceneOrModel(name + MODEL_EXTENSION, false);
+						}
+
+					}
+				}
 			}
 		}
 	}

@@ -1,12 +1,14 @@
 #include "UIInspector.h"
 #include "Application.h"
 #include "ModuleScene.h"
+#include "ModuleResource.h"
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentTransform.h"
 #include "ComponentCamera.h"
+#include "ResourceMesh.h"
 #include "Globals.h"
 
 
@@ -43,8 +45,15 @@ void UIInspector::DrawGameObjectInfo(GameObject* gameobject)
 	ImGui::SameLine();
 	ImGui::Checkbox("Draw AABB", &gameobject->draw_aabb);
 
-	ImGui::Text(gameobject->GetName().c_str());
+	static char go_name[120];
+	strcpy_s(go_name, 120, gameobject->GetName().c_str());
+	if (ImGui::InputText("Name", go_name, 25, ImGuiInputTextFlags_EnterReturnsTrue))
+		gameobject->SetName(go_name);
+	
 	ImGui::Text("UUID: %u", gameobject->GetUUID());
+	ImGui::SameLine();
+	if (ImGui::Button("Delete"))
+		gameobject->to_remove = true;
 	ImGui::Separator();
 	ImGui::Separator();
 	if (ComponentTransform* transform = (ComponentTransform*)gameobject->GetComponent(TRANSFORM))
@@ -103,24 +112,31 @@ void UIInspector::DrawTransformInfo(ComponentTransform * transform)
 
 }
 
-void UIInspector::DrawMeshInfo(ComponentMesh * mesh)
+void UIInspector::DrawMeshInfo(ComponentMesh * mesh_comp)
 {
-	ImGui::Text("Component Mesh");
+	if (ResourceMesh* mesh = (ResourceMesh*)App->resource->getResource(mesh_comp->getResourceUUID()))
+	{
+		ImGui::Text("Component Mesh");
 
-	ImGui::Text("UUID: %u", mesh->GetUUID());
+		ImGui::Text("UUID: %u", mesh_comp->GetUUID());
+		ImGui::Text("Resource UUID: %u", mesh->GetUUID());
+		ImGui::Text("Times Referenced: %u", mesh->getAmountLoaded());
 
-	ImGui::BulletText("Index ID: %u", mesh->id_index);
-	ImGui::BulletText("Num of indices: %u", mesh->num_indices);
-	ImGui::Separator();
-	ImGui::BulletText("Num of vertices: %u", mesh->num_vertices);
-	ImGui::Separator();
+		ImGui::BulletText("Index ID: %u", mesh->id_index);
+		ImGui::BulletText("Num of indices: %u", mesh->num_indices);
+		ImGui::Separator();
+		ImGui::BulletText("Num of vertices: %u", mesh->num_vertices);
+		ImGui::Separator();
 
-	if (mesh->uvs != nullptr)
-		ImGui::BulletText("This mesh contains UVs");
+		if (mesh->uvs != nullptr)
+			ImGui::BulletText("This mesh contains UVs");
+		else
+			ImGui::BulletText("This mesh does not have UVs");
+
+		//ImGui::Checkbox("Draw Normals", &mesh->draw_normals);
+	}
 	else
-		ImGui::BulletText("This mesh does not have UVs");
-
-	ImGui::Checkbox("Draw Normals", &mesh->draw_normals);
+		ImGui::Text("Mesh not loaded in memory");
 }
 
 void UIInspector::DrawMaterialInfo(ComponentMaterial * material)
