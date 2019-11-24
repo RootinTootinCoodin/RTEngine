@@ -187,6 +187,11 @@ void UIInspector::DrawCameraInfo(ComponentCamera * camera)
 
 	ImGui::Text("UUID: %u", camera->GetUUID());
 
+	if (ImGui::DragFloat("Near plane distance", &camera->near_plane_distance) || ImGui::DragFloat("Far plane distance", &camera->far_plane_distance))
+	{
+		camera->UpdateFrustum();
+	}
+
 
 }
 

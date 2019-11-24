@@ -4,12 +4,14 @@
 #include "ModuleImGui.h"
 #include "ModuleDebug.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleCamera3D.h"
 #include "UIInspector.h"
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentTransform.h"
+#include "ComponentCamera.h"
 #include "ModuleResource.h"
 #include "ResourceMesh.h"
 #include "Tree.h"
@@ -161,6 +163,9 @@ void ModuleScene::Draw()
 
 	DrawGrid(gridsize);
 
+	if (drawEditorFrustum)
+		App->debug->DrawFrustum(App->camera->editorCamera->camera);
+
 	if (debugQuad)
 		quadtree->root->Draw();
 
@@ -180,6 +185,13 @@ void ModuleScene::Draw()
 
 				if (draw_aabb || (*item)->draw_aabb)
 					App->debug->DrawAABB((*item)->GetAABB());
+
+				if (ComponentCamera* camera = (ComponentCamera*)(*item)->GetComponent(CAMERA))
+				{
+					if (drawEditorFrustum)
+						App->debug->DrawFrustum(camera->camera);
+				}
+
 
 				if (ComponentMesh* mesh_comp = (ComponentMesh*)(*item)->GetComponent(MESH))
 				{
