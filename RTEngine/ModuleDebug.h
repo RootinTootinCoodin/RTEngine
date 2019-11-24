@@ -30,6 +30,8 @@ public:
 
 	void DrawAABB(AABB &aabb)const;
 
+	void DrawFrustum(Frustum &frustum)const;
+
 private:
 
 

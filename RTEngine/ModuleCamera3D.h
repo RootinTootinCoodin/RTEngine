@@ -53,9 +53,9 @@ public:
 	vec3 newPos;
 
 	float sensitivity = 0.9f;
-	float speed = 0.5f;
+	float speed = 5.0f;
 	float wheel = 100.0f;
-	float speedmultiplier = 16.0f;
+	float speedmultiplier = 3.0f;
 
 	ComponentCamera* editorCamera;
 

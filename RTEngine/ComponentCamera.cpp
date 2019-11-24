@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleScene.h"
+#include "glmath.h"
 
 ComponentCamera::ComponentCamera()
 {
@@ -59,6 +60,17 @@ void ComponentCamera::Move(const vec &increment)
 	position += increment;
 	reference += increment;
 	camera.pos += increment;
+}
+
+void ComponentCamera::MoveTo(const vec & newPos)
+{
+	position = newPos;
+	reference = position;
+	reference.x += 1;
+	reference.Normalize();
+	camera.pos = position;
+	camera.front = reference;
+	LookAt(reference);
 }
 
 void ComponentCamera::LookAt(const vec& spot)

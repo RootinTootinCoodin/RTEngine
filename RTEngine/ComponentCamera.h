@@ -15,6 +15,7 @@ public:
 
 	void UpdateFrustum();
 	void Move(const vec &increment);
+	void MoveTo(const vec &newPos);
 	void LookAt(const vec& spot);
 	void UpdateTransform();
 

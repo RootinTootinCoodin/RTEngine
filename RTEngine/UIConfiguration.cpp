@@ -6,6 +6,7 @@
 #include "ModuleScene.h"
 #include "ModuleDebug.h"
 #include "ModuleCamera3D.h"
+#include "ComponentCamera.h"
 
 #define PAR_SHAPES_IMPLEMENTATION
 #include "par_shapes/par_shapes.h"
@@ -75,6 +76,16 @@ void UIConfiguration::Draw()
 			ImGui::SliderFloat("Speed", &App->camera->speed, 0.5f, 20.0f);
 			ImGui::SliderFloat("Speed acceleration (shift)", &App->camera->speedmultiplier, 0.5f, 25.0f);
 			ImGui::SliderFloat("Zoom speed", &App->camera->wheel, 0.5f, 150.0f);
+
+			if (ImGui::DragFloat("Near plane distance", &App->camera->editorCamera->near_plane_distance))
+			{
+				App->camera->editorCamera->UpdateFrustum();
+			}
+			if (ImGui::DragFloat("Far plane distance", &App->camera->editorCamera->far_plane_distance))
+			{
+				App->camera->editorCamera->UpdateFrustum();
+			}
+			ImGui::Checkbox("Debug draw camera", &App->scene->drawEditorFrustum);
 		}
 
 		if (ImGui::CollapsingHeader("Render"))
