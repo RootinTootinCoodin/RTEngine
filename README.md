@@ -40,6 +40,8 @@ Just extract the contents of the zip into a folder and click the .exe
 ## Other
 ### Development Notes:
 We are using maps as containers for the Component and 	Children lists. This is because we realized in Project 3 	that by doing so, the performance of the engine increases 	greatly, despite right now not making a difference.
+### Know Bugs:
+Right now, there is an important bug in the engine, which renders the AABBS useless when using the camera or the quadtree, spite them working perfectly when drawn. We have looked into this issue but haven't found a solution. Basically, when using the culling or quadtree, the AABB's are treated as if they were in the center, without the transformation applied.
 
 
 
