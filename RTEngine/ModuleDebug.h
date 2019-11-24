@@ -5,6 +5,10 @@
 
 struct par_shapes_mesh_s;
 class ComponentMesh;
+class GameObject;
+
+enum OPERATION;
+
 enum primitiveType
 {
 	PLANE,
@@ -32,12 +36,17 @@ public:
 
 	void DrawFrustum(Frustum &frustum)const;
 
+	void DrawGuizmo(GameObject* gameObject);
+
+	void CreatePrimitive(par_shapes_mesh_s* data, char* name, primitiveType type);
+
 private:
 
 
 public:
 
-	void CreatePrimitive(par_shapes_mesh_s* data, char* name, primitiveType type);
+	OPERATION operationType;
+	bool usingGuizmo = false;
 
 private:
 

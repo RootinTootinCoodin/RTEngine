@@ -13,15 +13,20 @@ public:
 
 	void Start();
 	void Stop();
+	void Pause();
+	void Unpause();
+
+	bool running;
 
 	Uint32 Read();
 	Uint32 ReadSec();
 
 private:
 
-	bool	running;
+	bool	paused;
 	Uint32	started_at;
-	Uint32	stopped_at;
+	Uint32	paused_at;
+	Uint32	accumulated = 0;
 };
 
 #endif //__TIMER_H__

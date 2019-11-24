@@ -58,6 +58,9 @@
     <Filter Include="Sources\GameObjects\Resources">
       <UniqueIdentifier>{8c4000a7-b5df-4a99-b230-9600b1b93c6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\External Libraries\ImGui\ImGuizmo">
+      <UniqueIdentifier>{8e1a1452-4888-4906-93b8-15c0eca5634b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -383,6 +386,9 @@
       <Filter>Sources\GameObjects\Resources</Filter>
     </ClInclude>
     <ClInclude Include="ResourceMaterial.h" />
+    <ClInclude Include="ImGui\ImGuizmo\ImGuizmo.h">
+      <Filter>Sources\External Libraries\ImGui\ImGuizmo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -611,6 +617,9 @@
       <Filter>Sources\GameObjects\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ResourceMaterial.cpp" />
+    <ClCompile Include="ImGui\ImGuizmo\ImGuizmo.cpp">
+      <Filter>Sources\External Libraries\ImGui\ImGuizmo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

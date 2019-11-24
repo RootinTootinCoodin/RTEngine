@@ -2,6 +2,7 @@
 #define __MODULE_TIME_H__
 
 #include "Module.h"
+#include "Timer.h"
 
 class Application;
 
@@ -35,6 +36,9 @@ public:
 
 	void SaveStartState();
 	void SetToStart();
+
+	Timer real_clock;
+	Timer game_clock;
 
 	bool stop = true;
 

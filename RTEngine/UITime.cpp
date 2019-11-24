@@ -61,7 +61,6 @@ void UITime::Draw()
 		{
 			App->time->Tick(App->dt);
 		}
-		ImGui::SameLine();
 
 		switch (App->time->GetState())
 		{
@@ -75,6 +74,10 @@ void UITime::Draw()
 			ImGui::Text("Stopped");
 			break;
 		}
+		ImGui::SameLine();
+		ImGui::Text("Real clock: %i", App->time->real_clock.Read());
+		ImGui::SameLine();
+		ImGui::Text("Game clock: %i", App->time->game_clock.Read());
 
 		ImGui::SliderFloat("Game speed", &App->time->gameSpeed, 0.01f, 15.0f);
 
