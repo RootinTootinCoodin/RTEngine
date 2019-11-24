@@ -14,6 +14,7 @@
 #include "ComponentCamera.h"
 #include "ModuleResource.h"
 #include "ResourceMesh.h"
+#include "ResourceMaterial.h"
 #include "Tree.h"
 
 
@@ -90,7 +91,7 @@ void ModuleScene::CreateTree()
 
 void ModuleScene::GenerateCheckerTexture()
 {
-	texture* checker = new texture;
+	ResourceMaterial* checker = (ResourceMaterial*)App->resource->createNewResource(RES_TEXTURE,1212121212);
 	checker->name = "Checker Texture";
 	checker->bpp = 1;
 	checker->depth = 1;
@@ -119,12 +120,12 @@ void ModuleScene::GenerateCheckerTexture()
 		0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-	textures.push_back(checker);
 }
 
 void ModuleScene::DefaultTexture()
 {
-	texture* white = new texture;
+	ResourceMaterial* white = (ResourceMaterial*)App->resource->createNewResource(RES_TEXTURE, 2121212121);
+
 	white->name = "Default Texture";
 	white->bpp = 1;
 	white->depth = 1;
@@ -152,7 +153,6 @@ void ModuleScene::DefaultTexture()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, checker_size, checker_size,
 		0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	textures.push_back(white);
 }
 
 
@@ -214,7 +214,8 @@ void ModuleScene::Draw()
 								glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
 								glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);
 
-								ComponentMaterial* material = (ComponentMaterial*)(*item)->GetComponent(MATERIAL);
+								ComponentMaterial* _material = (ComponentMaterial*)(*item)->GetComponent(MATERIAL);
+								ResourceMaterial* material = (ResourceMaterial*)App->resource->getResource(_material->getResourceUUID());
 								if (material)
 								{
 									glBindTexture(GL_TEXTURE_2D, material->id_texture);
@@ -250,7 +251,8 @@ void ModuleScene::Draw()
 							glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
 							glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);
 
-							ComponentMaterial* material = (ComponentMaterial*)(*item)->GetComponent(MATERIAL);
+							ComponentMaterial* _material = (ComponentMaterial*)(*item)->GetComponent(MATERIAL);
+							ResourceMaterial* material = (ResourceMaterial*)App->resource->getResource(_material->getResourceUUID());
 							if (material)
 							{
 								glBindTexture(GL_TEXTURE_2D, material->id_texture);

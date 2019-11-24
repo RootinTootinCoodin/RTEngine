@@ -29,6 +29,8 @@ public:
 
 	mat4x4 At(const vec3 &right, const vec3 &up, const vec3 &direction);
 
+	void MousePicking();
+
 	void Move(const vec3 &Movement);
 	float* GetViewMatrix();
 	void AdjustCameraToAABB(AABB& aabb);
@@ -59,9 +61,13 @@ public:
 
 	ComponentCamera* editorCamera;
 
+	float2 scene_pos_global;
+	float2 scene_size;
 private:
 	mat4x4 ViewMatrix, ViewMatrixInverse;
 	Timer timer;
+
+
 
 };
 

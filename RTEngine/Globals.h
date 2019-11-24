@@ -138,15 +138,5 @@ inline const char* const PATH(const char* folder, const char* file)
 #define TEXTURE_EXTENSIONS(extension) extension==".png"|| extension==".PNG"|| extension==".dds"|| extension==".DDS"
 
 
-struct texture
-{
-	std::string name;
-	std::string path;
-	uint id_texture;
-	uint width;
-	uint height;
-	uint depth;
-	uint bpp;
-};
 
 #endif

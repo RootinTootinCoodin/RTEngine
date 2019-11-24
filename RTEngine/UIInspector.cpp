@@ -9,6 +9,7 @@
 #include "ComponentTransform.h"
 #include "ComponentCamera.h"
 #include "ResourceMesh.h"
+#include "ResourceMaterial.h"
 #include "Globals.h"
 
 
@@ -139,29 +140,38 @@ void UIInspector::DrawMeshInfo(ComponentMesh * mesh_comp)
 		ImGui::Text("Mesh not loaded in memory");
 }
 
-void UIInspector::DrawMaterialInfo(ComponentMaterial * material)
+void UIInspector::DrawMaterialInfo(ComponentMaterial * _material)
 {
+	ResourceMaterial* material = (ResourceMaterial*)App->resource->getResource(_material->getResourceUUID());
 	ImGui::Text("Component Material");
 
-	ImGui::Text("UUID: %u", material->GetUUID());
+	if (material)
+	{
+		ImGui::Text("Resource UUID: %u", material->GetUUID());
+		ImGui::Text("Times referenced: %u", material->getAmountLoaded());
+		ImGui::Text("Name: %s", material->name.c_str());
+		ImGui::Text("Full Path: %s", material->path.c_str());
+		ImGui::Text("ID: %u", material->id_texture);
+		ImGui::Image((ImTextureID)material->id_texture, { 300,300 });
+		ImGui::Text("Size: %u x %u", material->width, material->height);
+		ImGui::Text("Bytes per pixel: %u", material->bpp);
+		ImGui::Text("Image Depth: %u", material->depth);
 
-	ImGui::Text("Name: %s", material->name.c_str());
-	ImGui::Text("Full Path: %s", material->path.c_str());
-	ImGui::Text("ID: %u", material->id_texture);
-	ImGui::Image((ImTextureID)material->id_texture, { 300,300 });
-	ImGui::Text("Size: %u x %u", material->width, material->height);
-	ImGui::Text("Bytes per pixel: %u", material->bpp);
-	ImGui::Text("Image Depth: %u", material->depth);
+	}
+	else
+		ImGui::Text("Resource not loaded");
+
 
 	if (ImGui::Button("Use Checkered Texture"))
 	{
-		material->CopyTextureToThis(App->scene->textures[1]);
+		_material->AssignResourceUUID(1212121212);
 	}
 	if (ImGui::CollapsingHeader("Select another material"))
 	{
-		for (int i = 0; i < App->scene->textures.size(); i++)
+		std::vector<ResourceMaterial*> textures = App->resource->getMaterials();
+		for (int i = 0; i < textures.size(); i++)
 		{
-			texture* tmp = App->scene->textures[i];
+			ResourceMaterial* tmp= textures[i];
 			ImGui::Bullet();
 			ImGui::PushID(i);
 			bool button = ImGui::Button(tmp->name.c_str());
@@ -174,7 +184,8 @@ void UIInspector::DrawMaterialInfo(ComponentMaterial * material)
 
 			if(button)
 			{
-				material->CopyTextureToThis(tmp);
+				tmp->decreaseAmountLoaded();
+				_material->AssignResourceUUID(tmp->GetUUID());
 			}
 			ImGui::PopID();
 		}

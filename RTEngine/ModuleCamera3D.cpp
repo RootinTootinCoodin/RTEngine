@@ -10,6 +10,8 @@
 
 #include "GameObject.h"
 
+#include "MathGeoLib/Math/float2.h"
+
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	//CalculateViewMatrix();
@@ -169,7 +171,8 @@ update_status ModuleCamera3D::Update(float dt)
 	}
 
 	// Debug frustum
-	
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+		MousePicking();
 	
 	return UPDATE_CONTINUE;
 }
@@ -206,6 +209,15 @@ mat4x4 ModuleCamera3D::At(const vec3 &right, const vec3 &up, const vec3 &dir)
 	mat4x4 matrix_2 = { X.x, X.y, X.z, -cameraPos.x, Y.x, Y.y, Y.z, -cameraPos.y, Z.x, Z.y, Z.z, -cameraPos.z, 0, 0, 0, 1 };
 
 	return matrix_1 * matrix_2;
+}
+
+void ModuleCamera3D::MousePicking()
+{
+	float2 mouse_pos;
+	mouse_pos.x = ((App->input->GetMouseX() - scene_pos_global.x) / (scene_size.x / 2)) - 1;
+	mouse_pos.y = ((App->input->GetMouseY() - scene_pos_global.y) / (scene_size.y / 2)) - 1;
+
+	LineSegment raycast = editorCamera->camera.UnProjectLineSegment(mouse_pos.x, -mouse_pos.y);
 }
 
 // -----------------------------------------------------------------

@@ -376,8 +376,13 @@
     <ClInclude Include="ModuleResource.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Res.h" />
-    <ClInclude Include="ResourceMesh.h" />
+    <ClInclude Include="Res.h">
+      <Filter>Sources\GameObjects\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceMesh.h">
+      <Filter>Sources\GameObjects\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceMaterial.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -599,8 +604,13 @@
     <ClCompile Include="ModuleResource.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Res.cpp" />
-    <ClCompile Include="ResourceMesh.cpp" />
+    <ClCompile Include="Res.cpp">
+      <Filter>Sources\GameObjects\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceMesh.cpp">
+      <Filter>Sources\GameObjects\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

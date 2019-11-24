@@ -14,7 +14,10 @@ public:
 	void Draw();
 
 	bool IsMouseHovering();
+	void GetSceneDimensions();
 	bool hovered;
+
+
 };
 
 #endif

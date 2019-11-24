@@ -114,6 +114,9 @@ void FileSystem::FormFullPath(std::string & path, const char * file_name, lib_di
 	case ASSETS_MODELS:
 		path = EXTERNAL_MODELS_FOLDER;
 		break;
+	case ASSETS_TEXTURES:
+		path = ASSETS_TEXTURES_FOLDER;
+		break;
 	case NO_LIB:
 		path = "";
 		break;

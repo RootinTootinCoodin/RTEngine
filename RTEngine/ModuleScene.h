@@ -42,10 +42,6 @@ public:
 	int gridsize = 10;
 
 	GLubyte checkImage[100][100][4];
-	uint id_image = 0;
-
-	std::vector<texture*> textures;
-	uint current_texture_index = 0;
 
 	bool save = false;
 	int checker_size = 100; 
