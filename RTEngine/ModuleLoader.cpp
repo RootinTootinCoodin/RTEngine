@@ -153,7 +153,7 @@ bool ModuleLoader::LoadTexture(std::string& path, ComponentMaterial* material_co
 
 
 			//Fuck different coordinate systems
-			if (il_img_info.Origin == IL_ORIGIN_UPPER_LEFT && extension != ".dds")
+			if (il_img_info.Origin == IL_ORIGIN_UPPER_LEFT)
 				if (!iluFlipImage())
 					LOG("Error rotating image: %s", iluErrorString(ilGetError()));
 
