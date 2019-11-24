@@ -148,14 +148,16 @@ bool ModuleLoader::LoadTexture(std::string& path, ComponentMaterial* material_co
 			ILinfo il_img_info;
 			iluGetImageInfo(&il_img_info);
 
-			if (!ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE))
-				LOG("Error converting image: %s", iluErrorString(ilGetError()));
+
 
 
 			//Fuck different coordinate systems
 			if (il_img_info.Origin == IL_ORIGIN_UPPER_LEFT)
 				if (!iluFlipImage())
 					LOG("Error rotating image: %s", iluErrorString(ilGetError()));
+
+			if (!ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE))
+				LOG("Error converting image: %s", iluErrorString(ilGetError()));
 
 
 			if (material_comp)
