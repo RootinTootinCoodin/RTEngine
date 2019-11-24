@@ -86,6 +86,7 @@ void UIConfiguration::Draw()
 				App->camera->editorCamera->UpdateFrustum();
 			}
 			ImGui::Checkbox("Debug draw camera", &App->scene->drawEditorFrustum);
+			ImGui::Checkbox("Frustum culling", &App->scene->frustCulling);
 		}
 
 		if (ImGui::CollapsingHeader("Render"))

@@ -18,6 +18,7 @@ public:
 	void MoveTo(const vec &newPos);
 	void LookAt(const vec& spot);
 	void UpdateTransform();
+	bool Cull(AABB & itemAABB);
 
 	float* GetProjectionMatrix();
 	float* GetViewMatrix();

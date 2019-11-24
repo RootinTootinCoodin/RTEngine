@@ -98,6 +98,33 @@ void ComponentCamera::UpdateTransform()
 	camera.up = rotation.Mul(camera.up).Normalized();
 }
 
+bool ComponentCamera::Cull(AABB & itemAABB)
+{
+	bool ret = false;
+	//float3 AABBpoints[8];
+	//itemAABB.GetCornerPoints(AABBpoints);
+
+	//Plane frustumPlanes[6];
+	//camera.GetPlanes(frustumPlanes);
+
+	if (camera.Contains(itemAABB.Centroid()))
+		ret = true;
+
+	/*int pointsInside = 8;
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j > 6; j++)
+			if (frustumPlanes[j].IsOnPositiveSide(AABBpoints[i]))
+				pointsInside--;
+	}
+
+	if (pointsInside > 0)
+		ret = true;*/
+
+	return ret;
+}
+
 float * ComponentCamera::GetProjectionMatrix()
 {
 	static float4x4 matrix;

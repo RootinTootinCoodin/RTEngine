@@ -35,6 +35,7 @@ public:
 	bool draw_aabb = false;
 	bool draw_normals = false;
 	bool drawEditorFrustum = false;
+	bool frustCulling = false;
 	float axis_x = 0.0f;
 	float axis_y = 0.0f;
 	float axis_z = 0.0f;

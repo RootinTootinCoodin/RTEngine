@@ -300,8 +300,11 @@ void GameObject::RecalculateAABB()
 		bounding_box.Enclose((*item).second->bounding_box);
 	}
 
+
 	bounding_box.Translate(transf->GetGlobalTransformMatrix().TranslatePart());
 	bounding_box.Scale(bounding_box.CenterPoint(), transf->GetGlobalTransformMatrix().GetScale());
+
+	
 }
 
 void GameObject::ParentRecalculateAABB()

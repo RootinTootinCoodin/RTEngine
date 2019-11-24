@@ -30,7 +30,7 @@ ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, sta
 {
 	name = "Scene";
 	root = new GameObject("Root", nullptr,0,nullptr);
-	treeArea.SetFromCenterAndSize({ 0.0f, 0.0f, 0.0f }, treeSize);
+	treeArea.SetFromCenterAndSize({ 10.0f, 0.0f, 10.0f }, treeSize);
 	quadtree = new Tree(treeArea);
 }
 
@@ -172,60 +172,108 @@ void ModuleScene::Draw()
 	std::vector<GameObject*> gameObjects;
 	root->RecursiveGetChildren(&gameObjects);
 
+	static ComponentCamera* worldcamera = nullptr;
+
 	if (!App->renderer3D->wireframe_enabled)
 	{
 		for (auto item = gameObjects.begin(); item != gameObjects.end(); item++)
 		{
 			if ((*item)->active)
 			{
+				AABB thisOneWorks = (*item)->GetAABB();
 				glPushMatrix();
 				ComponentTransform* transform = (ComponentTransform*)(*item)->GetComponent(TRANSFORM);
 				float4x4 matrix = transform->GetGlobalTransformMatrix().Transposed();
 				glMultMatrixf(matrix.ptr());
 
 				if (draw_aabb || (*item)->draw_aabb)
-					App->debug->DrawAABB((*item)->GetAABB());
+					App->debug->DrawAABB(thisOneWorks);
+
+				
 
 				if (ComponentCamera* camera = (ComponentCamera*)(*item)->GetComponent(CAMERA))
 				{
 					if (drawEditorFrustum)
 						App->debug->DrawFrustum(camera->camera);
+					if ((*item) != root)
+						worldcamera = camera;
 				}
-
 
 				if (ComponentMesh* mesh_comp = (ComponentMesh*)(*item)->GetComponent(MESH))
 				{
-					if (ResourceMesh* mesh = (ResourceMesh*)App->resource->getResource(mesh_comp->getResourceUUID()))
+					if (frustCulling)
 					{
-						//if (draw_normals || mesh_comp->draw_normals)
-						//	App->debug->DrawNormals(mesh);
-
-						glEnableClientState(GL_VERTEX_ARRAY);
-						glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
-						glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);
-
-						ComponentMaterial* material = (ComponentMaterial*)(*item)->GetComponent(MATERIAL);
-						if (material)
+						if (worldcamera != nullptr && worldcamera->Cull(thisOneWorks))
 						{
-							glBindTexture(GL_TEXTURE_2D, material->id_texture);
-							glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-							glTexCoordPointer(2, GL_FLOAT, 0, &mesh->uvs[0]);
+							if (ResourceMesh* mesh = (ResourceMesh*)App->resource->getResource(mesh_comp->getResourceUUID()))
+							{
+								//if (draw_normals || mesh_comp->draw_normals)
+								//	App->debug->DrawNormals(mesh);
+
+								glEnableClientState(GL_VERTEX_ARRAY);
+								glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
+								glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);
+
+								ComponentMaterial* material = (ComponentMaterial*)(*item)->GetComponent(MATERIAL);
+								if (material)
+								{
+									glBindTexture(GL_TEXTURE_2D, material->id_texture);
+									glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+									glTexCoordPointer(2, GL_FLOAT, 0, &mesh->uvs[0]);
+								}
+
+
+								glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
+
+
+								glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+								if (material)
+								{
+									glBindTexture(GL_TEXTURE_2D, 0);
+									glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+								}
+
+								glDisableClientState(GL_VERTEX_ARRAY);
+							}
 						}
-
-
-						glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
-
-
-						glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-						if (material)
-						{
-							glBindTexture(GL_TEXTURE_2D, 0);
-							glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-						}
-
-						glDisableClientState(GL_VERTEX_ARRAY);
 					}
+						
+					else
+					{
+						if (ResourceMesh* mesh = (ResourceMesh*)App->resource->getResource(mesh_comp->getResourceUUID()))
+						{
+							//if (draw_normals || mesh_comp->draw_normals)
+							//	App->debug->DrawNormals(mesh);
+
+							glEnableClientState(GL_VERTEX_ARRAY);
+							glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
+							glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);
+
+							ComponentMaterial* material = (ComponentMaterial*)(*item)->GetComponent(MATERIAL);
+							if (material)
+							{
+								glBindTexture(GL_TEXTURE_2D, material->id_texture);
+								glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+								glTexCoordPointer(2, GL_FLOAT, 0, &mesh->uvs[0]);
+							}
+
+
+							glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
+
+
+							glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+							if (material)
+							{
+								glBindTexture(GL_TEXTURE_2D, 0);
+								glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+							}
+
+							glDisableClientState(GL_VERTEX_ARRAY);
+						}
+					}
+							
 				}
 				glPopMatrix();
 			}

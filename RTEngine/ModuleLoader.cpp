@@ -666,7 +666,6 @@ GameObject* ModuleLoader::ImportGameObject(JSON_Object * json_go)
 	{
 		ImportComponent(json_array_get_object(component_array, i),go);
 	}
-	App->scene->quadtree->Insert(go);
 	return go;
 }
 
@@ -802,6 +801,7 @@ void ModuleLoader::LinkMeshesWithMaterials(std::map<uint, GameObject*> scene_gam
 		if (ComponentMesh* mesh = (ComponentMesh*)(*item).second->GetComponent(MESH))
 		{
 			(*item).second->ParentRecalculateAABB();
+			App->scene->quadtree->Insert((*item).second);
 			if (ComponentMaterial* material = (ComponentMaterial*)(*item).second->GetComponent(MATERIAL))
 			{
 				mesh->material = material;
