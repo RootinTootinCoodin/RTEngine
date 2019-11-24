@@ -52,14 +52,20 @@ void ModuleTime::SetState(GAME_STATE state)
 	case STATE_RUNNING:
 		if (stop)
 			SaveStartState();
+		if (real_clock.Read() == 0)
+			real_clock.Start();
+		game_clock.Start();
 		gameState = STATE_RUNNING;
 		stop = false;
 		break;
 	case STATE_PAUSED:
+		game_clock.Pause();
 		gameState = STATE_PAUSED;
 		break;
 	case STATE_STOPPED:
 		SetToStart();
+		real_clock.Stop();
+		game_clock.Stop();
 		gameState = STATE_STOPPED;
 		stop = true;
 		break;

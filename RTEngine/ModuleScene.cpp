@@ -161,6 +161,9 @@ void ModuleScene::Draw()
 	if (drawaxis)
 		DrawAxis();
 
+	if (selected_go)
+		App->debug->DrawGuizmo(selected_go);
+
 	DrawGrid(gridsize);
 
 	if (drawEditorFrustum)
@@ -180,14 +183,14 @@ void ModuleScene::Draw()
 		{
 			if ((*item)->active)
 			{
-				AABB thisOneWorks = (*item)->GetAABB();
+				AABB objAABB = (*item)->GetAABB();
 				glPushMatrix();
 				ComponentTransform* transform = (ComponentTransform*)(*item)->GetComponent(TRANSFORM);
 				float4x4 matrix = transform->GetGlobalTransformMatrix().Transposed();
 				glMultMatrixf(matrix.ptr());
 
 				if (draw_aabb || (*item)->draw_aabb)
-					App->debug->DrawAABB(thisOneWorks);
+					App->debug->DrawAABB(objAABB);
 
 				
 
@@ -203,7 +206,7 @@ void ModuleScene::Draw()
 				{
 					if (frustCulling)
 					{
-						if (worldcamera != nullptr && worldcamera->Cull(thisOneWorks))
+						if (App->camera->editorCamera->Cull(objAABB))
 						{
 							if (ResourceMesh* mesh = (ResourceMesh*)App->resource->getResource(mesh_comp->getResourceUUID()))
 							{
