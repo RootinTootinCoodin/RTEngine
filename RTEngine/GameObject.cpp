@@ -8,6 +8,8 @@
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 #include "ResourceMesh.h"
+#include "Tree.h"
+
 
 GameObject::GameObject()
 {
@@ -147,6 +149,7 @@ void GameObject::RecursiveSetActive(bool _active)
 		(*item).second->RecursiveSetActive(_active);
 	}
 	active = _active;
+
 }
 
 void GameObject::RecursiveSetStatic(bool _static)
@@ -156,6 +159,7 @@ void GameObject::RecursiveSetStatic(bool _static)
 		(*item).second->RecursiveSetStatic(_static);
 	}
 	is_static = _static;
+
 }
 
 void GameObject::RecursiveApplyTexture(texture * texture)
@@ -282,6 +286,8 @@ void GameObject::RecursiveDeleteGameobject()
 
 void GameObject::RecalculateAABB()
 {
+	ComponentTransform* transf = (ComponentTransform*)GetComponent(TRANSFORM);
+
 	if (ComponentMesh* mesh_comp = (ComponentMesh*)GetComponent(MESH))
 	{
 		if (ResourceMesh* mesh = (ResourceMesh*)_app->resource->getResource(mesh_comp->getResourceUUID()))
@@ -293,6 +299,9 @@ void GameObject::RecalculateAABB()
 	{
 		bounding_box.Enclose((*item).second->bounding_box);
 	}
+
+	bounding_box.Translate(transf->GetGlobalTransformMatrix().TranslatePart());
+	bounding_box.Scale(bounding_box.CenterPoint(), transf->GetGlobalTransformMatrix().GetScale());
 }
 
 void GameObject::ParentRecalculateAABB()

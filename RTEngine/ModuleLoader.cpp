@@ -9,6 +9,7 @@
 #include "ComponentTransform.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
+#include "Tree.h"
 
 #include "ResourceMesh.h"
 #include "FileSystem.h"
@@ -76,7 +77,6 @@ bool ModuleLoader::LoadFBX(std::string& path, std::string& name)
 		LoadAiNodesRecursively(scene->mRootNode, scene, new_model, path,transform->GetLocalTransformMatrix());
 		aiReleaseImport(scene);
 		App->camera->AdjustCameraToAABB(new_model->GetAABB());
-
 		ExportSceneOrModel(new_model);
 		new_model->to_remove = true;
 	}
@@ -666,7 +666,7 @@ GameObject* ModuleLoader::ImportGameObject(JSON_Object * json_go)
 	{
 		ImportComponent(json_array_get_object(component_array, i),go);
 	}
-
+	App->scene->quadtree->Insert(go);
 	return go;
 }
 

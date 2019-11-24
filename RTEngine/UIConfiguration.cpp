@@ -125,6 +125,12 @@ void UIConfiguration::Draw()
 			ImGui::DragInt("Grid size", &App->scene->gridsize, 1.0f, 0);
 		}
 
+		if (ImGui::CollapsingHeader("Space partitioning"))
+		{
+			ImGui::Checkbox("Quadtree debug draw", &App->scene->debugQuad);
+			ImGui::SliderInt("Node bucket", &App->scene->bucket, 1, 15);
+		}
+
 		if (ImGui::CollapsingHeader("Window")) // 2 - Window
 		{
 			if (ImGui::SliderFloat("Brightness", &App->window->brightness, 0.0f, 1.0f))

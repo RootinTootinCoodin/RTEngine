@@ -12,37 +12,44 @@ class Tree
 	{
 	public:
 		Node() {};
-		Node(AABB area, const Tree* tree, const Node* parent) : nodeArea(area), tree(tree), parent(parent) {};
+		Node(AABB area, Tree* tree, const Node* parent) : nodeArea(area), tree(tree), parent(parent) {};
 		~Node() {};
 
 		void Draw();
-		void Split();
+		void Split4();
 
 		void Clear();
-		void Intersect(std::vector<const GameObject*>& group, const AABB & area);
+		void CollectIntersections(std::vector<const GameObject*>& group, const AABB & area);
+		bool Insert(const GameObject* newItem);
+
+		bool IsLeaf() { return nodeObjects.empty(); }
+		bool IsBranch() { return (!nodeObjects.empty() && parent != nullptr); }
+		bool IsRoot() { return (parent == nullptr); }
 
 		AABB nodeArea;
-		const Tree* tree = nullptr;
-		std::vector<const GameObject*> containedGameobj;
+		Tree* tree = nullptr;
+		std::vector<const GameObject*> nodeObjects;
 		const Node* parent;
 		std::vector<Node*> children;
-
 	};
 
 public:
 	Tree(AABB aabb);
 	~Tree();
 
-	void Create(const AABB& limits); // Re-creates a new tree from an existing one
+	void Create(const AABB& limits); // Clears and recreates the tree
 	void Clear();
 
 	void Insert(GameObject* newItem);
 	void Remove(GameObject* itemToRemove);
 
-	void Intersect(std::vector<const GameObject*>& group, const AABB& area);
+	void CollectIntersections(std::vector<const GameObject*>& collector, const AABB& area);
+
+	int currentSubdivisions = 0;
 
 	Node* root;
-	std::vector<const GameObject*> containedGameobj;
+	std::vector<GameObject*> treeObjects;
+	int bucket = 1;
 
 };
 

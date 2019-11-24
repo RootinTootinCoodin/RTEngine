@@ -9,6 +9,7 @@
 struct model;
 struct par_shapes_mesh_s;
 class GameObject;
+class Tree;
 
 class ModuleScene :
 	public Module
@@ -22,6 +23,7 @@ public:
 	update_status Update(float dt) override;
 	update_status PostUpdate(float dt) override;
 
+	void CreateTree();
 
 	void GenerateCheckerTexture();
 	void DefaultTexture();
@@ -48,6 +50,11 @@ public:
 	std::string scene_name = "Name";
 	GameObject* root = nullptr;
 	GameObject* selected_go = nullptr;
+	Tree* quadtree = nullptr;
+	AABB treeArea;
+	float3 treeSize = { 150.0f, 50.0f, 150.0f };
+	bool debugQuad = false;
+	int bucket = 1;
 };
 
 #endif // !__MODULE_SCENE_H__

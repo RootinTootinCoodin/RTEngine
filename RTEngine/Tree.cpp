@@ -1,4 +1,7 @@
 #include "Tree.h"
+#include "GameObject.h"
+#include "Component.h"
+#include "ComponentMesh.h"
 
 #include "SDL/include/SDL_assert.h"
 #include "SDL/include/SDL_opengl.h"
@@ -20,19 +23,32 @@ void Tree::Create(const AABB& limits)
 
 void Tree::Clear()
 {
+	root->Clear();
 }
 
 void Tree::Insert(GameObject * newItem)
 {
+	if (newItem->GetComponent(MESH) != nullptr && newItem->active && newItem->is_static)
+	{
+		for (int i = 0; i < treeObjects.size(); i++)
+			if (treeObjects[i] == newItem)
+				return;
+
+		if (root->Insert(newItem))
+		{
+			treeObjects.push_back(newItem);
+		}
+	}
+	
 }
 
 void Tree::Remove(GameObject * itemToRemove)
 {
 }
 
-void Tree::Intersect(std::vector<const GameObject*>& group, const AABB & area)
+void Tree::CollectIntersections(std::vector<const GameObject*>& collector, const AABB & area)
 {
-	root->Intersect(group, area);
+	root->CollectIntersections(collector, area);
 }
 
 void Tree::Node::Draw()
@@ -78,6 +94,7 @@ void Tree::Node::Draw()
 	glVertex3f(nodeArea.MaxX(), nodeArea.MinY(), nodeArea.MaxZ());
 	glVertex3f(nodeArea.MinX(), nodeArea.MinY(), nodeArea.MaxZ());
 
+	glColor3f(1, 1, 1);
 	glEnd();
 
 	// Draw children
@@ -86,7 +103,7 @@ void Tree::Node::Draw()
 			children[i]->Draw();
 }
 
-void Tree::Node::Split()
+void Tree::Node::Split4()
 {
 	AABB newNodesAABB[4];
 	float3 minP, maxP;
@@ -133,10 +150,70 @@ void Tree::Node::Clear()
 	}
 
 	// Clear gameobject list
-	if (!containedGameobj.empty())
-		containedGameobj.clear();
+	if (!nodeObjects.empty())
+		nodeObjects.clear();
 }
 
-void Tree::Node::Intersect(std::vector<const GameObject*>& group, const AABB & area)
+void Tree::Node::CollectIntersections(std::vector<const GameObject*>& collector, const AABB & area)
 {
+	if (area.Intersects(nodeArea))
+	{
+		for (int i = 0; i < nodeObjects.size(); i++)
+			collector.push_back(nodeObjects[i]);
+
+		if (!children.empty())
+			for (int i = 0; i < children.size(); i++)
+				children[i]->CollectIntersections(collector, area);
+	}
+}
+
+bool Tree::Node::Insert(const GameObject * newItem)
+{
+	bool ret = false;
+
+	if (nodeArea.Contains(newItem->GetAABB().CenterPoint()))
+
+		// If the node has children
+		if (!children.empty())
+		{
+			// Try to insert in one of the children
+			for (int i = 0; i < children.size(); i++)
+				if (children[i]->Insert(newItem))
+				{
+					ret = true;
+					break;
+				}
+
+			if (!ret)
+			{
+				nodeObjects.push_back(newItem);
+				ret = true;
+			}
+		}
+		else
+		{
+			nodeObjects.push_back(newItem);
+			ret = true;
+
+			if (nodeObjects.size() > tree->bucket && tree->currentSubdivisions < 50)
+			{
+				Split4();
+				tree->currentSubdivisions++;
+
+				std::vector<const GameObject*> left;
+
+				for (int i = 0; i < nodeObjects.size(); i++)
+				{
+					for (int j = 0; j < children.size(); j++)
+					{
+						if (children[j]->Insert(nodeObjects[i]))
+						{
+							break;
+						}
+					}
+				}
+			}
+		}
+
+	return ret;
 }
