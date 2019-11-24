@@ -5,6 +5,7 @@
 #include "ModuleCamera3D.h"
 #include "ModuleScene.h"
 #include "ModuleLoader.h"
+#include "ResourceMesh.h"
 #include "ComponentMesh.h"
 #include "ComponentCamera.h"
 #include "GL/glew.h"
@@ -299,7 +300,7 @@ void ModuleRenderer3D::SetWireframe()
 
 
 
-bool ModuleRenderer3D::GenerateBufferForMesh(ComponentMesh * mesh)
+bool ModuleRenderer3D::GenerateBufferForMesh(ResourceMesh * mesh)
 {
 	glGenBuffers(1, (GLuint*)&(mesh->id_index));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);

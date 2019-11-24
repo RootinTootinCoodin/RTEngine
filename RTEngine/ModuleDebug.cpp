@@ -3,6 +3,8 @@
 #include "ModuleLoader.h"
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
+#include "ResourceMesh.h"
+#include "ModuleResource.h"
 #include "GameObject.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
@@ -29,21 +31,22 @@ bool ModuleDebug::CleanUp()
 
 void ModuleDebug::DrawNormals(ComponentMesh * mesh)
 {
-	glLineWidth(2.0f);
-	glColor3f(1, 0, 0);
+	//TODO: Make normals great again
+	//glLineWidth(2.0f);
+	//glColor3f(1, 0, 0);
 
-	glBegin(GL_LINES);
-	if (mesh->normals != nullptr)
-	{
-		for (uint i = 0; i < mesh->num_vertices * 3; i += 3)
-		{
-			glVertex3f(mesh->vertices[i] - mesh->normals[i], mesh->vertices[i + 1] - mesh->normals[i + 1], mesh->vertices[i + 2] - mesh->normals[i + 2]);
-			glVertex3f(mesh->vertices[i], mesh->vertices[i + 1], mesh->vertices[i + 2]);
-		}
-	}
-	glEnd();
-	glColor3f(1, 1, 1);
-	glLineWidth(STANDARD_LINE_SIZE);
+	//glBegin(GL_LINES);
+	//if (mesh->normals != nullptr)
+	//{
+	//	for (uint i = 0; i < mesh->num_vertices * 3; i += 3)
+	//	{
+	//		glVertex3f(mesh->vertices[i] - mesh->normals[i], mesh->vertices[i + 1] - mesh->normals[i + 1], mesh->vertices[i + 2] - mesh->normals[i + 2]);
+	//		glVertex3f(mesh->vertices[i], mesh->vertices[i + 1], mesh->vertices[i + 2]);
+	//	}
+	//}
+	//glEnd();
+	//glColor3f(1, 1, 1);
+	//glLineWidth(STANDARD_LINE_SIZE);
 }
 
 void ModuleDebug::DrawAABB(AABB & aabb) const
@@ -97,40 +100,99 @@ void ModuleDebug::DrawAABB(AABB & aabb) const
 }
 
 
-void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data, char* name)
+void ModuleDebug::CreatePrimitive(par_shapes_mesh_s * data, char* name,primitiveType type)
 {
 	GameObject* game_object = App->scene->root->AddChildren(name);
-	ComponentMesh* _primitive = (ComponentMesh*)game_object->AddComponent(MESH);
+	ComponentMesh* mesh_comp = (ComponentMesh*)game_object->AddComponent(MESH);
+	ResourceMesh* _primitive = nullptr;
+
+	//It's big brain time
+	switch (type)
+	{
+	case PLANE:
+		 _primitive = (ResourceMesh*)App->resource->createNewResource(RES_MESH, 1111111111);
+		 mesh_comp->AssignResourceUUID(1111111111);
+		break;
+	case CUBE:
+		_primitive = (ResourceMesh*)App->resource->createNewResource(RES_MESH, 2222222222);
+		mesh_comp->AssignResourceUUID(2222222222);
+
+
+		break;
+	case SPHERE:
+		_primitive = (ResourceMesh*)App->resource->createNewResource(RES_MESH, 3333333333);
+		mesh_comp->AssignResourceUUID(3333333333);
+
+
+		break;
+	case HEMISPHERE:
+		 _primitive = (ResourceMesh*)App->resource->createNewResource(RES_MESH, 4444444444);
+		 mesh_comp->AssignResourceUUID(4444444444);
+
+
+		break;
+	case CYLINDER:
+		_primitive = (ResourceMesh*)App->resource->createNewResource(RES_MESH, 5555555555);
+		mesh_comp->AssignResourceUUID(5555555555);
+
+
+		break;
+	case CONE:
+		 _primitive = (ResourceMesh*)App->resource->createNewResource(RES_MESH, 6666666666);
+		 mesh_comp->AssignResourceUUID(6666666666);
+
+
+		break;
+	case KLEIN:
+		 _primitive = (ResourceMesh*)App->resource->createNewResource(RES_MESH, 7777777777);
+		 mesh_comp->AssignResourceUUID(7777777777);
+
+
+		break;
+	case TREFOIL:
+	 _primitive = (ResourceMesh*)App->resource->createNewResource(RES_MESH, 8888888888);
+	 mesh_comp->AssignResourceUUID(8888888888);
+
+
+		break;
+	default:
+		break;
+	}
+	
 	ComponentMaterial* _material = (ComponentMaterial*)game_object->AddComponent(MATERIAL);
 	_material->CopyTextureToThis(App->scene->textures[0]);
-	// Set vertices
-	_primitive->num_vertices = data->npoints * 3; // Set vertex number
-	_primitive->vertices = new float[_primitive->num_vertices ]; // Allocate memory
-	for (int i = 0; i < _primitive->num_vertices; i++) // Fill data
+
+	if (_primitive)
 	{
-		_primitive->vertices[i] = data->points[i];
+		// Set vertices
+		_primitive->num_vertices = data->npoints * 3; // Set vertex number
+		_primitive->vertices = new float[_primitive->num_vertices]; // Allocate memory
+		for (int i = 0; i < _primitive->num_vertices; i++) // Fill data
+		{
+			_primitive->vertices[i] = data->points[i];
+		}
+		LOG("New mesh (primitive) with %d vertices,", _primitive->num_vertices);
+
+		// Set index
+		_primitive->num_indices = data->ntriangles * 3; // Set index number
+		_primitive->indices = new uint[_primitive->num_indices]; // Allocate memory
+		for (int i = 0; i < _primitive->num_indices; i++) // Fill data
+		{
+			_primitive->indices[i] = (uint)data->triangles[i];
+		}
+		LOG("%d indices.", _primitive->num_indices);
+
+		// Set UVs
+		_primitive->uvs = new float[data->npoints * 2]; // Allocate memory
+		for (int i = 0; i < data->npoints * 2; i++) // Fill data
+		{
+			_primitive->uvs[i] = data->tcoords[i];
+		}
+
+
+
+		App->renderer3D->GenerateBufferForMesh(_primitive);
 	}
-	LOG("New mesh (primitive) with %d vertices,", _primitive->num_vertices);
-
-	// Set index
-	_primitive->num_indices = data->ntriangles * 3; // Set index number
-	_primitive->indices = new uint[_primitive->num_indices]; // Allocate memory
-	for (int i = 0; i < _primitive->num_indices; i++) // Fill data
-	{
-		_primitive->indices[i] = (uint)data->triangles[i];
-	}
-	LOG("%d indices.", _primitive->num_indices);
-
-	// Set UVs
-	_primitive->uvs = new float[data->npoints * 2]; // Allocate memory
-	for (int i = 0; i < data->npoints * 2; i++) // Fill data
-	{
-		_primitive->uvs[i] = data->tcoords[i];
-	}
-
-
-
-	App->renderer3D->GenerateBufferForMesh(_primitive);
 }
 
 

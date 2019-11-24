@@ -3,6 +3,7 @@
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
+#include "ModuleResource.h"
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentTransform.h"
@@ -10,6 +11,7 @@
 #include "ComponentMaterial.h"
 #include "Tree.h"
 
+#include "ResourceMesh.h"
 #include "FileSystem.h"
 
 
@@ -64,21 +66,19 @@ bool ModuleLoader::FileReceived(std::string path)
 bool ModuleLoader::LoadFBX(std::string& path, std::string& name)
 {
 	const aiScene* scene = aiImportFile(path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
-
+	std::string extension = path;
+	FileSystem::getExtension(extension);
 	if (scene != nullptr && scene->HasMeshes())
 	{
+		FileSystem::copyFileTo(path.c_str(), ASSETS_MODELS, extension.c_str(), name);
 		GameObject* new_model = App->scene->root->AddChildren(name);
 		
-	/*	for (int i = 0; i < scene->mNumMeshes; i++)
-		{
-
-			LoadMesh(scene->mMeshes[i], new_model,scene,path);
-		}*/
 		ComponentTransform* transform = (ComponentTransform*)new_model->GetComponent(TRANSFORM);
 		LoadAiNodesRecursively(scene->mRootNode, scene, new_model, path,transform->GetLocalTransformMatrix());
 		aiReleaseImport(scene);
 		App->camera->AdjustCameraToAABB(new_model->GetAABB());
-		App->scene->quadtree->Insert(new_model);
+		ExportSceneOrModel(new_model);
+		new_model->to_remove = true;
 	}
 	else
 		LOG("Error loading scene %s", path);
@@ -154,7 +154,9 @@ bool ModuleLoader::LoadTexture(std::string& path, ComponentMaterial* material)
 
 		LoadMaterial(il_img_info, path, name, material);
 
+	//	SaveTextureAsDDS(std::to_string(material->GetUUID()));
 		SaveTextureAsDDS(name);
+
 		
 		ret = true;
 	}
@@ -214,7 +216,7 @@ bool ModuleLoader::LoadMaterial(ILinfo& il_img_info,std::string& path, std::stri
 	return true;
 }
 
-void ModuleLoader::LoadVertices(ComponentMesh * _mesh, aiMesh * m)
+void ModuleLoader::LoadVertices(ResourceMesh * _mesh, aiMesh * m)
 {
 	_mesh->num_vertices = m->mNumVertices;
 	_mesh->vertices = new float[_mesh->num_vertices * 3];
@@ -222,7 +224,7 @@ void ModuleLoader::LoadVertices(ComponentMesh * _mesh, aiMesh * m)
 	LOG("New mesh with %d vertices", _mesh->num_vertices);
 }
 
-void ModuleLoader::LoadUVS(ComponentMesh * _mesh, aiMesh * m)
+void ModuleLoader::LoadUVS(ResourceMesh * _mesh, aiMesh * m)
 {
 	//Can't use memcpy because m->mTextureCoords is a 3D vector but we only use x and y
 	_mesh->uvs = new float[_mesh->num_vertices * 2];
@@ -233,7 +235,7 @@ void ModuleLoader::LoadUVS(ComponentMesh * _mesh, aiMesh * m)
 	}
 }
 
-void ModuleLoader::LoadNormals(ComponentMesh * _mesh, aiMesh * m)
+void ModuleLoader::LoadNormals(ResourceMesh * _mesh, aiMesh * m)
 {
 	_mesh->normals = new float[_mesh->num_vertices * 3];
 	memcpy(_mesh->normals, m->mNormals, sizeof(float) * _mesh->num_vertices * 3);
@@ -258,7 +260,7 @@ void ModuleLoader::LoadMeshTexture(ComponentMaterial * _material, aiMaterial* ma
 	}
 }
 
-bool ModuleLoader::LoadMeshFaces(ComponentMesh * _mesh, aiMesh * m)
+bool ModuleLoader::LoadMeshFaces(ResourceMesh * _mesh, aiMesh * m)
 {
 	_mesh->num_indices = m->mNumFaces * 3;
 	_mesh->indices = new uint[_mesh->num_indices];
@@ -286,58 +288,62 @@ GameObject* ModuleLoader::LoadMesh(aiMesh * m, GameObject* new_model, const aiSc
 		mesh_gameobject = new_model->AddChildren(optional_name);
 
 
+	ComponentMesh* _mesh_comp = (ComponentMesh*)mesh_gameobject->AddComponent(MESH);
 
-	ComponentMesh* _mesh = (ComponentMesh*)mesh_gameobject->AddComponent(MESH);
 	ComponentMaterial* _material = (ComponentMaterial*)mesh_gameobject->AddComponent(MATERIAL);
 
-	LoadVertices(_mesh, m);
-
-	if (m->HasTextureCoords(0))
+	if (ResourceMesh* _mesh = (ResourceMesh*)App->resource->createNewResource(RES_MESH))
 	{
-		LoadUVS(_mesh, m);
-	}
+		_mesh_comp->AssignResourceUUID(_mesh->GetUUID());
+		LoadVertices(_mesh, m);
 
-	if (m->HasNormals())
-	{
-		LoadNormals(_mesh, m);
-	}
-
-	if (aiMaterial* material = scene->mMaterials[m->mMaterialIndex])
-	{
-		
-		LoadMeshTexture(_material, material, path);
-	}
-	else
-		_material->CopyTextureToThis(App->scene->textures[0]);
-
-	if (m->HasVertexColors(0))
-	{
-		_mesh->colors = new float[_mesh->num_vertices * 4];
-		memcpy(_mesh->colors, m->mColors[0], sizeof(float)*_mesh->num_vertices * 4);
-	}
-
-	if (m->HasFaces())
-	{
-		if (LoadMeshFaces(_mesh, m))
+		if (m->HasTextureCoords(0))
 		{
-			App->renderer3D->GenerateBufferForMesh(_mesh);
-			mesh_gameobject->ParentRecalculateAABB();
+			LoadUVS(_mesh, m);
+		}
 
+		if (m->HasNormals())
+		{
+			LoadNormals(_mesh, m);
+		}
+
+		if (aiMaterial* material = scene->mMaterials[m->mMaterialIndex])
+		{
+
+			LoadMeshTexture(_material, material, path);
 		}
 		else
+			_material->CopyTextureToThis(App->scene->textures[0]);
+
+		if (m->HasVertexColors(0))
 		{
-			mesh_gameobject->RemoveComponent(MESH);
-			mesh_gameobject->RemoveComponent(MATERIAL);
+			_mesh->colors = new float[_mesh->num_vertices * 4];
+			memcpy(_mesh->colors, m->mColors[0], sizeof(float)*_mesh->num_vertices * 4);
 		}
 
+		if (m->HasFaces())
+		{
+			if (LoadMeshFaces(_mesh, m))
+			{
+				App->renderer3D->GenerateBufferForMesh(_mesh);
+				mesh_gameobject->ParentRecalculateAABB();
+
+			}
+			else
+			{
+				mesh_gameobject->RemoveComponent(MESH);
+				mesh_gameobject->RemoveComponent(MATERIAL);
+			}
+
+		}
 	}
 	else
 		LOG("Error mesh from scene %s, no faces", path);
 
-	App->scene->quadtree->Insert(mesh_gameobject);
-
 	return mesh_gameobject;
 }
+
+
 
 bool ModuleLoader::SaveTextureAsDDS(std::string& name)
 {
@@ -355,7 +361,7 @@ bool ModuleLoader::SaveTextureAsDDS(std::string& name)
 	return ret;
 }
 
-bool ModuleLoader::ImportMesh(ComponentMesh* mesh)
+bool ModuleLoader::ImportMesh(ResourceMesh* mesh)
 {
 		//GOD BLESS C++ 
 		uint uvs = mesh->HasTextureCoords();
@@ -417,7 +423,7 @@ bool ModuleLoader::ImportMesh(ComponentMesh* mesh)
 			memcpy(cursor, mesh->colors, bytes);
 		}
 
-		return FileSystem::ExportBuffer(data, size, std::to_string(mesh->GetUUID()).c_str(), LIBRARY_MESHES, ".meshprtnr");
+		return FileSystem::ExportBuffer(data, size, std::to_string(mesh->GetUUID()).c_str(), LIBRARY_MESHES, MESH_EXTENSION);
 }
 
 //bool ModuleLoader::ImportGameobject(GameObject * go,char* pre_buffer)
@@ -480,7 +486,7 @@ bool ModuleLoader::ImportMesh(ComponentMesh* mesh)
 //	return false;
 //}
 
-bool ModuleLoader::ExportMesh(ComponentMesh* mesh, char* buffer)
+bool ModuleLoader::ExportMesh(ResourceMesh* mesh, char* buffer)
 {
 	char* cursor = buffer;
 	uint ranges[5];
@@ -528,15 +534,20 @@ bool ModuleLoader::ExportMesh(ComponentMesh* mesh, char* buffer)
 	return true;
 }
 
-bool ModuleLoader::ExportScene()
+bool ModuleLoader::ExportSceneOrModel(GameObject* gameobject)
 {
 	bool ret = false;
 	JSON_Value* file = json_value_init_object();	
 	JSON_Value* objects_array = json_value_init_array();	
 	json_object_set_value(json_object(file), "Scene", objects_array);
-
+	std::string extension;
 	std::vector<GameObject*> gameObjects;
-	App->scene->root->RecursiveGetChildren(&gameObjects);
+	if (gameobject == App->scene->root)
+		extension = SCENE_EXTENSION;
+	else
+		extension = MODEL_EXTENSION;
+
+	gameobject->RecursiveGetChildren(&gameObjects);
 
 	for (auto item = gameObjects.begin(); item != gameObjects.end(); item++)
 	{
@@ -548,7 +559,11 @@ bool ModuleLoader::ExportScene()
 	if (ret)
 	{
 		std::string path_buffer;
-		FileSystem::FormFullPath(path_buffer, App->scene->scene_name.c_str(), ASSETS_SCENES,".westscene");
+		if(extension == SCENE_EXTENSION)
+			FileSystem::FormFullPath(path_buffer, App->scene->scene_name.c_str(), ASSETS_SCENES, SCENE_EXTENSION);
+		else
+			FileSystem::FormFullPath(path_buffer, gameobject->GetName().c_str(), LIBRARY_MODELS, MODEL_EXTENSION);
+
 		json_serialize_to_file(file, path_buffer.c_str());
 	}
 	else
@@ -557,14 +572,19 @@ bool ModuleLoader::ExportScene()
 	return ret;
 }
 
-bool ModuleLoader::ImportScene(std::string& path)
+bool ModuleLoader::ImportSceneOrModel(std::string& path, bool is_scene)
 {
 	bool ret = false;
-	App->scene->root->RecursiveDeleteGameobject();
+	if(is_scene)
+		App->scene->root->RecursiveDeleteGameobject();
 	//the path received is just the name with the extension
 	std::string name = path.substr(0, path.find_last_of("."));
 
-	FileSystem::FormFullPath(path, name.c_str(), ASSETS_SCENES, ".westscene");
+	if(is_scene)
+		FileSystem::FormFullPath(path, name.c_str(), ASSETS_SCENES,SCENE_EXTENSION);
+	else
+		FileSystem::FormFullPath(path, name.c_str(), LIBRARY_MODELS, MODEL_EXTENSION);
+
 	JSON_Value* file = json_parse_file(path.c_str());
 	if (file)
 	{
@@ -595,7 +615,8 @@ bool ModuleLoader::ImportScene(std::string& path)
 			}
 		}
 		LinkMeshesWithMaterials(scene_gameobjects);
-
+		ResetUUIDS(scene_gameobjects);
+	
 	}
 	else
 	{
@@ -645,7 +666,7 @@ GameObject* ModuleLoader::ImportGameObject(JSON_Object * json_go)
 	{
 		ImportComponent(json_array_get_object(component_array, i),go);
 	}
-
+	App->scene->quadtree->Insert(go);
 	return go;
 }
 
@@ -679,8 +700,10 @@ bool ModuleLoader::ExportComponent(Component * component, JSON_Object * componen
 	case MESH:
 	{
 		json_object_set_string(component_json, "component_type", "mesh");
-		ComponentMesh* mesh = (ComponentMesh*)component;
-		ImportMesh(mesh);
+		ComponentMesh* comp_mesh = (ComponentMesh*)component;
+		json_object_set_number(component_json, "resource_UUID", comp_mesh->getResourceUUID());
+		if(ResourceMesh* mesh = (ResourceMesh*)App->resource->getResource(comp_mesh->getResourceUUID()))
+			ImportMesh(mesh);
 
 		break;
 	}
@@ -738,14 +761,24 @@ bool ModuleLoader::ImportComponent(JSON_Object * json_go, GameObject* go)
 	{
 		std::string mesh_file;
 		//THIS IS SO FUCKING UGLY
-		std::string uuid = std::to_string(json_object_get_number(json_go, "UUID"));
+		uint resource_uuid = json_object_get_number(json_go, "resource_UUID");
+		std::string uuid = std::to_string(resource_uuid);
 		uuid = uuid.substr(0, uuid.find_last_of("."));
-		FileSystem::FormFullPath(mesh_file, uuid.c_str(), LIBRARY_MESHES, ".meshprtnr");
+		FileSystem::FormFullPath(mesh_file, uuid.c_str(), LIBRARY_MESHES, MESH_EXTENSION);
 		char* buffer = FileSystem::ImportFile(mesh_file.c_str());
+
+		ResourceMesh* mesh = (ResourceMesh*)App->resource->getResource(resource_uuid);
+		if (!mesh)
+		{
+			mesh = (ResourceMesh*)App->resource->createNewResource(RES_MESH, resource_uuid);
+			ret = ExportMesh(mesh, buffer);
+			App->renderer3D->GenerateBufferForMesh(mesh);
+		}
+
 		ComponentMesh* component = (ComponentMesh*)go->AddComponent(MESH);
 		component->setUUID(json_object_get_number(json_go, "UUID"));
-		ret = ExportMesh(component, buffer);
-		App->renderer3D->GenerateBufferForMesh(component);
+		component->AssignResourceUUID(resource_uuid);
+
 	}
 	else if (component_type == "material")
 	{
@@ -768,10 +801,27 @@ void ModuleLoader::LinkMeshesWithMaterials(std::map<uint, GameObject*> scene_gam
 	{
 		if (ComponentMesh* mesh = (ComponentMesh*)(*item).second->GetComponent(MESH))
 		{
+			(*item).second->ParentRecalculateAABB();
 			if (ComponentMaterial* material = (ComponentMaterial*)(*item).second->GetComponent(MATERIAL))
 			{
 				mesh->material = material;
 			}
+		}
+	}
+}
+
+void ModuleLoader::ResetUUIDS(std::map<uint, GameObject*> scene_gameobjects)
+{
+	for (auto item = scene_gameobjects.begin(); item != scene_gameobjects.end(); item++)
+	{
+		if ((*item).second->GetUUID() != 0)
+		{
+			uint old_uuid = (*item).second->GetUUID();
+
+			uint new_uuid = Generate_UUID();
+			(*item).second->SetUUID(new_uuid);
+			GameObject* parent = (*item).second->GetParent();
+			parent->ChangeAChildrenUUID(new_uuid, old_uuid);
 		}
 	}
 }

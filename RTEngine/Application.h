@@ -27,7 +27,7 @@ class ModuleScene;
 class ModuleLoader;
 class ModuleDebug;
 class ModuleTime;
-
+class ModuleResourceManager;
 
 class Application
 {
@@ -41,6 +41,7 @@ public:
 	ModuleLoader* loader;
 	ModuleDebug* debug;
 	ModuleTime* time;
+	ModuleResourceManager* resource;
 
 	std::vector<float> fps_arr;
 	std::vector<float> ms_arr;

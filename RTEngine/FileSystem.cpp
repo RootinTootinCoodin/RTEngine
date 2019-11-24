@@ -99,17 +99,8 @@ void FileSystem::FormFullPath(std::string & path, const char * file_name, lib_di
 	case LIBRARY_TEXTURES:
 		path = TEXTURES_FOLDER;
 		break;
-	case LIBRARY_SCRIPTS:
-		path = SCRIPTS_FOLDER;
-		break;
-	case LIBRARY_3DOBJECTS:
-		path = OBJECTS_FOLDER;
-		break;
-	case LIBRARY_PREFABS:
-		path = PREFABS_FOLDER;
-		break;
-	case LIBRARY_SCENES:
-		path = SCENES_FOLDER;
+	case LIBRARY_MODELS:
+		path = MODELS_FOLDER;
 		break;
 	case SETTINGS:
 		path = SETTINGS_FOLDER;
@@ -120,8 +111,8 @@ void FileSystem::FormFullPath(std::string & path, const char * file_name, lib_di
 	case ASSETS_SCENES:
 		path = USER_SCENES_FOLDER;
 		break;
-	case ASSETS_PREFABS:
-		path = USER_PREFABS_FOLDER;
+	case ASSETS_MODELS:
+		path = EXTERNAL_MODELS_FOLDER;
 		break;
 	case NO_LIB:
 		path = "";
@@ -160,7 +151,7 @@ void FileSystem::SplitFilePath(std::string & full_path, std::string* path, std::
 	if (extension != nullptr)
 	{
 		if (pos_dot < full.length())
-			*extension = full.substr(pos_dot + 1);
+			*extension = full.substr(pos_dot);
 		else
 			extension->clear();
 	}
@@ -235,17 +226,8 @@ std::string FileSystem::getPathFromLibDir(lib_dir lib_dir) {
 	case LIBRARY_TEXTURES:
 		ret = TEXTURES_FOLDER;
 		break;
-	case LIBRARY_PREFABS:
-		ret = PREFABS_FOLDER;
-		break;
-	case LIBRARY_SCENES:
-		ret = SCENES_FOLDER;
-		break;
-	case LIBRARY_3DOBJECTS:
-		ret = OBJECTS_FOLDER;
-		break;
-	case LIBRARY_SCRIPTS:
-		ret = SCRIPTS_FOLDER;
+	case LIBRARY_MODELS:
+		ret = MODELS_FOLDER;
 		break;
 	case SETTINGS:
 		ret = SETTINGS_FOLDER;
@@ -253,8 +235,8 @@ std::string FileSystem::getPathFromLibDir(lib_dir lib_dir) {
 	case ASSETS_SCENES:
 		ret = USER_SCENES_FOLDER;
 		break;
-	case ASSETS_PREFABS:
-		ret = USER_PREFABS_FOLDER;
+	case ASSETS_MODELS:
+		ret = EXTERNAL_MODELS_FOLDER;
 		break;
 	case NO_LIB:
 		ret = "";
@@ -279,6 +261,14 @@ void FileSystem::DiscoverFiles(std::string path, std::vector<std::string>* file_
 			file_array->push_back(iter->path().string());
 		}
 	}
+}
+
+bool FileSystem::CheckIfModelExistsInLibrary(std::string path)
+{
+	//removeExtension(path);
+	//FormFullPath(path2, path.c_str(), ASSETS_MODELS, MODEL_EXTENSION);
+
+	return true;
 }
 
 bool FileSystem::removeExtension(std::string& str) {

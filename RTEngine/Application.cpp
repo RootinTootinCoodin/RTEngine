@@ -10,6 +10,7 @@
 #include "ModuleLoader.h"
 #include "ModuleDebug.h"
 #include "ModuleTime.h"
+#include "ModuleResource.h"
 
 Application::Application()
 {
@@ -24,12 +25,13 @@ Application::Application()
 	loader = new ModuleLoader(this);
 	debug = new ModuleDebug(this);
 	time = new ModuleTime(this);
+	resource = new ModuleResourceManager(this);
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
 
 	// Main Modules
-	
+	AddModule(resource);
 	AddModule(window);
 	AddModule(input);
 	AddModule(camera);

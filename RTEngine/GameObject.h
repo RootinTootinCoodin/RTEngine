@@ -30,6 +30,8 @@ public:
 	GameObject* GetParent() const { return parent; };
 
 	void RemoveComponent(componentType type);
+
+	void ChangeAChildrenUUID(uint new_uuid, uint old_uuid);
 	
 	void SetName(std::string _name) { name = _name; };
 	void SetUUID(uint _uuid) { uuid = _uuid; };
@@ -51,6 +53,7 @@ public:
 	void RecursiveHierarchyChildren();
 	void RecursiveSetDirty();
 	void RecursiveRemoveDirtyFlags();
+	void RecursiveCheckForDelete();
 	void RecursiveDeleteGameobject();
 	void RecalculateAABB();
 	void ParentRecalculateAABB();

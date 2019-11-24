@@ -16,23 +16,16 @@ public:
 	ComponentMesh(GameObject* parent);
 	~ComponentMesh();
 
-	bool HasTextureCoords() { return uvs != nullptr; };
-	bool HasNormals() { return normals != nullptr; };
-	bool HasVertexColors() { return colors != nullptr; };
+	void ComponentCleanUp() override;
+	
+	void AssignResourceUUID(uint uuid);
+	uint getResourceUUID()const { return resource_uuid; };
+
+
 private:
+	uint resource_uuid = 0;
+
 public:
-	uint id_index = 0;
-	uint num_indices = 0;
-	uint* indices = nullptr;
-
-	uint num_vertices = 0;
-	float* vertices = nullptr; //num vertices * 3 in size
-
-	float* colors = nullptr;
-
-	float* normals = nullptr; //num vertices in size
-
-	float* uvs = nullptr; //num
 
 	ComponentMaterial* material = nullptr;
 
