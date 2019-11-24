@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleTime.h"
 #include "ModuleScene.h"
+#include "ModuleLoader.h"
 #include "Component.h"
 #include "GameObject.h"
 
@@ -98,9 +99,12 @@ void ModuleTime::Tick(float dt)
 
 void ModuleTime::SaveStartState()
 {
+	_app->scene->save = true;
 }
 
 void ModuleTime::SetToStart()
 {
+	_app->loader->ImportSceneOrModel(_app->scene->scene_name, true);
+
 }
 

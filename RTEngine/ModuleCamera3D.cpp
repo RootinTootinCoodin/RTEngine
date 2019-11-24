@@ -150,7 +150,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 				if (new_up.y > 0.0f)
 				{
-					editorCamera->camera.up = new_up;
+					editorCamera->camera.up = new_up.Normalized();
 					editorCamera->camera.front = rotationY.Mul(editorCamera->camera.front).Normalized();
 				}
 			}
@@ -218,6 +218,17 @@ void ModuleCamera3D::MousePicking()
 	mouse_pos.y = ((App->input->GetMouseY() - scene_pos_global.y) / (scene_size.y / 2)) - 1;
 
 	LineSegment raycast = editorCamera->camera.UnProjectLineSegment(mouse_pos.x, -mouse_pos.y);
+
+	std::vector<GameObject*> gameobjects;
+	App->scene->root->RecursiveGetChildren(&gameobjects);
+	for (int i = 0; i < gameobjects.size(); i++)
+	{
+		if (raycast.Intersects(gameobjects[i]->GetAABB()))
+		{
+
+		}
+	}
+
 }
 
 // -----------------------------------------------------------------

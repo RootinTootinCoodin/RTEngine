@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleScene.h"
+#include "ModuleDebug.h"
 #include "glmath.h"
 
 ComponentCamera::ComponentCamera()
@@ -34,7 +35,7 @@ ComponentCamera::ComponentCamera(GameObject * parent) : Component(CAMERA, parent
 
 	camera.type = math::FrustumType::PerspectiveFrustum;
 	camera.pos = position;
-	camera.front = reference;
+	camera.front = reference.Normalized();
 	camera.up = { 0.0f, 1.0f, 0.0f };
 
 	UpdateFrustum();
@@ -69,7 +70,7 @@ void ComponentCamera::MoveTo(const vec & newPos)
 	reference.x += 1;
 	reference.Normalize();
 	camera.pos = position;
-	camera.front = reference;
+	camera.front = reference.Normalized();
 	LookAt(reference);
 }
 
@@ -106,7 +107,7 @@ bool ComponentCamera::Cull(AABB & itemAABB)
 
 	//Plane frustumPlanes[6];
 	//camera.GetPlanes(frustumPlanes);
-
+	_app->debug->DrawAABB(itemAABB);
 	if (camera.Contains(itemAABB.Centroid()))
 		ret = true;
 

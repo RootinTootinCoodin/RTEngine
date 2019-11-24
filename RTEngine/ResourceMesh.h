@@ -29,6 +29,8 @@ public:
 	float* normals = nullptr; //num vertices in size
 
 	float* uvs = nullptr; //num
+
+	bool has_uvs = true;
 };
 
 #endif // !__RESOURCE_MES_H__
