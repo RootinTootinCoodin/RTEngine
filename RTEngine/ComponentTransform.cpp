@@ -64,26 +64,26 @@ void ComponentTransform::setLocalFromPSR()
 	gameObject->RecursiveSetDirty();
 }
 
-void ComponentTransform::setPos(float3 & pos)
+void ComponentTransform::setPos(float3 pos)
 {
 	this->pos = pos;
 	setLocalFromPSR();
 }
 
-void ComponentTransform::setScale(float3 & scale)
+void ComponentTransform::setScale(float3 scale)
 {
 	//local_transform.sca(pos);
 	this->scale = scale;
 	setLocalFromPSR();
 }
 
-void ComponentTransform::setRotation(Quat & rotation)
+void ComponentTransform::setRotation(Quat rotation)
 {
 	this->rotation = rotation;
 	setLocalFromPSR();
 }
 
-void ComponentTransform::setRotation(float3 & rotation)
+void ComponentTransform::setRotation(float3 rotation)
 {
 	this->rotation = Quat::FromEulerXYZ(rotation.x,rotation.y,rotation.z);
 	setLocalFromPSR();

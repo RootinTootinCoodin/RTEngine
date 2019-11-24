@@ -24,10 +24,10 @@ public:
 
 	void setLocalFromMatrix(math::float4x4 matrix);
 	void setLocalFromPSR();
-	void setPos(float3 & pos);
-	void setScale(float3& scale);
-	void setRotation(Quat& rotation);
-	void setRotation(float3& rotation);
+	void setPos(float3 pos);
+	void setScale(float3 scale);
+	void setRotation(Quat rotation);
+	void setRotation(float3 rotation);
 
 	float3 getPos() { return pos; };
 	float3 getScale() { return scale; };
