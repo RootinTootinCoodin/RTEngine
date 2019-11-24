@@ -29,6 +29,13 @@ void UIHierarchy::Draw()
 		if (ImGui::InputText("App Name", scene_name, 25, ImGuiInputTextFlags_EnterReturnsTrue))
 			App->scene->scene_name = scene_name;
 	}
+	if (App->scene->selected_go != nullptr)
+	{
+		if (ImGui::Button("Add empty child"))
+		{
+			App->scene->selected_go->AddChildren("Token Child");
+		}
+	}
 	App->scene->root->RecursiveHierarchyChildren();
 
 	ImGui::End();
