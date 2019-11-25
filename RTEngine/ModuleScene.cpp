@@ -51,7 +51,9 @@ bool ModuleScene::Start()
 {
 	DefaultTexture();
 	GenerateCheckerTexture();
-
+	std::string model = "Street environment_V01.FBX";
+	App->loader->ImportSceneOrModel(model, false);
+	
 	return true;
 }
 
