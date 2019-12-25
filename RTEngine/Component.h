@@ -14,6 +14,7 @@ public:
 
 	~Component();
 
+	virtual void ComponentStart() { };
 	virtual void ComponentCleanUp() {};
 
 	virtual bool UpdateComponent(float dt) { return true; };

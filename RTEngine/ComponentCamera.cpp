@@ -108,7 +108,7 @@ bool ComponentCamera::Cull(AABB & itemAABB)
 	//Plane frustumPlanes[6];
 	//camera.GetPlanes(frustumPlanes);
 	_app->debug->DrawAABB(itemAABB);
-	if (camera.Contains(itemAABB.Centroid()))
+	if (camera.ContainsAABBCustom(itemAABB))
 		ret = true;
 
 	/*int pointsInside = 8;

@@ -50,10 +50,16 @@ bool ModuleCamera3D::Init(JSON_Object* config)
 	if (sensitivity < 0.3)
 		sensitivity = 0.3;
 
-	editorCamera = (ComponentCamera*)App->scene->root->AddComponent(CAMERA);
 
 	bool ret = true;
 	return ret;
+}
+
+bool ModuleCamera3D::Start()
+{
+	editorCamera = (ComponentCamera*)App->scene->root->AddComponent(CAMERA);
+
+	return true;
 }
 
 // -----------------------------------------------------------------
