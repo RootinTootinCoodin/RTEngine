@@ -61,6 +61,12 @@
     <Filter Include="Sources\External Libraries\ImGui\ImGuizmo">
       <UniqueIdentifier>{8e1a1452-4888-4906-93b8-15c0eca5634b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\External Libraries\LuaBridge">
+      <UniqueIdentifier>{cac386a6-c02f-45d5-aef8-552d4c5fc27b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\External Libraries\LUA">
+      <UniqueIdentifier>{ebc30239-d9ee-4f1b-9925-30722623d056}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -343,9 +349,6 @@
     <ClInclude Include="GameObject.h">
       <Filter>Sources\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="par_shapes\par_shapes.h">
-      <Filter>Sources\External Libraries</Filter>
-    </ClInclude>
     <ClInclude Include="Component.h">
       <Filter>Sources\GameObjects\Components</Filter>
     </ClInclude>
@@ -360,9 +363,6 @@
     </ClInclude>
     <ClInclude Include="UIAssets.h">
       <Filter>Sources\UIElements</Filter>
-    </ClInclude>
-    <ClInclude Include="FileSystem.h">
-      <Filter>Sources\External Libraries</Filter>
     </ClInclude>
     <ClInclude Include="ComponentCamera.h">
       <Filter>Sources\GameObjects\Components</Filter>
@@ -388,6 +388,99 @@
     <ClInclude Include="ResourceMaterial.h" />
     <ClInclude Include="ImGui\ImGuizmo\ImGuizmo.h">
       <Filter>Sources\External Libraries\ImGui\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\detail\CFunctions.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\detail\ClassInfo.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\detail\Config.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\detail\Constructor.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\detail\dump.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSystem.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\detail\FuncTraits.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\detail\Iterator.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\List.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\LuaBridge.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\detail\LuaException.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\detail\LuaHelpers.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\detail\LuaRef.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\Map.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\detail\Namespace.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="par_shapes\par_shapes.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\RefCountedObject.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\RefCountedPtr.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\detail\Security.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\detail\Stack.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\detail\TypeList.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\detail\TypeTraits.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\UnorderedMap.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\detail\Userdata.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaBridge\Vector.h">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="LUA\include\lauxlib.h">
+      <Filter>Sources\External Libraries\LUA</Filter>
+    </ClInclude>
+    <ClInclude Include="LUA\include\lua.h">
+      <Filter>Sources\External Libraries\LUA</Filter>
+    </ClInclude>
+    <ClInclude Include="LUA\include\lua.hpp">
+      <Filter>Sources\External Libraries\LUA</Filter>
+    </ClInclude>
+    <ClInclude Include="LUA\include\luaconf.h">
+      <Filter>Sources\External Libraries\LUA</Filter>
+    </ClInclude>
+    <ClInclude Include="LUA\include\lualib.h">
+      <Filter>Sources\External Libraries\LUA</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleScripting.h">
+      <Filter>Sources\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -592,9 +685,6 @@
     <ClCompile Include="UIAssets.cpp">
       <Filter>Sources\UIElements</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem.cpp">
-      <Filter>Sources\External Libraries</Filter>
-    </ClCompile>
     <ClCompile Include="ComponentCamera.cpp">
       <Filter>Sources\GameObjects\Components</Filter>
     </ClCompile>
@@ -619,6 +709,12 @@
     <ClCompile Include="ResourceMaterial.cpp" />
     <ClCompile Include="ImGui\ImGuizmo\ImGuizmo.cpp">
       <Filter>Sources\External Libraries\ImGui\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSystem.cpp">
+      <Filter>Sources\External Libraries\LuaBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleScripting.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

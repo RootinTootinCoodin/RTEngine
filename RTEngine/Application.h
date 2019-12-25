@@ -28,6 +28,7 @@ class ModuleLoader;
 class ModuleDebug;
 class ModuleTime;
 class ModuleResourceManager;
+class ModuleScripting;
 
 class Application
 {
@@ -42,6 +43,7 @@ public:
 	ModuleDebug* debug;
 	ModuleTime* time;
 	ModuleResourceManager* resource;
+	ModuleScripting* scripting;
 
 	std::vector<float> fps_arr;
 	std::vector<float> ms_arr;

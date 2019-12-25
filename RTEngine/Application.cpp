@@ -11,6 +11,7 @@
 #include "ModuleDebug.h"
 #include "ModuleTime.h"
 #include "ModuleResource.h"
+#include "ModuleScripting.h"
 
 Application::Application()
 {
@@ -26,6 +27,7 @@ Application::Application()
 	debug = new ModuleDebug(this);
 	time = new ModuleTime(this);
 	resource = new ModuleResourceManager(this);
+	scripting = new ModuleScripting(this);
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -39,6 +41,7 @@ Application::Application()
 	AddModule(debug);
 	AddModule(time);
 	AddModule(loader);
+	AddModule(scripting);
 	// Renderer last!
 	AddModule(ImGui);
 	AddModule(renderer3D);
