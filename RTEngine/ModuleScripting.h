@@ -13,6 +13,7 @@ extern "C"
 
 #pragma comment(lib,"LUA/liblua53.a")
 
+
 using namespace luabridge;
 
 class ModuleScripting :
@@ -23,6 +24,11 @@ public:
 	~ModuleScripting();
 
 	bool Init(JSON_Object* config)override;
+
+	bool LoadScript(std::string path,uint* uuid);
+
+	lua_State* v_machine = nullptr;
+	
 };
 
 #endif

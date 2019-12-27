@@ -30,6 +30,15 @@ void UIHierarchy::Draw()
 			App->scene->selected_go->AddChildren("Token Child");
 		}
 	}
+	else
+	{
+		ImGui::SameLine();
+		if (ImGui::Button("Add empty child"))
+		{
+			App->scene->root->AddChildren("Token Child");
+		}
+	}
+
 	if (App->time->GetState() == STATE_STOPPED)
 	{
 		static char scene_name[120];

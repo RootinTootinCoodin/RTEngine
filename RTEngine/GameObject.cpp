@@ -7,6 +7,7 @@
 #include "ComponentTransform.h"
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
+#include "ComponentScript.h"
 #include "ResourceMesh.h"
 #include "Tree.h"
 
@@ -82,6 +83,9 @@ Component* GameObject::AddComponent(componentType type)
 	case CAMERA:
 
 		ret = new ComponentCamera(this);
+		break;
+	case SCRIPT:
+		ret = new ComponentScript(this);
 		break;
 	default:
 		break;

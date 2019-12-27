@@ -15,6 +15,9 @@
 #include "ModuleResource.h"
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
+#include "ResourceScript.h"
+#include "ModuleScripting.h"
+#include "ModuleTime.h"
 #include "Tree.h"
 
 

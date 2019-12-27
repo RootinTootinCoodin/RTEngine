@@ -47,7 +47,8 @@ enum componentType
 	TRANSFORM,
 	MESH,
 	MATERIAL,
-	CAMERA
+	CAMERA,
+	SCRIPT
 };
 // Configuration -----------
 
@@ -126,6 +127,7 @@ inline const char* const PATH(const char* folder, const char* file)
 #define SETTINGS_FOLDER "\\Settings\\"
 #define ASSETS_MODELS_FOLDER "\\Assets\\Models\\"
 #define ASSETS_TEXTURES_FOLDER "\\Assets\\Textures\\"
+#define ASSETS_SCRIPTS_FOLDER "Assets\\Scripts\\"
 #define LIBRARY_FOLDER "\\Library\\"
 #define LIBRARY_MODELS_FOLDER "Library\\Models\\"
 #define LIBRARY_MESHES_FOLDER "\\Library\\Meshes\\"
@@ -136,6 +138,7 @@ inline const char* const PATH(const char* folder, const char* file)
 
 #define MODEL_EXTENSIONS(extension) extension==".fbx"|| extension==".FBX"
 #define TEXTURE_EXTENSIONS(extension) extension==".png"|| extension==".PNG"|| extension==".dds"|| extension==".DDS"
+#define SCRIPT_EXTENSIONS(extension) extension==".lua" || extension==".LUA"
 
 
 

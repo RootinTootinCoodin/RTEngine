@@ -2,6 +2,7 @@
 #include "Res.h"
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
+#include "ResourceScript.h"
 
 ModuleResourceManager::ModuleResourceManager(Application * app, bool start_enabled) : Module(app,start_enabled)
 {
@@ -37,6 +38,8 @@ Res * ModuleResourceManager::createNewResource(ResourceType type, uint _uuid)
 		case RES_TEXTURE:
 			ret = new ResourceMaterial(uuid);
 			break;
+		case RES_SCRIPT:
+			ret = new ResourceScript(uuid);
 		}
 		resource_map[uuid] = ret;
 	}
