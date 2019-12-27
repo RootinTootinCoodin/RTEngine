@@ -43,7 +43,7 @@ void UIHierarchy::Draw()
 	{
 		static char scene_name[120];
 		strcpy_s(scene_name, 120, App->scene->scene_name.c_str());
-		if (ImGui::InputText("App Name", scene_name, 25, ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::InputText("Scene Name", scene_name, 25, ImGuiInputTextFlags_EnterReturnsTrue))
 			App->scene->scene_name = scene_name;
 	}
 	

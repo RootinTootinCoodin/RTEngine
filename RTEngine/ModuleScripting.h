@@ -28,8 +28,24 @@ public:
 	bool LoadScript(std::string path,uint* uuid);
 
 	lua_State* v_machine = nullptr;
+
+	//LUA C++ FUNCTIONS
+
+	//BASIC
+	void SetBasicNamespace();
+
+
+	//INPUT
+
+	//OUPUT
+	void SetOutputNamespace();
+
 	
 };
+void LUALog(const char* string);
+void MoveX(uint uuid, float units);
+
+
 
 #endif
 

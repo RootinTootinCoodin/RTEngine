@@ -21,7 +21,8 @@ void ComponentScript::ComponentStart()
 {
 	if (ResourceScript* res = (ResourceScript*)_app->resource->getResource(uuid))
 	{
-		res->scriptTable["Start"]();
+		if(res->scriptTable["Start"].isFunction())
+			res->scriptTable["Start"]();
 	}
 }
 
@@ -30,8 +31,9 @@ bool ComponentScript::UpdateComponent(float dt)
 	bool ret = false;
 	if (ResourceScript* res = (ResourceScript*)_app->resource->getResource(resource_uuid))
 	{
-		res->scriptTable["Update"]();
-		int number = res->scriptTable["number"];
+		if (res->scriptTable["Update"].isFunction())
+			res->scriptTable["Update"]();
+
 		ret = true;
 	}
 	return ret;

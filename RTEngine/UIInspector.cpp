@@ -254,6 +254,8 @@ void UIInspector::SelectScript(GameObject* go)
 					App->scripting->LoadScript((*item), &script_uuid);
 					ComponentScript* script = (ComponentScript*)go->AddComponent(SCRIPT);
 					script->AssignResourceUUID(script_uuid);
+					ResourceScript* res_script = (ResourceScript*)App->resource->getResource(script->getResourceUUID());
+					res_script->scriptTable["UUID"] = go->GetUUID();
 				}
 			}
 		}

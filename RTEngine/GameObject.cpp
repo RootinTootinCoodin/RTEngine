@@ -146,6 +146,25 @@ void GameObject::RecursiveGameObjectCleanUp()
 	RemoveComponents();
 }
 
+GameObject * GameObject::RecursiveFindChild(uint uuid)
+{
+	GameObject* ret = nullptr;
+	if (children.find(uuid) != children.end())
+	{
+		ret = children[uuid];
+	}
+	else
+	{
+		for (auto item = children.begin(); item != children.end(); item++)
+		{
+			ret = (*item).second->RecursiveFindChild(uuid);
+			if (ret)
+				break;
+		}
+	}
+	return ret;
+}
+
 void GameObject::RecursiveSetActive(bool _active)
 {
 	for (auto item = children.begin(); item != children.end(); item++)

@@ -7,5 +7,5 @@ function script:Start()
     script["number"] = 1
 end
 function script:Update()
-    OUTPUT.MoveX(script["UUID"],0.1)
+    OUTPUT.MoveX(script["UUID"],0)
 end

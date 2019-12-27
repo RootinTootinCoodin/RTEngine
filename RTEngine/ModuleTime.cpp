@@ -27,7 +27,7 @@ update_status ModuleTime::Update(float dt)
 	if (gameState == STATE_RUNNING)
 		Tick(dt * gameSpeed);
 
-	if (gameState == STATE_PAUSED || gameState == STATE_STOPPED)
+	if (gameState == STATE_PAUSED)
 		Tick(0.0f);
 
 	return UPDATE_CONTINUE;
