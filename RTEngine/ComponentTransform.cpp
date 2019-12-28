@@ -26,15 +26,6 @@ ComponentTransform::~ComponentTransform()
 {
 }
 
-bool ComponentTransform::UpdateComponent(float dt)
-{
-	float3 mov = { 1, 1, 1 };
-
-	pos += mov * dt;
-
-	return true;
-}
-
 void ComponentTransform::removeDirty()
 {
 	if (!gameObject->GetUUID() == 0)
@@ -67,7 +58,9 @@ void ComponentTransform::setLocalFromPSR()
 void ComponentTransform::setPos(float3 pos)
 {
 	this->pos = pos;
-	setLocalFromPSR();
+	local_transform.SetTranslatePart(pos);
+	gameObject->RecursiveSetDirty();
+	//setLocalFromPSR();
 }
 
 void ComponentTransform::setScale(float3 scale)
@@ -80,7 +73,9 @@ void ComponentTransform::setScale(float3 scale)
 void ComponentTransform::setRotation(Quat rotation)
 {
 	this->rotation = rotation;
-	setLocalFromPSR();
+	local_transform.SetRotatePart(rotation);
+
+	gameObject->RecursiveSetDirty();
 }
 
 void ComponentTransform::setRotation(float3 rotation)

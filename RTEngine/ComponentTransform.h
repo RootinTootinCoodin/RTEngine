@@ -13,8 +13,6 @@ public:
 	ComponentTransform(GameObject* parent);
 	~ComponentTransform();
 
-	bool UpdateComponent(float dt);
-
 	math::float4x4 GetLocalTransformMatrix() const { return local_transform; };
 	math::float4x4 GetGlobalTransformMatrix() const { return global_transform; };
 
@@ -29,10 +27,10 @@ public:
 	void setRotation(Quat rotation);
 	void setRotation(float3 rotation);
 
-	float3 getPos() { return pos; };
-	float3 getScale() { return scale; };
-	float3 getRotation() { return rotation.ToEulerXYZ(); };
-	Quat getRotationQuat() { return rotation; };
+	float3 getPos() { return local_transform.TranslatePart(); };
+	float3 getScale() { return  local_transform.GetScale(); };
+	float3 getRotation() { return local_transform.RotatePart().ToEulerXYZ(); };
+	Quat getRotationQuat() { return local_transform.RotatePart().ToQuat(); };
 
 
 private:

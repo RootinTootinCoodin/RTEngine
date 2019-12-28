@@ -109,8 +109,6 @@ void UIInspector::DrawTransformInfo(ComponentTransform * transform)
 	ImGui::Text("UUID: %u", transform->GetUUID());
 	float3 position = transform->getPos();
 	float3 rotation = transform->getRotation();
-	transform->setRotation(rotation);
-
 	float3 scale = transform->getScale();
 	
 

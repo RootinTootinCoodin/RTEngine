@@ -4,6 +4,7 @@
 #include "ComponentTransform.h"
 #include "ModuleResource.h"
 #include "ModuleScene.h"
+#include "ModuleInput.h"
 #include "ResourceScript.h"
 #include "FileSystem.h"
 
@@ -25,6 +26,7 @@ bool ModuleScripting::Init(JSON_Object * config)
 	luaL_openlibs(v_machine);
 	lua_pcall(v_machine, 0, 0, 0);
 	SetBasicNamespace();
+	SetInputNamespace();
 	SetOutputNamespace();
 	//luaL_dofile(v_machine, "script.lua");
 
@@ -60,13 +62,35 @@ void ModuleScripting::SetBasicNamespace()
 		.endNamespace();
 }
 
+void ModuleScripting::SetInputNamespace()
+{
+	getGlobalNamespace(v_machine)
+		.beginNamespace("INPUT")
+			.addFunction("GetKeyState", LUAGetKeyState)
+		.endNamespace();
+}
+
 
 void ModuleScripting::SetOutputNamespace()
 {
 	getGlobalNamespace(v_machine)
 		.beginNamespace("OUTPUT")
 			.addFunction("MoveX", MoveX)
+			.addFunction("MoveY",MoveY)
+			.addFunction("MoveZ",MoveZ)
 		.endNamespace();
+}
+
+float LUAGetKeyState(uint uuid, float key)
+{
+	float ret = -1;
+	if (GameObject* go = _app->scene->root->RecursiveFindChild(uuid))
+	{
+		ret = _app->input->GetKey(key);
+	}
+	else
+		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
+	return ret;
 }
 
 void MoveX(uint uuid, float units)
@@ -82,6 +106,31 @@ void MoveX(uint uuid, float units)
 		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
 }
 
+void MoveY(uint uuid, float units)
+{
+	if (GameObject* go = _app->scene->root->RecursiveFindChild(uuid))
+	{
+		ComponentTransform* transform = (ComponentTransform*)go->GetComponent(TRANSFORM);
+		float3 pos = transform->getPos();
+		pos.y += units;
+		transform->setPos(pos);
+	}
+	else
+		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
+}
+
+void MoveZ(uint uuid, float units)
+{
+	if (GameObject* go = _app->scene->root->RecursiveFindChild(uuid))
+	{
+		ComponentTransform* transform = (ComponentTransform*)go->GetComponent(TRANSFORM);
+		float3 pos = transform->getPos();
+		pos.z += units;
+		transform->setPos(pos);
+	}
+	else
+		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
+}
 
 void LUALog(const char* string)
 {

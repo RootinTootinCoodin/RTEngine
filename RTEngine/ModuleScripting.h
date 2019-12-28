@@ -31,19 +31,28 @@ public:
 
 	//LUA C++ FUNCTIONS
 
-	//BASIC
 	void SetBasicNamespace();
 
+	void SetInputNamespace();
 
-	//INPUT
-
-	//OUPUT
 	void SetOutputNamespace();
 
 	
 };
+
+
+//BASIC
 void LUALog(const char* string);
+
+//INPUT
+float LUAGetKeyState(uint uuid, float key);
+//OUPUT
 void MoveX(uint uuid, float units);
+void MoveY(uint uuid, float units);
+void MoveZ(uint uuid, float units);
+
+
+
 
 
 
