@@ -2,8 +2,10 @@
 #define __MODULE_IMGUI_H__
 
 #include <vector>
+#include <array>
 #include "Module.h"
 #include "UIElement.h"
+#include "ImGui/imgui.h"
 
 class UIScene;
 class UITests;
@@ -15,6 +17,8 @@ class UIInspector;
 class UIHierarchy;
 class UIAssets;
 class UITime;
+
+enum UIFonts { REGULAR, REGULAR_BOLD, REGULAR_ITALIC, REGULAR_BOLDITALIC, TITLES, IMGUI_DEFAULT, LAST_UI_FONT };
 
 class ModuleImGui :
 	public Module
@@ -44,7 +48,10 @@ public:
 	UIAssets* assets = nullptr;
 	UITime* time = nullptr;
 
+	ImGuiIO* io;
+
 	std::vector<UIElement*> UI;
+	std::array<ImFont*, LAST_UI_FONT> uiFonts;
 private:
 	bool show_demo_window = false;
 	bool dockspace_active = true;

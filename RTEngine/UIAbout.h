@@ -14,4 +14,3 @@ public:
 };
 
 #endif // !__UI_ABOUT_H__
-

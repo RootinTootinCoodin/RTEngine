@@ -14,6 +14,9 @@
 #include "UIAssets.h"
 #include "UITime.h"
 
+
+#include <fstream>
+
 ModuleImGui::ModuleImGui(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	name = "Imgui";
@@ -58,6 +61,11 @@ bool ModuleImGui::Init(JSON_Object* config)
 	UI.push_back((UIElement*)hierarchy);
 	UI.push_back((UIElement*)assets);
 	UI.push_back((UIElement*)time);
+
+	//uiFonts[TITLES] = io->Fonts->AddFontFromFileTTF("Fonts/title.ttf", 16.0f);
+	//uiFonts[REGULAR] = io->Fonts->AddFontFromFileTTF("Fonts/regular.ttf", 18.0f);
+	//uiFonts[IMGUI_DEFAULT] = io->Fonts->AddFontDefault();
+
 	return true;
 }
 
