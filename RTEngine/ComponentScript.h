@@ -13,7 +13,7 @@ public:
 	void AssignResourceUUID(uint uuid);
 	uint getResourceUUID()const { return resource_uuid; };
 
-	uint resource_uuid;
+	uint resource_uuid = 0;
 	~ComponentScript();
 };
 

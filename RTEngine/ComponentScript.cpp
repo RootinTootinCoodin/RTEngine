@@ -21,8 +21,13 @@ void ComponentScript::ComponentStart()
 {
 	if (ResourceScript* res = (ResourceScript*)_app->resource->getResource(uuid))
 	{
-		if(res->scriptTable["Start"].isFunction())
-			res->scriptTable["Start"]();
+		if (res->compiled)
+		{
+			if (res->scriptTable["Start"].isFunction())
+			{
+				res->scriptTable["Start"]();
+			}
+		}
 	}
 }
 
@@ -31,16 +36,24 @@ bool ComponentScript::UpdateComponent(float dt)
 	bool ret = false;
 	if (ResourceScript* res = (ResourceScript*)_app->resource->getResource(resource_uuid))
 	{
-		if (res->scriptTable["Update"].isFunction())
-			res->scriptTable["Update"]();
-
-		ret = true;
+		if (res->compiled)
+		{
+			if (res->scriptTable["Update"].isFunction())
+			{
+				res->scriptTable["Update"]();
+				ret = true;
+			}
+		}
 	}
 	return ret;
 }
 
 void ComponentScript::AssignResourceUUID(uint uuid)
 {
+	if (resource_uuid != 0)
+	{
+		_app->resource->DeleteResource(resource_uuid);
+	}
 	resource_uuid = uuid;
 	if (ResourceScript* res = (ResourceScript*)_app->resource->getResource(uuid))
 		res->increaseAmountLoaded();

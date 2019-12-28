@@ -221,13 +221,22 @@ void UIInspector::DrawScriptInfo(ComponentScript * _script)
 {
 	ImGui::Text("Component Script");
 
-	ImGui::Text("UUID: %u", _script->GetUUID());
-
 	ResourceScript* script = (ResourceScript*)App->resource->getResource(_script->getResourceUUID());
 
 	if (script)
 	{
 		ImGui::Text("Script Name: %s", script->GetOriginalFile());
+		if (script->compiled)
+			ImGui::Text("Compiled: TRUE");
+		else
+		{
+			ImGui::Text("Compiled: FALSE");
+			ImGui::Text("This script will be ignored until it compiles");
+			if (ImGui::Button("Recompile"))
+			{
+				App->scripting->LoadScript(script->GetOriginalFile(), _script);
+			}
+		}
 	}
 
 }
@@ -248,12 +257,8 @@ void UIInspector::SelectScript(GameObject* go)
 				FileSystem::getFileNameFromPath(name);
 				if (ImGui::Button(name.c_str()))
 				{
-					uint script_uuid = 0;
-					App->scripting->LoadScript((*item), &script_uuid);
 					ComponentScript* script = (ComponentScript*)go->AddComponent(SCRIPT);
-					script->AssignResourceUUID(script_uuid);
-					ResourceScript* res_script = (ResourceScript*)App->resource->getResource(script->getResourceUUID());
-					res_script->scriptTable["UUID"] = go->GetUUID();
+					App->scripting->LoadScript((*item), script);
 				}
 			}
 		}

@@ -16,6 +16,8 @@ extern "C"
 
 using namespace luabridge;
 
+class ComponentScript;
+
 class ModuleScripting :
 	public Module
 {
@@ -25,7 +27,7 @@ public:
 
 	bool Init(JSON_Object* config)override;
 
-	bool LoadScript(std::string path,uint* uuid);
+	bool LoadScript(std::string path, ComponentScript* component);
 
 	lua_State* v_machine = nullptr;
 

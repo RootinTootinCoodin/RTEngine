@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "ComponentTransform.h"
+#include "ComponentScript.h"
 #include "ModuleResource.h"
 #include "ModuleScene.h"
 #include "ModuleInput.h"
@@ -40,18 +41,26 @@ bool ModuleScripting::Init(JSON_Object * config)
 	return true;
 }
 
-bool ModuleScripting::LoadScript(std::string path, uint* res_uuid)
+bool ModuleScripting::LoadScript(std::string path, ComponentScript* component)
 {
-	if (luaL_dofile(v_machine, path.c_str()) == LUA_OK)
+	bool ret = false;
+	int compiled = luaL_dofile(v_machine, path.c_str());
+	ResourceScript* res_script = (ResourceScript*)App->resource->createNewResource(RES_SCRIPT);
+	res_script->SetOriginalFile(path);
+	component->AssignResourceUUID(res_script->GetUUID());
+	if (compiled == LUA_OK)
 	{
-		ResourceScript* res_script = (ResourceScript*)App->resource->createNewResource(RES_SCRIPT);
-		*res_uuid = res_script->GetUUID();
+		res_script->compiled = true;
 		res_script->scriptTable = getGlobal(v_machine,"script");
-
+		res_script->scriptTable["UUID"] = component->getGameObject()->GetUUID();
+		ret = true;
 	}
 	else
+	{
+		LOG("Could not compile script %s, check for compilation errors",path.c_str());
 		LOG("%s", lua_tostring(v_machine, -1));
-	return false;
+	}
+	return ret;
 }
 
 void ModuleScripting::SetBasicNamespace()
