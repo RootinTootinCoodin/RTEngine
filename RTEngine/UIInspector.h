@@ -9,6 +9,7 @@ class ComponentTransform;
 class ComponentMesh;
 class ComponentMaterial;
 class ComponentCamera;
+class ComponentScript;
 
 class UIInspector :
 	public UIElement
@@ -23,7 +24,9 @@ public:
 	void DrawMeshInfo(ComponentMesh* mesh);
 	void DrawMaterialInfo(ComponentMaterial* material);
 	void DrawCameraInfo(ComponentCamera* camera);
+	void DrawScriptInfo(ComponentScript* script);
 
+	void SelectScript(GameObject* go);
 
 };
 

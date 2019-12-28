@@ -8,8 +8,11 @@
 #include "ComponentMaterial.h"
 #include "ComponentTransform.h"
 #include "ComponentCamera.h"
+#include "ComponentScript.h"
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
+#include "ResourceScript.h"
+#include "FileSystem.h"
 #include "Globals.h"
 
 
@@ -88,6 +91,16 @@ void UIInspector::DrawGameObjectInfo(GameObject* gameobject)
 		if (ImGui::Button("Add camera"))
 			gameobject->AddComponent(CAMERA);
 	}
+	if(ComponentScript* script = (ComponentScript*)gameobject->GetComponent(SCRIPT))
+	{
+		DrawScriptInfo(script);
+		ImGui::Separator();
+		ImGui::Separator();
+	}
+	else
+	{
+		SelectScript(gameobject);
+	}
 }
 
 void UIInspector::DrawTransformInfo(ComponentTransform * transform)
@@ -96,8 +109,6 @@ void UIInspector::DrawTransformInfo(ComponentTransform * transform)
 	ImGui::Text("UUID: %u", transform->GetUUID());
 	float3 position = transform->getPos();
 	float3 rotation = transform->getRotation();
-	transform->setRotation(rotation);
-
 	float3 scale = transform->getScale();
 	
 
@@ -204,6 +215,49 @@ void UIInspector::DrawCameraInfo(ComponentCamera * camera)
 	}
 
 
+}
+
+void UIInspector::DrawScriptInfo(ComponentScript * _script)
+{
+	ImGui::Text("Component Script");
+
+	ImGui::Text("UUID: %u", _script->GetUUID());
+
+	ResourceScript* script = (ResourceScript*)App->resource->getResource(_script->getResourceUUID());
+
+	if (script)
+	{
+		ImGui::Text("Script Name: %s", script->GetOriginalFile());
+	}
+
+}
+
+void UIInspector::SelectScript(GameObject* go)
+{
+	std::vector<std::string> files;
+	FileSystem::DiscoverFiles(ASSETS_SCRIPTS_FOLDER, &files, nullptr);
+	if(ImGui::CollapsingHeader("CurrentScripts"))
+	{
+		for (auto item = files.begin(); item != files.end(); item++)
+		{
+			std::string extension  = (*item);
+			FileSystem::getExtension(extension);
+			if (SCRIPT_EXTENSIONS(extension))
+			{
+				std::string name = (*item);
+				FileSystem::getFileNameFromPath(name);
+				if (ImGui::Button(name.c_str()))
+				{
+					uint script_uuid = 0;
+					App->scripting->LoadScript((*item), &script_uuid);
+					ComponentScript* script = (ComponentScript*)go->AddComponent(SCRIPT);
+					script->AssignResourceUUID(script_uuid);
+					ResourceScript* res_script = (ResourceScript*)App->resource->getResource(script->getResourceUUID());
+					res_script->scriptTable["UUID"] = go->GetUUID();
+				}
+			}
+		}
+	}
 }
 
 

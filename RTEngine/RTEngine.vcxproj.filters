@@ -385,7 +385,6 @@
     <ClInclude Include="ResourceMesh.h">
       <Filter>Sources\GameObjects\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceMaterial.h" />
     <ClInclude Include="ImGui\ImGuizmo\ImGuizmo.h">
       <Filter>Sources\External Libraries\ImGui\ImGuizmo</Filter>
     </ClInclude>
@@ -481,6 +480,15 @@
     </ClInclude>
     <ClInclude Include="ModuleScripting.h">
       <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceMaterial.h">
+      <Filter>Sources\GameObjects\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceScript.h">
+      <Filter>Sources\GameObjects\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentScript.h">
+      <Filter>Sources\GameObjects\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -706,7 +714,6 @@
     <ClCompile Include="ResourceMesh.cpp">
       <Filter>Sources\GameObjects\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceMaterial.cpp" />
     <ClCompile Include="ImGui\ImGuizmo\ImGuizmo.cpp">
       <Filter>Sources\External Libraries\ImGui\ImGuizmo</Filter>
     </ClCompile>
@@ -715,6 +722,15 @@
     </ClCompile>
     <ClCompile Include="ModuleScripting.cpp">
       <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceMaterial.cpp">
+      <Filter>Sources\GameObjects\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceScript.cpp">
+      <Filter>Sources\GameObjects\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentScript.cpp">
+      <Filter>Sources\GameObjects\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

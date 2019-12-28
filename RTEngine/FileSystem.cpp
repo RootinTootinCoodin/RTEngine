@@ -117,6 +117,8 @@ void FileSystem::FormFullPath(std::string & path, const char * file_name, lib_di
 	case ASSETS_TEXTURES:
 		path = ASSETS_TEXTURES_FOLDER;
 		break;
+	case ASSETS_SCRIPTS:
+		path = ASSETS_SCRIPTS_FOLDER;
 	case NO_LIB:
 		path = "";
 		break;

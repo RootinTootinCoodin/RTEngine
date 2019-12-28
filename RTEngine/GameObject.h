@@ -46,6 +46,7 @@ public:
 	void RemoveComponents();
 	void RecursiveGameObjectCleanUp();
 
+	GameObject* RecursiveFindChild(uint uuid);
 	void RecursiveSetActive(bool active);
 	void RecursiveSetStatic(bool _static);
 	void RecursiveGetChildren(std::vector<GameObject*>* buffer);

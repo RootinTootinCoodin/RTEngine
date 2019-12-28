@@ -7,7 +7,8 @@ class Res;
 class ResourceMaterial;
 enum  ResourceType {
 	RES_MESH,
-	RES_TEXTURE
+	RES_TEXTURE,
+	RES_SCRIPT
 };
 class ModuleResourceManager :
 	public Module

@@ -773,6 +773,11 @@ bool ModuleLoader::ExportComponent(Component * component, JSON_Object * componen
 		json_object_set_string(component_json, "component_type", "camera");
 		break;
 	}
+	case SCRIPT:
+	{
+		json_object_set_string(component_json, "component_type", "script");
+		break;
+	}
 	}
 	json_object_set_number(component_json, "UUID", component->GetUUID());
 	return true;
@@ -845,6 +850,10 @@ bool ModuleLoader::ImportComponent(JSON_Object * json_go, GameObject* go)
 
 	}
 	else if (component_type == "camera")
+	{
+		ret = true;
+	}
+	else if (component_type == "script")
 	{
 		ret = true;
 	}

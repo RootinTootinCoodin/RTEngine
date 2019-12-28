@@ -7,6 +7,7 @@
 #include "ComponentTransform.h"
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
+#include "ComponentScript.h"
 #include "ResourceMesh.h"
 #include "Tree.h"
 
@@ -83,6 +84,9 @@ Component* GameObject::AddComponent(componentType type)
 
 		ret = new ComponentCamera(this);
 		break;
+	case SCRIPT:
+		ret = new ComponentScript(this);
+		break;
 	default:
 		break;
 	}
@@ -140,6 +144,25 @@ void GameObject::RecursiveGameObjectCleanUp()
 		(*item).second->RecursiveGameObjectCleanUp();
 	}
 	RemoveComponents();
+}
+
+GameObject * GameObject::RecursiveFindChild(uint uuid)
+{
+	GameObject* ret = nullptr;
+	if (children.find(uuid) != children.end())
+	{
+		ret = children[uuid];
+	}
+	else
+	{
+		for (auto item = children.begin(); item != children.end(); item++)
+		{
+			ret = (*item).second->RecursiveFindChild(uuid);
+			if (ret)
+				break;
+		}
+	}
+	return ret;
 }
 
 void GameObject::RecursiveSetActive(bool _active)
