@@ -18,6 +18,7 @@ ComponentTransform::ComponentTransform(GameObject * parent) : Component(TRANSFOR
 	global_transform.SetIdentity();
 	pos = { 0,0,0 };
 	rotation = Quat::identity;
+	rotation_euler = { 0,0,0 };
 	scale = { 1,1,1 };
 }
 
@@ -44,6 +45,7 @@ void ComponentTransform::setLocalFromMatrix(math::float4x4 matrix)
 	pos = matrix.TranslatePart();
 	scale = matrix.GetScale();
 	rotation = matrix.RotatePart().ToQuat();
+	rotation_euler = matrix.RotatePart().ToEulerXYZ();
 	gameObject->RecursiveSetDirty();
 
 }
@@ -73,13 +75,13 @@ void ComponentTransform::setScale(float3 scale)
 void ComponentTransform::setRotation(Quat rotation)
 {
 	this->rotation = rotation;
-	local_transform.SetRotatePart(rotation);
-
-	gameObject->RecursiveSetDirty();
+	setLocalFromPSR();
 }
 
 void ComponentTransform::setRotation(float3 rotation)
 {
+	rotation_euler = rotation;
 	this->rotation = Quat::FromEulerXYZ(rotation.x,rotation.y,rotation.z);
+
 	setLocalFromPSR();
 }

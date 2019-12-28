@@ -6,6 +6,8 @@
 #include "ModuleResource.h"
 #include "ModuleScene.h"
 #include "ModuleInput.h"
+#include "ModuleTime.h"
+#include "ModuleLoader.h"
 #include "ResourceScript.h"
 #include "FileSystem.h"
 
@@ -29,15 +31,7 @@ bool ModuleScripting::Init(JSON_Object * config)
 	SetBasicNamespace();
 	SetInputNamespace();
 	SetOutputNamespace();
-	//luaL_dofile(v_machine, "script.lua");
 
-
-	//LuaRef s = getGlobal(v_machine, "testString");
-	//LuaRef n = getGlobal(v_machine, "number");
-	//std::string luaString = s.cast<std::string>();
-	//int answer = n.cast<int>();
-	//LOG(luaString.c_str());
-	//LOG("%i", answer);
 	return true;
 }
 
@@ -68,6 +62,8 @@ void ModuleScripting::SetBasicNamespace()
 	getGlobalNamespace(v_machine)
 		.beginNamespace("BASIC")
 			.addFunction("LUALog", LUALog)
+			.addFunction("LUAGetDT",LUAGetDT)
+			.addFunction("Instantiate",Instantiate)
 		.endNamespace();
 }
 
@@ -87,6 +83,9 @@ void ModuleScripting::SetOutputNamespace()
 			.addFunction("MoveX", MoveX)
 			.addFunction("MoveY",MoveY)
 			.addFunction("MoveZ",MoveZ)
+			.addFunction("MoveForward",MoveForward)
+			.addFunction("MoveSideways",MoveSideways)
+			.addFunction("RotateAlongY",RotateAlongY)
 		.endNamespace();
 }
 
@@ -141,7 +140,57 @@ void MoveZ(uint uuid, float units)
 		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
 }
 
+void MoveForward(uint uuid, float units)
+{
+	if (GameObject* go = _app->scene->root->RecursiveFindChild(uuid))
+	{
+		ComponentTransform* transform = (ComponentTransform*)go->GetComponent(TRANSFORM);
+		float3 pos = transform->GetLocalTransformMatrix().WorldZ();
+		pos *= units;
+		transform->setPos(transform->getPos() + pos);
+	}
+	else
+		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
+}
+
+void MoveSideways(uint uuid, float units)
+{
+	if (GameObject* go = _app->scene->root->RecursiveFindChild(uuid))
+	{
+		ComponentTransform* transform = (ComponentTransform*)go->GetComponent(TRANSFORM);
+		float3 pos = transform->GetLocalTransformMatrix().WorldX();
+		pos *= units;
+		transform->setPos(transform->getPos() + pos);
+	}
+	else
+		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
+}
+
+void RotateAlongY(uint uuid, float degrees)
+{
+	if (GameObject* go = _app->scene->root->RecursiveFindChild(uuid))
+	{
+		ComponentTransform* transform = (ComponentTransform*)go->GetComponent(TRANSFORM);
+		float3 rotation = transform->getRotation();
+		rotation.y += DEGTORAD * degrees;
+		transform->setRotation(rotation);
+	}
+	else
+		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
+}
+
+void Instantiate(uint uuid, const char * name)
+{
+	std::string _name = name;
+	_app->loader->ImportSceneOrModel(_name, false);
+}
+
 void LUALog(const char* string)
 {
 	LOG(string);
+}
+
+float LUAGetDT()
+{
+	return _app->time->game_dt;
 }

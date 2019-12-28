@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleScene.h"
 #include "ModuleResource.h"
+#include "ModuleLoader.h"
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentMesh.h"
@@ -49,6 +50,11 @@ void UIInspector::DrawGameObjectInfo(GameObject* gameobject)
 	ImGui::SameLine();
 	ImGui::Checkbox("Draw AABB", &gameobject->draw_aabb);
 
+	if (ImGui::Button("Save"))
+	{
+		_app->loader->ExportSceneOrModel(gameobject,true);
+	}
+
 	static char go_name[120];
 	strcpy_s(go_name, 120, gameobject->GetName().c_str());
 	if (ImGui::InputText("Name", go_name, 25, ImGuiInputTextFlags_EnterReturnsTrue))
@@ -65,6 +71,17 @@ void UIInspector::DrawGameObjectInfo(GameObject* gameobject)
 		DrawTransformInfo(transform);
 		ImGui::Separator();
 		ImGui::Separator();
+	}
+
+	if (ComponentScript* script = (ComponentScript*)gameobject->GetComponent(SCRIPT))
+	{
+		DrawScriptInfo(script);
+		ImGui::Separator();
+		ImGui::Separator();
+	}
+	else
+	{
+		SelectScript(gameobject);
 	}
 
 	if (ComponentMesh* mesh = (ComponentMesh*)gameobject->GetComponent(MESH))
@@ -91,16 +108,7 @@ void UIInspector::DrawGameObjectInfo(GameObject* gameobject)
 		if (ImGui::Button("Add camera"))
 			gameobject->AddComponent(CAMERA);
 	}
-	if(ComponentScript* script = (ComponentScript*)gameobject->GetComponent(SCRIPT))
-	{
-		DrawScriptInfo(script);
-		ImGui::Separator();
-		ImGui::Separator();
-	}
-	else
-	{
-		SelectScript(gameobject);
-	}
+
 }
 
 void UIInspector::DrawTransformInfo(ComponentTransform * transform)
@@ -109,14 +117,24 @@ void UIInspector::DrawTransformInfo(ComponentTransform * transform)
 	ImGui::Text("UUID: %u", transform->GetUUID());
 	float3 position = transform->getPos();
 	float3 rotation = transform->getRotation();
+	rotation.x *= RADTODEG;
+	rotation.y *= RADTODEG;
+	rotation.z *= RADTODEG;
+
+
 	float3 scale = transform->getScale();
 	
 
 
 	if (ImGui::DragFloat3("Position", (float*)&position, 0.1f))
 		transform->setPos(position); 
-	if (ImGui::DragFloat3("Rotation", (float*)&rotation,0.1f));
-		transform->setRotation(rotation); 
+	if (ImGui::DragFloat3("Rotation", (float*)&rotation, 0.1f))
+	{
+		rotation.x *= DEGTORAD;
+		rotation.y *= DEGTORAD;
+		rotation.z *= DEGTORAD;
+		transform->setRotation(rotation);
+	}
 	if (ImGui::DragFloat3("Scale", (float*)&scale, 0.1f))
 		transform->setScale(scale); 
 
@@ -225,7 +243,7 @@ void UIInspector::DrawScriptInfo(ComponentScript * _script)
 
 	if (script)
 	{
-		ImGui::Text("Script Name: %s", script->GetOriginalFile());
+		ImGui::Text("Script Name: %s", script->GetOriginalFile().c_str());
 		if (script->compiled)
 			ImGui::Text("Compiled: TRUE");
 		else

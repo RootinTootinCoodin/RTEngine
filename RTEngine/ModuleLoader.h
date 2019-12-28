@@ -46,8 +46,8 @@ public:
 	bool ExportMesh(ResourceMesh* mesh);
 	bool ImportMesh(ResourceMesh* mesh, char* buffer);
 
-	bool ExportSceneOrModel(GameObject* gameobject);
-	bool ImportSceneOrModel(std::string& path, bool is_scene);
+	bool ExportSceneOrModel(GameObject* gameobject,bool is_prefab = false);
+	bool ImportSceneOrModel(std::string& path, bool is_scene,bool is_prefab = false);
 	 
 	bool ExportGameObject(GameObject* go, JSON_Object* go_json);
 	GameObject* ImportGameObject(JSON_Object* json_go); 

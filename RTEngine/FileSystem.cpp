@@ -119,6 +119,10 @@ void FileSystem::FormFullPath(std::string & path, const char * file_name, lib_di
 		break;
 	case ASSETS_SCRIPTS:
 		path = ASSETS_SCRIPTS_FOLDER;
+		break;
+	case ASSETS_PREFABS:
+		path = ASSETS_PREFABS_FOLDER;
+		break;
 	case NO_LIB:
 		path = "";
 		break;
@@ -242,6 +246,9 @@ std::string FileSystem::getPathFromLibDir(lib_dir lib_dir) {
 		break;
 	case ASSETS_MODELS:
 		ret = EXTERNAL_MODELS_FOLDER;
+		break;
+	case ASSETS_SCRIPTS:
+		ret = PREFABS_FOLDER;
 		break;
 	case NO_LIB:
 		ret = "";

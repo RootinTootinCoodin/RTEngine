@@ -9,6 +9,7 @@
 #define MESHES_FOLDER "Library\\Meshes\\"
 #define TEXTURES_FOLDER "Library\\Textures\\"
 #define SCRIPTS_FOLDER "Assets\\Scripts\\"
+#define PREFABS_FOLDER "Assets\\Models\\"
 
 #define MESH_EXTENSION ".meshprtnr"
 #define SCENE_EXTENSION ".westscene"
@@ -32,6 +33,7 @@ enum lib_dir {
 	ASSETS_MODELS,
 	ASSETS_TEXTURES,
 	ASSETS_SCRIPTS,
+	ASSETS_PREFABS,
 	NO_LIB
 };
 

@@ -128,6 +128,8 @@ inline const char* const PATH(const char* folder, const char* file)
 #define ASSETS_MODELS_FOLDER "\\Assets\\Models\\"
 #define ASSETS_TEXTURES_FOLDER "\\Assets\\Textures\\"
 #define ASSETS_SCRIPTS_FOLDER "Assets\\Scripts\\"
+#define ASSETS_PREFABS_FOLDER "Assets\\Prefabs\\"
+#define LIBRARY_PREFABS_FOLDER "Library\\Prefabs\\"
 #define LIBRARY_FOLDER "\\Library\\"
 #define LIBRARY_MODELS_FOLDER "Library\\Models\\"
 #define LIBRARY_MESHES_FOLDER "\\Library\\Meshes\\"

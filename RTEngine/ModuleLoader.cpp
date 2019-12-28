@@ -4,15 +4,18 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleResource.h"
+#include "ModuleScripting.h"
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentTransform.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
+#include "ComponentScript.h"
 #include "Tree.h"
 
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
+#include "ResourceScript.h"
 #include "FileSystem.h"
 
 
@@ -581,7 +584,7 @@ bool ModuleLoader::ImportMesh(ResourceMesh* mesh, char* buffer)
 	return true;
 }
 
-bool ModuleLoader::ExportSceneOrModel(GameObject* gameobject)
+bool ModuleLoader::ExportSceneOrModel(GameObject* gameobject,bool is_prefab)
 {
 	bool ret = false;
 	JSON_Value* file = json_value_init_object();	
@@ -608,8 +611,10 @@ bool ModuleLoader::ExportSceneOrModel(GameObject* gameobject)
 		std::string path_buffer;
 		if(extension == SCENE_EXTENSION)
 			FileSystem::FormFullPath(path_buffer, App->scene->scene_name.c_str(), ASSETS_SCENES, SCENE_EXTENSION);
-		else
+		else if(!is_prefab)
 			FileSystem::FormFullPath(path_buffer, gameobject->GetName().c_str(), LIBRARY_MODELS, MODEL_EXTENSION);
+		else
+			FileSystem::FormFullPath(path_buffer, gameobject->GetName().c_str(), ASSETS_PREFABS, MODEL_EXTENSION);
 
 		json_serialize_to_file(file, path_buffer.c_str());
 	}
@@ -619,7 +624,7 @@ bool ModuleLoader::ExportSceneOrModel(GameObject* gameobject)
 	return ret;
 }
 
-bool ModuleLoader::ImportSceneOrModel(std::string& path, bool is_scene)
+bool ModuleLoader::ImportSceneOrModel(std::string& path, bool is_scene,bool is_prefab)
 {
 	bool ret = false;
 	if(is_scene)
@@ -629,8 +634,11 @@ bool ModuleLoader::ImportSceneOrModel(std::string& path, bool is_scene)
 
 	if(is_scene)
 		FileSystem::FormFullPath(path, name.c_str(), ASSETS_SCENES,SCENE_EXTENSION);
-	else
+	else if(!is_prefab)
 		FileSystem::FormFullPath(path, name.c_str(), LIBRARY_MODELS, MODEL_EXTENSION);
+	else
+		FileSystem::FormFullPath(path, name.c_str(), ASSETS_PREFABS, MODEL_EXTENSION);
+
 
 	JSON_Value* file = json_parse_file(path.c_str());
 	if (file)
@@ -775,7 +783,12 @@ bool ModuleLoader::ExportComponent(Component * component, JSON_Object * componen
 	}
 	case SCRIPT:
 	{
+		ComponentScript* script = (ComponentScript*)component;
 		json_object_set_string(component_json, "component_type", "script");
+		if (ResourceScript* res_script = (ResourceScript*)App->resource->getResource(script->getResourceUUID()))
+		{
+			json_object_set_string(component_json, "path", res_script->GetOriginalFile().c_str());
+		}
 		break;
 	}
 	}
@@ -855,6 +868,8 @@ bool ModuleLoader::ImportComponent(JSON_Object * json_go, GameObject* go)
 	}
 	else if (component_type == "script")
 	{
+		ComponentScript* script = (ComponentScript*)go->AddComponent(SCRIPT);
+		App->scripting->LoadScript(json_object_get_string(json_go, "path"), script);
 		ret = true;
 	}
 	return ret;
@@ -885,6 +900,11 @@ void ModuleLoader::ResetUUIDS(std::map<uint, GameObject*> scene_gameobjects)
 
 			uint new_uuid = Generate_UUID();
 			(*item).second->SetUUID(new_uuid);
+			if (ComponentScript* script = (ComponentScript*)(*item).second->GetComponent(SCRIPT))
+			{
+				ResourceScript* res_script = (ResourceScript*)App->resource->getResource(script->getResourceUUID());
+				res_script->scriptTable["UUID"] = (*item).second->GetUUID();
+			}
 			GameObject* parent = (*item).second->GetParent();
 			parent->ChangeAChildrenUUID(new_uuid, old_uuid);
 		}

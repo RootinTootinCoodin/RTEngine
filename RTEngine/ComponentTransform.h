@@ -27,10 +27,10 @@ public:
 	void setRotation(Quat rotation);
 	void setRotation(float3 rotation);
 
-	float3 getPos() { return local_transform.TranslatePart(); };
-	float3 getScale() { return  local_transform.GetScale(); };
-	float3 getRotation() { return local_transform.RotatePart().ToEulerXYZ(); };
-	Quat getRotationQuat() { return local_transform.RotatePart().ToQuat(); };
+	float3 getPos() { return pos; };
+	float3 getScale() { return  scale; };
+	float3 getRotation() { return rotation_euler; };
+	Quat getRotationQuat() { return rotation; };
 
 
 private:
@@ -39,6 +39,7 @@ private:
 
 	float3 pos;
 	float3 scale;
+	float3 rotation_euler;
 	Quat rotation;
 
 	bool dirty = true;
