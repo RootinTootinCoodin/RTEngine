@@ -245,6 +245,10 @@ void UIInspector::DrawScriptInfo(ComponentScript * _script)
 	if (script)
 	{
 		ImGui::Text("Script Name: %s", script->GetOriginalFile().c_str());
+		if(ImGui::Button("Edit"))
+		{
+			App->ImGui->texted->SetNewScript(script->GetOriginalFile());
+		}
 		if (script->compiled)
 		{
 			ImGui::Text("Compiled: TRUE");

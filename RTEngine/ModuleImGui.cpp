@@ -64,10 +64,7 @@ bool ModuleImGui::Init(JSON_Object* config)
 	UI.push_back((UIElement*)time);
 	UI.push_back((UIElement*)texted);
 
-	//uiFonts[TITLES] = io->Fonts->AddFontFromFileTTF("Fonts/title.ttf", 16.0f);
-	//uiFonts[REGULAR] = io->Fonts->AddFontFromFileTTF("Fonts/regular.ttf", 18.0f);
-	//uiFonts[IMGUI_DEFAULT] = io->Fonts->AddFontDefault();
-
+	uiFonts[IMGUI_DEFAULT] = io.Fonts->AddFontDefault();
 	return true;
 }
 

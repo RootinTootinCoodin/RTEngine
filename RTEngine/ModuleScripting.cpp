@@ -105,6 +105,23 @@ void ModuleScripting::SetOutputNamespace()
 		.endNamespace();
 }
 
+void ModuleScripting::RecompileAllScriptsWithPath(std::string path)
+{
+	std::vector<GameObject*> gameObjects;
+	App->scene->root->RecursiveGetChildren(&gameObjects);
+	for (auto item = gameObjects.begin(); item != gameObjects.end(); item++)
+	{
+		if (ComponentScript* script = (ComponentScript*)(*item)->GetComponent(SCRIPT))
+		{
+			ResourceScript* res_script = (ResourceScript*)App->resource->getResource(script->getResourceUUID());
+			if (res_script->GetOriginalFile() == path)
+			{
+				App->scripting->LoadScript(path, script);
+			}
+		}
+	}
+}
+
 float LUAGetKeyState(uint uuid, float key)
 {
 	float ret = -1;

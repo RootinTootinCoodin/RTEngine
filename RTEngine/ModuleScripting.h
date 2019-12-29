@@ -39,6 +39,7 @@ public:
 
 	void SetOutputNamespace();
 
+	void RecompileAllScriptsWithPath(std::string path);
 	
 };
 

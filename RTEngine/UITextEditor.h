@@ -11,12 +11,14 @@ public:
 	~UITextEditor();
 
 	void Draw();
-	void InitializeScriptEditor();
+
+	void SetNewScript(std::string path);
 
 	std::string text;
 
-	TextEditor scriptEditor;
-	std::string scriptPath;
+	TextEditor* scriptEditor;
+	std::string scriptPath = ".";
+	std::string scriptName = ".";
 };
 
 #endif // !__UI_TEXTEDITOR_H__
