@@ -11,6 +11,7 @@
 
 class Timer;
 class ComponentCamera;
+class GameObject;
 
 class ModuleCamera3D : public Module
 {
@@ -30,7 +31,7 @@ public:
 
 	mat4x4 At(const vec3 &right, const vec3 &up, const vec3 &direction);
 
-	void MousePicking();
+	float3 MousePicking(bool external_use = false);
 
 	void Move(const vec3 &Movement);
 	float* GetViewMatrix();

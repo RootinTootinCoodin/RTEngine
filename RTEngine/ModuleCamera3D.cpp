@@ -222,8 +222,9 @@ mat4x4 ModuleCamera3D::At(const vec3 &right, const vec3 &up, const vec3 &dir)
 	return matrix_1 * matrix_2;
 }
 
-void ModuleCamera3D::MousePicking()
+float3 ModuleCamera3D::MousePicking(bool external_use)
 {
+	float3 ret = { 0,0,0 };
 	float2 mouse_pos;
 	mouse_pos.x = ((App->input->GetMouseX() - scene_pos_global.x) / (scene_size.x / 2)) - 1;
 	mouse_pos.y = ((App->input->GetMouseY() - scene_pos_global.y) / (scene_size.y / 2)) - 1;
@@ -255,6 +256,7 @@ void ModuleCamera3D::MousePicking()
 					bool hit = local_ray.Intersects(tri, &distance, nullptr);
 					if (distance > 0 && distance < curr_smallest_distance)
 					{
+						ret = tri.CenterPoint();
 						curr_smallest_distance = distance;
 						winner = gameobjects[j];
 					}
@@ -263,10 +265,11 @@ void ModuleCamera3D::MousePicking()
 			}
 		}
 	}
-	if (winner)
+	if (winner && !external_use)
 	{
 		App->scene->selected_go = winner;
 	}
+	return ret;
 }
 
 // -----------------------------------------------------------------

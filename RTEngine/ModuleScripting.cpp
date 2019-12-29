@@ -3,11 +3,14 @@
 #include "GameObject.h"
 #include "ComponentTransform.h"
 #include "ComponentScript.h"
+#include "ComponentCamera.h"
 #include "ModuleResource.h"
 #include "ModuleScene.h"
 #include "ModuleInput.h"
 #include "ModuleTime.h"
 #include "ModuleLoader.h"
+#include "ModuleCamera3D.h"
+#include "ModuleDebug.h"
 #include "ResourceScript.h"
 #include "FileSystem.h"
 
@@ -80,6 +83,11 @@ void ModuleScripting::SetInputNamespace()
 		.beginNamespace("INPUT")
 			.addFunction("GetKeyState", LUAGetKeyState)
 			.addFunction("GetButtonState", LUAGetButtonState)
+			.addFunction("GetPositionX",LUAGetPositionX)
+			.addFunction("GetPositionY", LUAGetPositionY)
+			.addFunction("GetPositionZ", LUAGetPositionZ)
+			.addFunction("GetMouseX",LUAGetMouseX)
+			.addFunction("GetMouxeY",LUAGetMouseY)
 		.endNamespace();
 }
 
@@ -119,6 +127,55 @@ float LUAGetButtonState(uint uuid, float key)
 	else
 		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
 	return ret;
+}
+
+float LUAGetPositionX(uint uuid)
+{
+	if (GameObject* go = _app->scene->root->RecursiveFindChild(uuid))
+	{
+		ComponentTransform* transform = (ComponentTransform*)go->GetComponent(TRANSFORM);
+		float3 pos = transform->getPos();
+		return pos.x;
+	}
+	else
+		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
+	return 0;
+}
+
+float LUAGetPositionY(uint uuid)
+{
+	if (GameObject* go = _app->scene->root->RecursiveFindChild(uuid))
+	{
+		ComponentTransform* transform = (ComponentTransform*)go->GetComponent(TRANSFORM);
+		float3 pos = transform->getPos();
+		return pos.y;
+	}
+	else
+		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
+	return 0;
+}
+
+float LUAGetPositionZ(uint uuid)
+{
+	if (GameObject* go = _app->scene->root->RecursiveFindChild(uuid))
+	{
+		ComponentTransform* transform = (ComponentTransform*)go->GetComponent(TRANSFORM);
+		float3 pos = transform->getPos();
+		return pos.z;
+	}
+	else
+		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
+	return 0;
+}
+
+float LUAGetMouseX()
+{
+	return _app->input->GetMouseX();
+}
+
+float LUAGetMouseY()
+{
+	return _app->input->GetMouseY();
 }
 
 void MoveX(uint uuid, float units)
@@ -199,7 +256,7 @@ void RotateAlongY(uint uuid, float degrees)
 		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
 }
 
-void Instantiate(uint uuid, const char * name,bool parent_direction)
+void Instantiate(uint uuid, const char * name,bool parent_direction,float offset_x,float offset_y,float offset_z, bool spawning_from_child)
 {
 	GameObject* parent = _app->scene->root->RecursiveFindChild(uuid);
 	std::string _name = name;
@@ -209,6 +266,22 @@ void Instantiate(uint uuid, const char * name,bool parent_direction)
 		ComponentTransform* parent_transform = (ComponentTransform*)parent->GetComponent(TRANSFORM);
 		ComponentTransform* transform = (ComponentTransform*)go->GetComponent(TRANSFORM);
 		transform->setLocalFromMatrix(parent_transform->GetLocalTransformMatrix());
+		float3 pos;
+		if (!spawning_from_child)
+			pos = transform->getPos();
+		else
+		{
+			parent_transform = (ComponentTransform*)parent->GetParent()->GetComponent(TRANSFORM);
+			pos = parent_transform->getPos();
+			float3 rot = transform->getRotation();
+			rot -= parent_transform->getRotation();
+			transform->setRotation(rot);
+		}
+		pos.x += offset_x;
+		pos.y += offset_y;
+		pos.z += offset_z;
+		transform->setPos(pos);
+		go->RecursiveRemoveDirtyFlags();
 	}
 }
 

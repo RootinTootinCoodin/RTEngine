@@ -3,9 +3,9 @@ local table = {}
 --Do not touch
 table["UUID"] = 0
 --
-table["speed"] = 30
+table["speed"] = 50
 table["current_time"] = 0
-table["bullet_time"] = 5
+table["bullet_time"] = 2
 
 function table:Start()
 

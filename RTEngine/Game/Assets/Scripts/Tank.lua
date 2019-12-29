@@ -1,9 +1,9 @@
-function script()
+function Tank()
 local table = {}
 --Do not touch
 table["UUID"] = 0
 --
-table["speed"] = 1
+table["speed"] = 1000
 table["rotation_speed"] = 90
 function table:Start()
     table["number"] = 1
@@ -21,11 +21,7 @@ function table:Update()
         OUTPUT.RotateAlongY(table["UUID"],-table["rotation_speed"]*BASIC.LUAGetDT())
     end
 
-    if INPUT.GetButtonState(table["UUID"],1) == 1 then
-    
-        BASIC.Instantiate(table["UUID"],"Bullet.westmodel",true)
-
-    end
+   
 end
 return table
 end

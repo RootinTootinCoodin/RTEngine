@@ -265,6 +265,12 @@ void GameObject::RecursiveCheckForDelete()
 
 void GameObject::RecursiveDeleteGameobject()
 {
+	//Thats my way of handling a weird bug the last day of the delivery
+	if (uuid == parent_uuid && uuid != 0)
+	{
+		delete this;
+		return;
+	}
 	if (uuid != 0)
 	{
 		for (auto item = components.begin(); item != components.end(); item++)

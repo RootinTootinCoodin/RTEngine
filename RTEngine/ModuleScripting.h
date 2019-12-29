@@ -51,6 +51,13 @@ void DeleteThis(uint uuid);
 //INPUT
 float LUAGetKeyState(uint uuid, float key);
 float LUAGetButtonState(uint uuid, float key);
+float LUAGetPositionX(uint uuid);
+float LUAGetPositionY(uint uuid);
+float LUAGetPositionZ(uint uuid);
+float LUAGetMouseX();
+float LUAGetMouseY();
+
+
 //OUPUT
 void MoveX(uint uuid, float units);
 void MoveY(uint uuid, float units);
@@ -58,7 +65,7 @@ void MoveZ(uint uuid, float units);
 void MoveForward(uint uuid, float units);
 void MoveSideways(uint uuid, float units);
 void RotateAlongY(uint uuid, float degrees);
-void Instantiate(uint uuid, const char* name, bool parent_direction);
+void Instantiate(uint uuid, const char* name, bool parent_direction, float offset_x, float offset_y, float offset_z,bool spawning_from_child);
 
 
 

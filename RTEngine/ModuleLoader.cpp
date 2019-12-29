@@ -632,8 +632,11 @@ GameObject* ModuleLoader::ImportSceneOrModel(std::string& path, bool is_scene,bo
 	//the path received is just the name with the extension
 	std::string name = path.substr(0, path.find_last_of("."));
 
-	if(is_scene)
-		FileSystem::FormFullPath(path, name.c_str(), ASSETS_SCENES,SCENE_EXTENSION);
+	if (is_scene)
+	{
+		FileSystem::FormFullPath(path, name.c_str(), ASSETS_SCENES, SCENE_EXTENSION);
+		App->scene->scene_name = name;
+	}
 	else if(!is_prefab)
 		FileSystem::FormFullPath(path, name.c_str(), LIBRARY_MODELS, MODEL_EXTENSION);
 	else
