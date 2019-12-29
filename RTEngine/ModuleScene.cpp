@@ -54,7 +54,8 @@ bool ModuleScene::Start()
 {
 	DefaultTexture();
 	GenerateCheckerTexture();
-	
+	std::string model = "TankScene.westscene";
+	App->loader->ImportSceneOrModel(model, true);
 	return true;
 }
 
