@@ -13,7 +13,7 @@
 #include "UIHierarchy.h"
 #include "UIAssets.h"
 #include "UITime.h"
-
+#include "UITextEditor.h"
 
 #include <fstream>
 
@@ -51,6 +51,7 @@ bool ModuleImGui::Init(JSON_Object* config)
 	hierarchy = new UIHierarchy(App);
 	assets = new UIAssets(App);
 	time = new UITime(App);
+	texted = new UITextEditor(App);
 
 	UI.push_back((UIElement*)scene);
 	UI.push_back((UIElement*)tests);
@@ -61,6 +62,7 @@ bool ModuleImGui::Init(JSON_Object* config)
 	UI.push_back((UIElement*)hierarchy);
 	UI.push_back((UIElement*)assets);
 	UI.push_back((UIElement*)time);
+	UI.push_back((UIElement*)texted);
 
 	//uiFonts[TITLES] = io->Fonts->AddFontFromFileTTF("Fonts/title.ttf", 16.0f);
 	//uiFonts[REGULAR] = io->Fonts->AddFontFromFileTTF("Fonts/regular.ttf", 18.0f);

@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+
 class ComponentScript :
 	public Component
 {
@@ -12,8 +13,10 @@ public:
 
 	void AssignResourceUUID(uint uuid);
 	uint getResourceUUID()const { return resource_uuid; };
+	std::vector<std::string*> varList;
 
 	uint resource_uuid = 0;
+
 	~ComponentScript();
 };
 

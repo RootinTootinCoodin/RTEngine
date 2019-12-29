@@ -216,7 +216,6 @@ void MoveZ(uint uuid, float units)
 	else
 		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
 }
-
 void MoveForward(uint uuid, float units)
 {
 	if (GameObject* go = _app->scene->root->RecursiveFindChild(uuid))

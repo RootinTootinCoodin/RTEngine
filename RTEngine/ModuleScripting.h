@@ -67,11 +67,5 @@ void MoveSideways(uint uuid, float units);
 void RotateAlongY(uint uuid, float degrees);
 void Instantiate(uint uuid, const char* name, bool parent_direction, float offset_x, float offset_y, float offset_z,bool spawning_from_child);
 
-
-
-
-
-
-
 #endif
 

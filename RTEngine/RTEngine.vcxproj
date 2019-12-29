@@ -203,6 +203,7 @@
     <ClInclude Include="ResourceMaterial.h" />
     <ClInclude Include="ResourceMesh.h" />
     <ClInclude Include="ResourceScript.h" />
+    <ClInclude Include="TextEditor.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Tree.h" />
     <ClInclude Include="UIAbout.h" />
@@ -214,6 +215,7 @@
     <ClInclude Include="UIInspector.h" />
     <ClInclude Include="UIScene.h" />
     <ClInclude Include="UITests.h" />
+    <ClInclude Include="UITextEditor.h" />
     <ClInclude Include="UITime.h" />
   </ItemGroup>
   <ItemGroup>
@@ -286,6 +288,7 @@
     <ClCompile Include="ResourceMaterial.cpp" />
     <ClCompile Include="ResourceMesh.cpp" />
     <ClCompile Include="ResourceScript.cpp" />
+    <ClCompile Include="TextEditor.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Tree.cpp" />
     <ClCompile Include="UIAbout.cpp" />
@@ -296,6 +299,7 @@
     <ClCompile Include="UIInspector.cpp" />
     <ClCompile Include="UIScene.cpp" />
     <ClCompile Include="UITests.cpp" />
+    <ClCompile Include="UITextEditor.cpp" />
     <ClCompile Include="UITime.cpp" />
   </ItemGroup>
   <ItemGroup>

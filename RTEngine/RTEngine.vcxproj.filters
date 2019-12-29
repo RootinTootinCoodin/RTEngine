@@ -490,6 +490,12 @@
     <ClInclude Include="ComponentScript.h">
       <Filter>Sources\GameObjects\Components</Filter>
     </ClInclude>
+    <ClInclude Include="TextEditor.h">
+      <Filter>Sources\Modules\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="UITextEditor.h">
+      <Filter>Sources\UIElements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -731,6 +737,12 @@
     </ClCompile>
     <ClCompile Include="ComponentScript.cpp">
       <Filter>Sources\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TextEditor.cpp">
+      <Filter>Sources\Modules\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="UITextEditor.cpp">
+      <Filter>Sources\UIElements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

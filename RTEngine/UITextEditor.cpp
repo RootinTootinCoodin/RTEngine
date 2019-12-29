@@ -5,6 +5,7 @@
 #include "ModuleInput.h"
 #include "ModuleScripting.h"
 #include "ModuleImGui.h"
+#include "FileSystem.h"
 
 #include <fstream>
 
@@ -39,13 +40,10 @@ void UITextEditor::InitializeScriptEditor()
 
 void UITextEditor::Draw()
 {
-	//if (App->scripting->edited_scripts.find(scriptPath) != App->scripting->edited_scripts.end())
-	//	App->scripting->edited_scripts.at(scriptPath) = scriptEditor.GetText();
-	//else
-	//	App->scripting->edited_scripts.insert(std::make_pair(scriptPath, scriptEditor.GetText()));
+	std::vector<std::string> files;
+	FileSystem::DiscoverFiles(ASSETS_SCRIPTS_FOLDER, &files, nullptr);
+	ImGui::PushFont(App->ImGui->uiFonts[IMGUI_DEFAULT]);
 
-	//disable_keyboard_control = true; // Will disable keybord control forever
-	//ImGui::PushFont(uiFonts[IMGUI_DEFAULT]);
 	auto cpos = scriptEditor.GetCursorPosition();
 
 	if (ImGui::Begin(name.c_str(), &show_window, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar))
@@ -121,7 +119,7 @@ void UITextEditor::Draw()
 		c_keys._C = App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN;
 		c_keys._V = App->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN;
 
-		//scriptEditor.Render("TextEditor", uiFonts[IMGUI_DEFAULT], c_keys);
+		scriptEditor.Render("TextEditor", App->ImGui->uiFonts[IMGUI_DEFAULT], c_keys);
 		ImGui::PopFont();
 		ImGui::End();
 	}
