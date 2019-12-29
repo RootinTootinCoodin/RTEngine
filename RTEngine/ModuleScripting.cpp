@@ -52,7 +52,6 @@ bool ModuleScripting::LoadScript(std::string path, ComponentScript* component)
 		LuaRef getTable = getGlobal(v_machine, name.c_str());
 		LuaRef table(getTable());
 		res_script->scriptTable = table;
-
 		res_script->scriptTable["UUID"] = component->getGameObject()->GetUUID();
 		ret = true;
 	}

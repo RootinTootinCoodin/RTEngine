@@ -15,7 +15,7 @@ bool FileSystem::ExportBuffer(char * data, int size, const char * file_name, lib
 	FormFullPath(path, file_name, lib, extension);
 	std::ofstream file;
 	file.open(path, std::fstream::out | std::fstream::binary);
-	file.write(data, size);
+	file.write(data, size );
 	file.close();
 
 	return true;
@@ -31,6 +31,7 @@ char * FileSystem::ImportFile(const char * file_name) {
 
 	char* ret = new char[size];
 	file.read(ret, size);
+	file.close();
 
 	return ret;
 }

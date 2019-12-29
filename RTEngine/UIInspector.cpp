@@ -283,7 +283,32 @@ void UIInspector::SelectScript(GameObject* go)
 				}
 			}
 		}
+		if (ImGui::CollapsingHeader("NewScript"))
+		{
+			static char script_name[120];
+			bool doit = ImGui::InputText("Script_Name", script_name, 25, ImGuiInputTextFlags_EnterReturnsTrue);
+
+			if (ImGui::Button("Create new script") || doit)
+			{
+				NewScript(script_name);
+				ComponentScript* script = (ComponentScript*)go->AddComponent(SCRIPT);
+				std::string path;
+				FileSystem::FormFullPath(path, script_name, ASSETS_SCRIPTS, ".lua");
+				App->scripting->LoadScript(path, script);
+			}
+		}
 	}
+}
+
+void UIInspector::NewScript(char* script_name)
+{
+	char* buffer = FileSystem::ImportFile("Assets\\Scripts\\TEMPLATE.lua");
+	std::string file = buffer;
+	file.replace(file.find("TEMPLATE"), 8, script_name);
+	//The open/close functions of the FileSystem add weird characters
+	file.erase(file.find_last_of("d") + 1,100);
+	std::vector<char> cstr(file.c_str(), file.c_str() + file.size() + 1);
+	FileSystem::ExportBuffer(cstr.data(), cstr.size()-1, script_name, ASSETS_SCRIPTS, ".lua");
 }
 
 
