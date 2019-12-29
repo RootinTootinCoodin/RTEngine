@@ -1,22 +1,60 @@
-script = {}
+function script()
+local table = {}
 --Do not touch
-script["UUID"] = 0
+table["UUID"] = 0
 --
-script["speed"] = 1
-script["rotation_speed"] = 90
-function script:Start()
-    script["number"] = 1
+table["speed"] = 1
+table["rotation_speed"] = 90
+function table:Start()
+    table["number"] = 1
 end
-function script:Update()
-    if INPUT.GetKeyState(script["UUID"],26) == 2 then
-        BASIC.Instantiate(script["UUID"],"Bullet.westmodel")
-    elseif INPUT.GetKeyState(script["UUID"],22) == 2 then
-        OUTPUT.MoveForward(script["UUID"],-script["speed"]*BASIC.LUAGetDT())
+function table:Update()
+    if INPUT.GetKeyState(table["UUID"],26) == 2 then
+        OUTPUT.MoveForward(table["UUID"],table["speed"]*BASIC.LUAGetDT())
+    elseif INPUT.GetKeyState(table["UUID"],22) == 2 then
+        OUTPUT.MoveForward(table["UUID"],-table["speed"]*BASIC.LUAGetDT())
     end
 
-    if INPUT.GetKeyState(script["UUID"],7) == 2 then
-        OUTPUT.RotateAlongY(script["UUID"],script["rotation_speed"]*BASIC.LUAGetDT())
-    elseif INPUT.GetKeyState(script["UUID"],4) == 2 then
-        OUTPUT.RotateAlongY(script["UUID"],-script["rotation_speed"]*BASIC.LUAGetDT())
+    if INPUT.GetKeyState(table["UUID"],7) == 2 then
+        OUTPUT.RotateAlongY(table["UUID"],table["rotation_speed"]*BASIC.LUAGetDT())
+    elseif INPUT.GetKeyState(table["UUID"],4) == 2 then
+        OUTPUT.RotateAlongY(table["UUID"],-table["rotation_speed"]*BASIC.LUAGetDT())
+    end
+
+    if INPUT.GetButtonState(table["UUID"],1) == 1 then
+    
+        BASIC.Instantiate(table["UUID"],"Bullet.westmodel",true)
+
     end
 end
+return table
+end
+
+-- table = {}
+-- --Do not touch
+-- table["UUID"] = 0
+-- --
+-- table["speed"] = 1
+-- table["rotation_speed"] = 90
+-- function table:Start()
+--     table["number"] = 1
+-- end
+-- function table:Update()
+--     if INPUT.GetKeyState(table["UUID"],26) == 2 then
+--         OUTPUT.MoveForward(table["UUID"],table["speed"]*BASIC.LUAGetDT())
+--     elseif INPUT.GetKeyState(table["UUID"],22) == 2 then
+--         OUTPUT.MoveForward(table["UUID"],-table["speed"]*BASIC.LUAGetDT())
+--     end
+
+--     if INPUT.GetKeyState(table["UUID"],7) == 2 then
+--         OUTPUT.RotateAlongY(table["UUID"],table["rotation_speed"]*BASIC.LUAGetDT())
+--     elseif INPUT.GetKeyState(table["UUID"],4) == 2 then
+--         OUTPUT.RotateAlongY(table["UUID"],-table["rotation_speed"]*BASIC.LUAGetDT())
+--     end
+
+--     if INPUT.GetButtonState(table["UUID"],1) == 1 then
+    
+--         BASIC.Instantiate(table["UUID"],"Bullet.westmodel",true)
+
+--     end
+-- end

@@ -245,7 +245,10 @@ void UIInspector::DrawScriptInfo(ComponentScript * _script)
 	{
 		ImGui::Text("Script Name: %s", script->GetOriginalFile().c_str());
 		if (script->compiled)
+		{
 			ImGui::Text("Compiled: TRUE");
+			ImGui::Text("Script pointing to: %u", (uint)script->scriptTable["UUID"]);
+		}
 		else
 		{
 			ImGui::Text("Compiled: FALSE");

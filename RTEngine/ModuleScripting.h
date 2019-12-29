@@ -46,9 +46,11 @@ public:
 //BASIC
 void LUALog(const char* string);
 float LUAGetDT();
+void DeleteThis(uint uuid);
 
 //INPUT
 float LUAGetKeyState(uint uuid, float key);
+float LUAGetButtonState(uint uuid, float key);
 //OUPUT
 void MoveX(uint uuid, float units);
 void MoveY(uint uuid, float units);
@@ -56,7 +58,7 @@ void MoveZ(uint uuid, float units);
 void MoveForward(uint uuid, float units);
 void MoveSideways(uint uuid, float units);
 void RotateAlongY(uint uuid, float degrees);
-void Instantiate(uint uuid, const char* name);
+void Instantiate(uint uuid, const char* name, bool parent_direction);
 
 
 

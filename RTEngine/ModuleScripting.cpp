@@ -44,8 +44,15 @@ bool ModuleScripting::LoadScript(std::string path, ComponentScript* component)
 	component->AssignResourceUUID(res_script->GetUUID());
 	if (compiled == LUA_OK)
 	{
+		std::string name = path;
+		FileSystem::getFileNameFromPath(name);
 		res_script->compiled = true;
-		res_script->scriptTable = getGlobal(v_machine,"script");
+
+		//I'm gonna be honest, the other team told me how to do this (in order to have various script instances). -Lorién
+		LuaRef getTable = getGlobal(v_machine, name.c_str());
+		LuaRef table(getTable());
+		res_script->scriptTable = table;
+
 		res_script->scriptTable["UUID"] = component->getGameObject()->GetUUID();
 		ret = true;
 	}
@@ -64,6 +71,7 @@ void ModuleScripting::SetBasicNamespace()
 			.addFunction("LUALog", LUALog)
 			.addFunction("LUAGetDT",LUAGetDT)
 			.addFunction("Instantiate",Instantiate)
+			.addFunction("DeleteThis",DeleteThis)
 		.endNamespace();
 }
 
@@ -72,6 +80,7 @@ void ModuleScripting::SetInputNamespace()
 	getGlobalNamespace(v_machine)
 		.beginNamespace("INPUT")
 			.addFunction("GetKeyState", LUAGetKeyState)
+			.addFunction("GetButtonState", LUAGetButtonState)
 		.endNamespace();
 }
 
@@ -95,6 +104,18 @@ float LUAGetKeyState(uint uuid, float key)
 	if (GameObject* go = _app->scene->root->RecursiveFindChild(uuid))
 	{
 		ret = _app->input->GetKey(key);
+	}
+	else
+		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
+	return ret;
+}
+
+float LUAGetButtonState(uint uuid, float key)
+{
+	float ret = -1;
+	if (GameObject* go = _app->scene->root->RecursiveFindChild(uuid))
+	{
+		ret = _app->input->GetMouseButton(key);
 	}
 	else
 		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
@@ -179,10 +200,17 @@ void RotateAlongY(uint uuid, float degrees)
 		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
 }
 
-void Instantiate(uint uuid, const char * name)
+void Instantiate(uint uuid, const char * name,bool parent_direction)
 {
+	GameObject* parent = _app->scene->root->RecursiveFindChild(uuid);
 	std::string _name = name;
-	_app->loader->ImportSceneOrModel(_name, false);
+	GameObject* go = _app->loader->ImportSceneOrModel(_name, false,true);
+	if (parent_direction)
+	{
+		ComponentTransform* parent_transform = (ComponentTransform*)parent->GetComponent(TRANSFORM);
+		ComponentTransform* transform = (ComponentTransform*)go->GetComponent(TRANSFORM);
+		transform->setLocalFromMatrix(parent_transform->GetLocalTransformMatrix());
+	}
 }
 
 void LUALog(const char* string)
@@ -193,4 +221,14 @@ void LUALog(const char* string)
 float LUAGetDT()
 {
 	return _app->time->game_dt;
+}
+
+void DeleteThis(uint uuid)
+{
+	if (GameObject* go = _app->scene->root->RecursiveFindChild(uuid))
+	{
+		go->to_remove = true;
+	}
+	else
+		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
 }

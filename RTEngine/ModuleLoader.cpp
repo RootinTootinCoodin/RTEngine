@@ -624,9 +624,9 @@ bool ModuleLoader::ExportSceneOrModel(GameObject* gameobject,bool is_prefab)
 	return ret;
 }
 
-bool ModuleLoader::ImportSceneOrModel(std::string& path, bool is_scene,bool is_prefab)
+GameObject* ModuleLoader::ImportSceneOrModel(std::string& path, bool is_scene,bool is_prefab)
 {
-	bool ret = false;
+	GameObject* ret = nullptr;
 	if(is_scene)
 		App->scene->root->RecursiveDeleteGameobject();
 	//the path received is just the name with the extension
@@ -643,7 +643,6 @@ bool ModuleLoader::ImportSceneOrModel(std::string& path, bool is_scene,bool is_p
 	JSON_Value* file = json_parse_file(path.c_str());
 	if (file)
 	{
-		ret = true;
 		std::map<uint, GameObject*> scene_gameobjects;
 		JSON_Array* json_scene = json_object_get_array(json_object(file), "Scene");
 		for (uint i = 0; i < json_array_get_count(json_scene); i++)
@@ -664,6 +663,7 @@ bool ModuleLoader::ImportSceneOrModel(std::string& path, bool is_scene,bool is_p
 				}
 				else
 				{
+					ret = (*item).second;
 					(*item).second->SetParent(App->scene->root);
 					App->scene->root->AddChildren((*item).second);
 				}
