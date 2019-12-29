@@ -50,7 +50,7 @@ float LUAGetKeyState(uint uuid, float key);
 void MoveX(uint uuid, float units);
 void MoveY(uint uuid, float units);
 void MoveZ(uint uuid, float units);
-
+void TrackVar(std::string variable, std::string value);
 
 
 

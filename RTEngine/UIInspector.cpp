@@ -14,7 +14,8 @@
 #include "ResourceScript.h"
 #include "FileSystem.h"
 #include "Globals.h"
-
+#include "UITextEditor.h"
+#include "ModuleImGui.h"
 
 UIInspector::UIInspector(Application* app) : UIElement(app)
 {
@@ -229,6 +230,12 @@ void UIInspector::DrawScriptInfo(ComponentScript * _script)
 	{
 		ImGui::Text("Script Name: %s", script->GetOriginalFile());
 	}
+
+	/*if (ImGui::Button("Edit script"))
+	{
+		App->ImGui->texted->scriptPath = script->GetOriginalFile();
+		App->ImGui->texted->show_window = true;
+	}*/
 
 }
 

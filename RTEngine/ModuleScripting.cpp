@@ -132,6 +132,11 @@ void MoveZ(uint uuid, float units)
 		LOG("Script accessing an unexisting gameobject with uuid %u", uuid);
 }
 
+void TrackVar(std::string variable, std::string value)
+{
+
+}
+
 void LUALog(const char* string)
 {
 	LOG(string);

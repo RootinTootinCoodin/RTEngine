@@ -17,6 +17,7 @@ class UIInspector;
 class UIHierarchy;
 class UIAssets;
 class UITime;
+class UITextEditor;
 
 enum UIFonts { REGULAR, REGULAR_BOLD, REGULAR_ITALIC, REGULAR_BOLDITALIC, TITLES, IMGUI_DEFAULT, LAST_UI_FONT };
 
@@ -47,6 +48,7 @@ public:
 	UIHierarchy* hierarchy = nullptr;
 	UIAssets* assets = nullptr;
 	UITime* time = nullptr;
+	UITextEditor* texted = nullptr;
 
 	ImGuiIO* io;
 

@@ -209,6 +209,7 @@ void ModuleScene::Draw()
 				{
 					if (frustCulling)
 					{
+						glEnableClientState(GL_VERTEX_ARRAY);
 						if (App->camera->editorCamera->Cull(objAABB))
 						{
 							if (ResourceMesh* mesh = (ResourceMesh*)App->resource->getResource(mesh_comp->getResourceUUID()))
@@ -216,7 +217,7 @@ void ModuleScene::Draw()
 								//if (draw_normals || mesh_comp->draw_normals)
 								//	App->debug->DrawNormals(mesh);
 
-								glEnableClientState(GL_VERTEX_ARRAY);
+								
 								glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
 								glVertexPointer(3, GL_FLOAT, 0, &mesh->vertices[0]);
 
