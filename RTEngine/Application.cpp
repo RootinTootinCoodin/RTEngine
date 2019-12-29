@@ -268,7 +268,7 @@ void Application::SaveConfig()
 
 void Application::app_log(const char * string,...)
 {
-	logs.append(string);
+	logs.appendf(string);
 
 
 	update_console = true;

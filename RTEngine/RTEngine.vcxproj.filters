@@ -58,9 +58,6 @@
     <Filter Include="Sources\GameObjects\Resources">
       <UniqueIdentifier>{8c4000a7-b5df-4a99-b230-9600b1b93c6d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\External Libraries\ImGui\ImGuizmo">
-      <UniqueIdentifier>{8e1a1452-4888-4906-93b8-15c0eca5634b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\External Libraries\LuaBridge">
       <UniqueIdentifier>{cac386a6-c02f-45d5-aef8-552d4c5fc27b}</UniqueIdentifier>
     </Filter>
@@ -384,9 +381,6 @@
     </ClInclude>
     <ClInclude Include="ResourceMesh.h">
       <Filter>Sources\GameObjects\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\ImGuizmo\ImGuizmo.h">
-      <Filter>Sources\External Libraries\ImGui\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="LuaBridge\detail\CFunctions.h">
       <Filter>Sources\External Libraries\LuaBridge</Filter>
@@ -719,9 +713,6 @@
     </ClCompile>
     <ClCompile Include="ResourceMesh.cpp">
       <Filter>Sources\GameObjects\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\ImGuizmo\ImGuizmo.cpp">
-      <Filter>Sources\External Libraries\ImGui\ImGuizmo</Filter>
     </ClCompile>
     <ClCompile Include="FileSystem.cpp">
       <Filter>Sources\External Libraries\LuaBridge</Filter>

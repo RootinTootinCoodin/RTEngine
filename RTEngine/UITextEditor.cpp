@@ -26,8 +26,8 @@ void UITextEditor::Draw()
 {
 	auto cpos = scriptEditor->GetCursorPosition();
 
-	if (ImGui::Begin(name.c_str(), &show_window, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar))
-	{
+	ImGui::Begin(name.c_str(), &show_window, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar);
+	
 		ImGui::SetWindowSize(ImVec2(800, 600), ImGuiCond_FirstUseEver);
 		if (ImGui::BeginMenuBar())
 		{
@@ -95,19 +95,12 @@ void UITextEditor::Draw()
 			scriptEditor->CanUndo() ? "*" : " ",
 			scriptEditor->GetLanguageDefinition().mName.c_str());
 
-		TextEditor::CommandKeys c_keys;
-		c_keys.ctrl = (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT);
-		c_keys._X = App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN;
-		c_keys._Y = App->input->GetKey(SDL_SCANCODE_Y) == KEY_DOWN;
-		c_keys._Z = App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN;
-		c_keys._C = App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN;
-		c_keys._V = App->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN;
 
-		scriptEditor->Render("TextEditor", App->ImGui->uiFonts[IMGUI_DEFAULT], c_keys);
+		scriptEditor->Render("TextEditor");
 
-		ImGui::End();
-	}
 
+	
+	ImGui::End();
 //	ImGui::PopFont();
 }
 

@@ -164,9 +164,6 @@ void ModuleScene::Draw()
 	if (drawaxis)
 		DrawAxis();
 
-	if (selected_go)
-		App->debug->DrawGuizmo(selected_go);
-
 	DrawGrid(gridsize);
 
 	if (drawEditorFrustum)

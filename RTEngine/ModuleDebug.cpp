@@ -10,7 +10,6 @@
 #include "ComponentMaterial.h"
 #include "ComponentTransform.h"
 #include "par_shapes/par_shapes.h"
-#include "ImGui/ImGuizmo/ImGuizmo.h"
 
 ModuleDebug::ModuleDebug(Application * app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -149,40 +148,6 @@ void ModuleDebug::DrawFrustum(Frustum & frustum) const
 		glLineWidth(STANDARD_LINE_SIZE);
 		glColor3f(1, 1, 1);
 	}
-}
-
-void ModuleDebug::DrawGuizmo(GameObject* gameObject)
-{
-	ImGuizmo::Enable(true);
-	float4x4 view_matrix;
-	float4x4 projection_matrix;
-	glGetFloatv(GL_MODELVIEW_MATRIX, (float*)view_matrix.v);
-	glGetFloatv(GL_PROJECTION_MATRIX, (float*)projection_matrix.v);
-
-	ImGuiIO& io = ImGui::GetIO();
-	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-
-	ComponentTransform* transf = (ComponentTransform*)gameObject->GetComponent(TRANSFORM);
-
-	float4x4 localMat = transf->GetLocalTransformMatrix();
-	localMat.Transpose();
-	ImGuizmo::Manipulate((float*)view_matrix.v, (float*)projection_matrix.v, (ImGuizmo::OPERATION)operationType, ImGuizmo::WORLD, (float*)localMat.v, NULL, NULL);
-	localMat.Transpose();
-
-
-	if (ImGuizmo::IsUsing())
-	{
-		usingGuizmo = true;
-		if (operationType == ImGuizmo::TRANSLATE)
-			transf->setPos(localMat.TranslatePart());
-		else if (operationType == ImGuizmo::ROTATE)
-		{
-			transf->setRotation(localMat.RotatePart().ToQuat());
-		}
-		else if (operationType == ImGuizmo::SCALE)
-			transf->setScale(localMat.GetScale());
-	}
-	else usingGuizmo = false;
 }
 
 

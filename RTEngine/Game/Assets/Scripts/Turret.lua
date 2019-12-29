@@ -24,5 +24,6 @@ function Turret()
              BASIC.Instantiate(table["UUID"],"Bullet.westmodel",true,0,5,0,true)
         end
     end
+
     return table
 end
