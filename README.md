@@ -41,18 +41,21 @@ Just extract the contents of the zip into a folder and click the .exe
 - Creating Scripts: Scripts can be created or added in both ways. The user can select New Script and input a name (which can not have any blank spaces), or select an already existing script from the Assets//Scripts folder. External scripts can also be used, by placing them in the Assets//Scripts folder but at the moment, the scripting system is very limited, and ony accepts scripts with the TEMPLATE format
 - TEMPLATE format: Created to imitate the class system of C, the script needs to be encapsulated in a function with its own name, that returns a table. Inside this table, there needs to be all the script funcionality.
 - C++/LUA functions: Easy to expand, right now the engine has three namespaces: BASIC, INPUT, OUTPUT, with a limited API, displayed in the Tank scene, that acts as a demo. 
-- BASIC:-LUALog to log strings into the console
-        -LUAGetDT to get the dt of the frame in seconds
-        -DeleteThis to delete the gameobject attached to the script
--INPUT: -LUAGetKeyState to get the state of a key
-        -LUAGetButtonState to get the state of a button
-        -LUAGetMouseX/Y to get the position of the mouse onscreen
-        -LUAGetPositionX/Y/Z to get the value from the transform
--OUTPUT: -MoveX/Y/Z to move along those axis in global space
-         -MoveForward to move in the foward vector of the gameobject
-         -MoveSideways to move perpendicular to the forward of the gameobject
-         -RotateAlongY to rotate using the Y axis in world space
-         -Instantiate to instantiate a prefab by name
+- BASIC:
+- LUALog to log strings into the console
+- LUAGetDT to get the dt of the frame in seconds
+- DeleteThis to delete the gameobject attached to the script
+- INPUT: 
+- LUAGetKeyState to get the state of a key
+- LUAGetButtonState to get the state of a button
+- LUAGetMouseX/Y to get the position of the mouse onscreen
+- LUAGetPositionX/Y/Z to get the value from the transform
+- OUTPUT: 
+- MoveX/Y/Z to move along those axis in global space
+- MoveForward to move in the foward vector of the gameobject
+- MoveSideways to move perpendicular to the forward of the gameobject
+- RotateAlongY to rotate using the Y axis in world space
+- Instantiate to instantiate a prefab by name
         
 - Tank Scene: Control the tank with WASD. Shoot bullets with the mouse left click. To rotate the turret, move the mouse in the X axis of the screen.
 
