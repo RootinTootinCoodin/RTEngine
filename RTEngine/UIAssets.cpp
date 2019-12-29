@@ -90,6 +90,10 @@ void UIAssets::Draw()
 
 					}
 				}
+				else if (extension == MODEL_EXTENSION)
+				{
+					_app->loader->ImportSceneOrModel(filename, false,true);
+				}
 			}
 		}
 	}

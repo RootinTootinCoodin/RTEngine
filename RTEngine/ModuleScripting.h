@@ -16,6 +16,8 @@ extern "C"
 
 using namespace luabridge;
 
+class ComponentScript;
+
 class ModuleScripting :
 	public Module
 {
@@ -25,7 +27,7 @@ public:
 
 	bool Init(JSON_Object* config)override;
 
-	bool LoadScript(std::string path,uint* uuid);
+	bool LoadScript(std::string path, ComponentScript* component);
 
 	lua_State* v_machine = nullptr;
 
@@ -43,18 +45,20 @@ public:
 
 //BASIC
 void LUALog(const char* string);
+float LUAGetDT();
+void DeleteThis(uint uuid);
 
 //INPUT
 float LUAGetKeyState(uint uuid, float key);
+float LUAGetButtonState(uint uuid, float key);
 //OUPUT
 void MoveX(uint uuid, float units);
 void MoveY(uint uuid, float units);
 void MoveZ(uint uuid, float units);
-void TrackVar(std::string variable, std::string value);
-
-
-
-
+void MoveForward(uint uuid, float units);
+void MoveSideways(uint uuid, float units);
+void RotateAlongY(uint uuid, float degrees);
+void Instantiate(uint uuid, const char* name, bool parent_direction);
 
 #endif
 

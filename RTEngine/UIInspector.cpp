@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleScene.h"
 #include "ModuleResource.h"
+#include "ModuleLoader.h"
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentMesh.h"
@@ -50,6 +51,11 @@ void UIInspector::DrawGameObjectInfo(GameObject* gameobject)
 	ImGui::SameLine();
 	ImGui::Checkbox("Draw AABB", &gameobject->draw_aabb);
 
+	if (ImGui::Button("Save"))
+	{
+		_app->loader->ExportSceneOrModel(gameobject,true);
+	}
+
 	static char go_name[120];
 	strcpy_s(go_name, 120, gameobject->GetName().c_str());
 	if (ImGui::InputText("Name", go_name, 25, ImGuiInputTextFlags_EnterReturnsTrue))
@@ -66,6 +72,17 @@ void UIInspector::DrawGameObjectInfo(GameObject* gameobject)
 		DrawTransformInfo(transform);
 		ImGui::Separator();
 		ImGui::Separator();
+	}
+
+	if (ComponentScript* script = (ComponentScript*)gameobject->GetComponent(SCRIPT))
+	{
+		DrawScriptInfo(script);
+		ImGui::Separator();
+		ImGui::Separator();
+	}
+	else
+	{
+		SelectScript(gameobject);
 	}
 
 	if (ComponentMesh* mesh = (ComponentMesh*)gameobject->GetComponent(MESH))
@@ -92,16 +109,7 @@ void UIInspector::DrawGameObjectInfo(GameObject* gameobject)
 		if (ImGui::Button("Add camera"))
 			gameobject->AddComponent(CAMERA);
 	}
-	if(ComponentScript* script = (ComponentScript*)gameobject->GetComponent(SCRIPT))
-	{
-		DrawScriptInfo(script);
-		ImGui::Separator();
-		ImGui::Separator();
-	}
-	else
-	{
-		SelectScript(gameobject);
-	}
+
 }
 
 void UIInspector::DrawTransformInfo(ComponentTransform * transform)
@@ -110,14 +118,24 @@ void UIInspector::DrawTransformInfo(ComponentTransform * transform)
 	ImGui::Text("UUID: %u", transform->GetUUID());
 	float3 position = transform->getPos();
 	float3 rotation = transform->getRotation();
+	rotation.x *= RADTODEG;
+	rotation.y *= RADTODEG;
+	rotation.z *= RADTODEG;
+
+
 	float3 scale = transform->getScale();
 	
 
 
 	if (ImGui::DragFloat3("Position", (float*)&position, 0.1f))
 		transform->setPos(position); 
-	if (ImGui::DragFloat3("Rotation", (float*)&rotation,0.1f));
-		transform->setRotation(rotation); 
+	if (ImGui::DragFloat3("Rotation", (float*)&rotation, 0.1f))
+	{
+		rotation.x *= DEGTORAD;
+		rotation.y *= DEGTORAD;
+		rotation.z *= DEGTORAD;
+		transform->setRotation(rotation);
+	}
 	if (ImGui::DragFloat3("Scale", (float*)&scale, 0.1f))
 		transform->setScale(scale); 
 
@@ -222,13 +240,25 @@ void UIInspector::DrawScriptInfo(ComponentScript * _script)
 {
 	ImGui::Text("Component Script");
 
-	ImGui::Text("UUID: %u", _script->GetUUID());
-
 	ResourceScript* script = (ResourceScript*)App->resource->getResource(_script->getResourceUUID());
 
 	if (script)
 	{
-		ImGui::Text("Script Name: %s", script->GetOriginalFile());
+		ImGui::Text("Script Name: %s", script->GetOriginalFile().c_str());
+		if (script->compiled)
+		{
+			ImGui::Text("Compiled: TRUE");
+			ImGui::Text("Script pointing to: %u", (uint)script->scriptTable["UUID"]);
+		}
+		else
+		{
+			ImGui::Text("Compiled: FALSE");
+			ImGui::Text("This script will be ignored until it compiles");
+			if (ImGui::Button("Recompile"))
+			{
+				App->scripting->LoadScript(script->GetOriginalFile(), _script);
+			}
+		}
 	}
 
 	/*if (ImGui::Button("Edit script"))
@@ -255,16 +285,37 @@ void UIInspector::SelectScript(GameObject* go)
 				FileSystem::getFileNameFromPath(name);
 				if (ImGui::Button(name.c_str()))
 				{
-					uint script_uuid = 0;
-					App->scripting->LoadScript((*item), &script_uuid);
 					ComponentScript* script = (ComponentScript*)go->AddComponent(SCRIPT);
-					script->AssignResourceUUID(script_uuid);
-					ResourceScript* res_script = (ResourceScript*)App->resource->getResource(script->getResourceUUID());
-					res_script->scriptTable["UUID"] = go->GetUUID();
+					App->scripting->LoadScript((*item), script);
 				}
 			}
 		}
+		if (ImGui::CollapsingHeader("NewScript"))
+		{
+			static char script_name[120];
+			bool doit = ImGui::InputText("Script_Name", script_name, 25, ImGuiInputTextFlags_EnterReturnsTrue);
+
+			if (ImGui::Button("Create new script") || doit)
+			{
+				NewScript(script_name);
+				ComponentScript* script = (ComponentScript*)go->AddComponent(SCRIPT);
+				std::string path;
+				FileSystem::FormFullPath(path, script_name, ASSETS_SCRIPTS, ".lua");
+				App->scripting->LoadScript(path, script);
+			}
+		}
 	}
+}
+
+void UIInspector::NewScript(char* script_name)
+{
+	char* buffer = FileSystem::ImportFile("Assets\\Scripts\\TEMPLATE.lua");
+	std::string file = buffer;
+	file.replace(file.find("TEMPLATE"), 8, script_name);
+	//The open/close functions of the FileSystem add weird characters
+	file.erase(file.find_last_of("d") + 1,100);
+	std::vector<char> cstr(file.c_str(), file.c_str() + file.size() + 1);
+	FileSystem::ExportBuffer(cstr.data(), cstr.size()-1, script_name, ASSETS_SCRIPTS, ".lua");
 }
 
 

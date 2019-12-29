@@ -12,6 +12,7 @@ public:
 	~ResourceScript();
 
 	LuaRef scriptTable = 0;
+	bool compiled = false;
 };
 
 #endif

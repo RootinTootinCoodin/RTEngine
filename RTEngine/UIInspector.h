@@ -27,6 +27,7 @@ public:
 	void DrawScriptInfo(ComponentScript* script);
 
 	void SelectScript(GameObject* go);
+	void NewScript(char* script_name);
 
 };
 

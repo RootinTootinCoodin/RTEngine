@@ -26,6 +26,8 @@ public:
 
 	std::vector<ResourceMaterial*> getMaterials();
 
+	void DeleteResource(uint uuid);
+
 private:
 	std::map<uint, Res*> resource_map;
 };

@@ -20,6 +20,8 @@ public:
 	void SetOriginalFile(std::string file) { original_file = file; };
 	ResourceType getType()const { return type; };
 
+	virtual void ResCleanup() {};
+
 protected:
 	uint uuid = 0;
 	std::string original_file = "";

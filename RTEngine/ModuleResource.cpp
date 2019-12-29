@@ -85,3 +85,10 @@ std::vector<ResourceMaterial*> ModuleResourceManager::getMaterials()
 
 	return ret;
 }
+
+void ModuleResourceManager::DeleteResource(uint uuid)
+{
+	resource_map[uuid]->ResCleanup();
+	resource_map[uuid]->decreaseAmountLoaded();
+	resource_map.erase(uuid);
+}

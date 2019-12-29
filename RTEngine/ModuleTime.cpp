@@ -80,6 +80,7 @@ GAME_STATE ModuleTime::GetState()
 
 void ModuleTime::Tick(float dt)
 {
+	game_dt = dt;
 	std::vector<GameObject*> gameObjects;
 	App->scene->root->RecursiveGetChildren(&gameObjects);
 
